@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coase–Information Theory Demo Suite</title>
+  <style>
+:root {
+  --bg: #0f172a;
+  --panel: #111827;
+  --panel-2: #0b1220;
+  --border: rgba(255,255,255,0.09);
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --accent: #8b5cf6;
+  --accent-2: #60a5fa;
+  --accent-3: #22c55e;
+  --danger: #f97316;
+  --warn: #f59e0b;
+  --card: rgba(255,255,255,0.04);
+  --radius: 20px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(180deg, #020617 0%, #0f172a 100%); color: var(--text); }
+a { color: inherit; }
+.container { max-width: 1180px; margin: 0 auto; padding: 24px; }
+.hero { border: 1px solid var(--border); background: linear-gradient(180deg, rgba(139,92,246,0.12), rgba(255,255,255,0.03)); padding: 28px; border-radius: 28px; box-shadow: 0 18px 40px rgba(0,0,0,0.26); }
+.eyebrow { display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#ddd6fe; padding:8px 12px; border-radius:999px; background: rgba(139,92,246,0.14); border:1px solid rgba(139,92,246,0.28); }
+h1 { font-size: clamp(32px, 5vw, 54px); line-height: 1.03; margin: 14px 0 10px; }
+h2 { font-size: 28px; margin: 0 0 8px; }
+h3 { font-size: 18px; margin: 0 0 8px; }
+p { color: var(--muted); line-height: 1.65; }
+.grid { display: grid; gap: 18px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+@media (max-width: 980px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+.card { border:1px solid var(--border); background: var(--card); border-radius: var(--radius); padding: 18px; }
+.metric { font-size: 34px; font-weight: 700; margin: 6px 0; color: white; }
+.small { font-size: 12px; color: var(--muted); }
+.controls { display: grid; gap: 12px; }
+.control { border:1px solid var(--border); background: rgba(255,255,255,0.03); border-radius: 16px; padding: 14px; }
+.control label { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.control span { color: white; }
+input[type="range"], select { width: 100%; }
+select { background: #020617; color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+.badge { display:inline-block; font-size:12px; padding: 5px 10px; border-radius:999px; background: rgba(96,165,250,0.13); color: #bfdbfe; border: 1px solid rgba(96,165,250,0.24); }
+.kicker { color:#c4b5fd; font-size:13px; font-weight:600; letter-spacing:.02em; }
+.section { margin-top: 22px; }
+.topnav { display:flex; gap:12px; flex-wrap: wrap; margin: 18px 0 0; }
+.topnav a { text-decoration: none; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #e2e8f0; }
+.topnav a.active { background: rgba(139,92,246,0.18); border-color: rgba(139,92,246,0.36); color: white; }
+.stack { display:grid; gap: 10px; }
+.bar-group { display:grid; gap:12px; }
+.bar-row { display:grid; gap:6px; }
+.bar-label { display:flex; justify-content:space-between; font-size:13px; color:#cbd5e1; }
+.bar-track { width:100%; height:14px; background: rgba(255,255,255,0.06); border-radius:999px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:999px; }
+.purple { background: linear-gradient(90deg, #a78bfa, #8b5cf6); }
+.blue { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
+.green { background: linear-gradient(90deg, #4ade80, #22c55e); }
+.orange { background: linear-gradient(90deg, #fb923c, #f97316); }
+.slate { background: linear-gradient(90deg, #94a3b8, #64748b); }
+.table { width:100%; border-collapse: collapse; }
+.table th, .table td { padding: 10px 12px; text-align:left; border-bottom: 1px solid var(--border); }
+.table th { color:#cbd5e1; font-size:13px; }
+.table td { color:#e5e7eb; }
+.timeline { display:grid; gap: 10px; }
+.event { border-left: 3px solid #8b5cf6; padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 0 14px 14px 0; }
+.event .time { font-size:12px; color:#ddd6fe; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.note { border:1px dashed rgba(96,165,250,0.35); background: rgba(96,165,250,0.06); color:#dbeafe; padding: 14px; border-radius: 16px; }
+.footer { margin: 28px 0 8px; font-size: 12px; color: var(--muted); }
+.score { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.score strong { font-size: 20px; color:white; }
+.cta-grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); margin-top: 18px; }
+@media (max-width: 980px) { .cta-grid { grid-template-columns: 1fr; } }
+.cta { border:1px solid var(--border); background: rgba(255,255,255,0.04); border-radius: 22px; padding: 18px; text-decoration:none; }
+.cta:hover { background: rgba(255,255,255,0.06); }
+.list { padding-left: 18px; color: var(--muted); }
+.code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #ddd6fe; }
+.pill-row { display:flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.pill { padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); font-size: 13px; color:#e2e8f0; }
+.hero-grid { display:grid; gap:18px; grid-template-columns: 1.5fr 1fr; }
+@media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="topnav"><a class="active" href="index.html">Home</a><a class="" href="topology-lab.html">Topology lab</a><a class="" href="incident-room.html">Incident room</a><a class="" href="boundary-explorer.html">Boundary explorer</a><a class="" href="support-router.html">Support router</a><a class="" href="workflow-trace-mapper.html">Trace mapper</a></div>
+    
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">Coase–Information Theory demo suite</div>
+      <h1>Make the paper real with web apps that show signal turning into coordinated action.</h1>
+      <p>
+        The paper gets much stronger if the math is paired with reality-anchored software. These demos let a reader vary protocols,
+        agent coverage, observability, modularity, and approval layers, then watch organizational agility and firm boundaries move.
+      </p>
+      <div class="pill-row">
+        <div class="pill"><span class="code">Agility ≈ I(X;A) / τ</span></div>
+        <div class="pill">Delay matters</div>
+        <div class="pill">Distortion matters</div>
+        <div class="pill">Agents shift the boundary</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="kicker">Paper contribution</div>
+      <h3>Recast the firm as a distributed inference-and-control system.</h3>
+      <p>
+        These apps are the empirical bridge. They translate the paper’s abstract quantities into software delivery,
+        support operations, vendor orchestration, and routing workflows that managers already recognize.
+      </p>
+      <div class="note">
+        Strong narrative: <strong>hierarchy</strong>, <strong>market</strong>, and <strong>agentic mesh</strong> are alternative information architectures.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="cta-grid">
+    <a class="cta" href="topology-lab.html">
+      <div class="badge">App 1</div>
+      <h3>Topology lab</h3>
+      <p>Compare hierarchy, market, and agentic coordination under the same external environment.</p>
+      <ul class="list">
+        <li>Tests <span class="code">I(X;A)</span>, latency, capacity, and distortion</li>
+        <li>Shows when agents dominate</li>
+        <li>Best for the core theory section</li>
+      </ul>
+    </a>
+    <a class="cta" href="incident-room.html">
+      <div class="badge">App 2</div>
+      <h3>Incident room</h3>
+      <p>Simulate a deployment incident, customer escalation, lead routing failure, or vendor outage.</p>
+      <ul class="list">
+        <li>Anchors the theory in operations</li>
+        <li>Shows stage-by-stage latency reduction</li>
+        <li>Best for organizational agility</li>
+      </ul>
+    </a>
+    <a class="cta" href="boundary-explorer.html">
+      <div class="badge">App 3</div>
+      <h3>Boundary explorer</h3>
+      <p>Ask when work should stay in-house, move to the market, or sit in an agent-mediated hybrid boundary.</p>
+      <ul class="list">
+        <li>Extends classic Coase</li>
+        <li>Connects protocols and governance to boundary choice</li>
+        <li>Best for the theory-of-the-firm claim</li>
+      </ul>
+    </a>
+    <a class="cta" href="support-router.html">
+      <div class="badge">App 4</div>
+      <h3>Support router</h3>
+      <p>Show how software agents improve first-touch routing, handoffs, and resolution in a ticket workflow.</p>
+      <ul class="list">
+        <li>Concrete software-agent use case</li>
+        <li>Ties directly to APIs, schemas, and policies</li>
+        <li>Best for the agents section</li>
+      </ul>
+    </a>
+    <a class="cta" href="workflow-trace-mapper.html">
+      <div class="badge">App 5</div>
+      <h3>Workflow trace mapper</h3>
+      <p>Paste incident or support traces and compute operational proxies for agility.</p>
+      <ul class="list">
+        <li>Moves from toy models to observable traces</li>
+        <li>Computes latency, handoffs, agent share, and quality</li>
+        <li>Best for the empirical bridge</li>
+      </ul>
+    </a>
+  </div>
+</section>
+
+<section class="section grid grid-2">
+  <div class="card">
+    <div class="kicker">Formal note structure</div>
+    <h3>How the demos map to the paper</h3>
+    <ul class="list">
+      <li><strong>Definitions:</strong> world state <span class="code">X_t</span>, local observations <span class="code">Y_t^i</span>, messages <span class="code">M_t^{ij}</span>, actions <span class="code">A_t^i</span>.</li>
+      <li><strong>Agility functional:</strong> use a proxy like <span class="code">A_g = I(X_t;A_t)/(τ_t·C_t)</span>.</li>
+      <li><strong>Proposition 1:</strong> better protocols increase usable information flow and reduce distortion.</li>
+      <li><strong>Proposition 2:</strong> agent nodes reduce sensing-to-action latency for structured tasks.</li>
+      <li><strong>Proposition 3:</strong> the efficient firm boundary shifts when machine-readable coordination improves.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="kicker">Reality anchors</div>
+    <h3>Use cases that make the theory believable</h3>
+    <ul class="list">
+      <li>Engineering incidents and rollback coordination</li>
+      <li>Customer support triage and escalation routing</li>
+      <li>Lead routing, enrichment, and CRM handoffs</li>
+      <li>Vendor outage coordination and compliance-heavy workflows</li>
+      <li>Procurement or finance approvals where approvals dominate latency</li>
+    </ul>
+    <div class="note">
+      Best empirical move: later replace toy formulas with real telemetry from Jira, PagerDuty, Zendesk, Salesforce, or internal workflow traces.
+    </div>
+  </div>
+</section>
+
+    <div class="footer">Toy models for a Coase–Information Theory paper. These are illustrative prototypes, not calibrated causal estimates.</div>
+  </div>
+  <script>
+function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
+function setText(id, value) { document.getElementById(id).textContent = value; }
+function setHTML(id, value) { document.getElementById(id).innerHTML = value; }
+function pct(value, max=100) { return Math.max(0, Math.min(100, (value / max) * 100)); }
+function makeBar(label, value, max, cls, suffix='') {
+  return `<div class="bar-row"><div class="bar-label"><span>${label}</span><span>${value}${suffix}</span></div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct(value, max)}%"></div></div></div>`;
+}
+function fmt(n) {
+  return (Math.round(n * 10) / 10).toFixed(1);
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+case_id,timestamp,actor_type,owner,event_type,quality
+TCK-1,2026-06-04T08:00:00Z,customer,inbox,created,
+TCK-1,2026-06-04T08:01:00Z,agent,intake-agent,triage,
+TCK-1,2026-06-04T08:04:00Z,agent,billing-agent,decision,
+TCK-1,2026-06-04T08:09:00Z,agent,billing-agent,resolved,94
+TCK-2,2026-06-04T08:20:00Z,customer,inbox,created,
+TCK-2,2026-06-04T08:35:00Z,human,support-l1,triage,
+TCK-2,2026-06-04T09:05:00Z,human,support-l2,handoff,
+TCK-2,2026-06-04T09:50:00Z,human,engineering,handoff,
+TCK-2,2026-06-04T10:20:00Z,human,engineering,resolved,66
+TCK-3,2026-06-04T09:00:00Z,customer,inbox,created,
+TCK-3,2026-06-04T09:02:00Z,agent,intake-agent,triage,
+TCK-3,2026-06-04T09:05:00Z,agent,policy-agent,decision,
+TCK-3,2026-06-04T09:12:00Z,human,support-l2,handoff,
+TCK-3,2026-06-04T09:25:00Z,human,support-l2,resolved,82

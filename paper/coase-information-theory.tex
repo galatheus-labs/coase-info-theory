@@ -1,0 +1,578 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=blue!55!black,
+  urlcolor=blue!55!black,
+  pdftitle={Coase--Information Theory},
+  pdfauthor={Brian Guarraci}
+}
+
+\setlist[itemize]{topsep=4pt,itemsep=2pt,leftmargin=1.5em}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt,leftmargin=1.7em}
+\renewcommand{\arraystretch}{1.15}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calT}{\mathcal{T}}
+
+\title{\textbf{Coase--Information Theory}\\
+\large Agent Boundaries, Organizational Agility, and Software Agents}
+\author{Brian Guarraci}
+\date{Working paper draft \\ June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper proposes a Coase--Information Theory of agent boundaries.
+Classical transaction-cost economics explains the firm as an alternative to
+market coordination when internal organization is cheaper than contracting. I
+generalize this account by treating an agent as any bounded
+information-processing unit: an individual, team, organization, firm, vendor,
+software agent, or coalition of these. Boundaries form when agents coalesce into
+shared representations and control loops; boundaries dissolve or split when the
+cost of shared coordination exceeds its reduction in uncertainty, delay, error,
+or surprise. The paper decomposes transaction and coordination costs into
+information-processing terms: sensing, communication, interpretation,
+monitoring, delay, error, and misalignment. It defines organizational agility as
+the rate at which decision-relevant information about the world becomes
+effective action. Software agents matter because they alter the cost surface of
+coordination: they can reduce communication, interpretation, and execution
+latency for structured tasks while introducing new governance and misalignment
+costs. This creates an agent-mediated design region between hierarchy and
+market, and a broader theory of when agents should merge, remain separate, or
+coordinate through protocols.
+\end{abstract}
+
+\section{Introduction}
+
+Coase framed the firm as a response to the costs of using the price mechanism:
+firms exist because contracting, searching, negotiating, monitoring, and
+enforcing every transaction through the market can be more costly than directing
+work internally \cite{coase1937}. Modern organizations increasingly coordinate
+through software systems, APIs, observability pipelines, ticket queues, chat
+systems, workflow engines, and software agents. These tools do not merely lower
+generic transaction costs. They change how information moves, how decisions are
+formed, and how quickly actions can be coordinated.
+
+This suggests a sharper question:
+
+\begin{quote}
+Given a changing environment, what agent architecture best converts
+distributed, noisy information into coordinated action under latency, cost, and
+governance constraints?
+\end{quote}
+
+The answer determines not only the boundary of the firm but also the boundaries
+of teams, vendors, platforms, workflows, and software agents. It determines
+which agents should coalesce into a larger agent, which should split apart, and
+which should remain separate but coupled through protocols.
+
+The central claim is that the firm is one instance of a broader
+\emph{agent-boundary problem}. A person, team, department, firm, vendor network,
+or software agent can each be treated as an agent when it has observations,
+internal state, policies, actions, and a boundary. Organizational structure is a
+communication graph. Roles, dashboards, runbooks, APIs, metrics, and managers
+are compression mechanisms. Software agents are organizational nodes with
+observation channels, message protocols, policies, tool interfaces, and
+governance envelopes. The economic performance of an organization depends on
+the fidelity, speed, and cost with which latent world states are converted into
+action.
+
+The contribution is not the broad claim that firms process information. That
+intuition has deep roots in Hayek, Simon, Galbraith, and distributed decision
+theory \cite{hayek1945,simon1947,galbraith1973,marschakradner1972}. The
+contribution is a formal decomposition of boundary formation, organizational
+cost, and agility that can be operationalized in software and workflow traces.
+
+\section{Formal Model}
+
+Let the external or internal environment generate a latent state
+\[
+X_t \in \calX
+\]
+at time \(t\). The state may include customer demand, a production incident, a
+supply shock, a workflow backlog, a vendor outage, or any other
+decision-relevant facts.
+
+An organization is a directed graph
+\[
+G=(V,E),
+\]
+where nodes \(i \in V\) are humans, teams, services, vendors, software agents,
+or composite groups. Edges \((i,j)\in E\) are communication or coordination
+channels.
+
+The word \emph{agent} is used recursively. A node may be a primitive actor, such
+as a person or software service, or a composite actor, such as a team, firm,
+platform, vendor network, or incident-response group. Let \(V_0\) be the set of
+primitive actors and let
+\[
+\calB=\{B_1,\ldots,B_m\}
+\]
+be a partition of \(V_0\) into bounded agents. Each block \(B_\ell\) is an agent
+when its members share enough representation, policy, governance, and action
+interfaces to be treated as one decision-making unit at the relevant level of
+analysis.
+
+Each node receives a local observation
+\[
+Y_t^i \sim P_i(Y\mid X_t)
+\]
+and may send messages
+\[
+M_t^{ij}\in\calM_{ij}
+\]
+to neighboring nodes. Messages may be unstructured human communication,
+structured tickets, API calls, database writes, workflow events, or
+agent-generated summaries.
+
+Each node maintains a compressed local representation
+\[
+Z_t^i=f_i(Y_{\leq t}^i,M_{\leq t}^{*i}),
+\]
+where \(M_{\leq t}^{*i}\) denotes messages received by node \(i\). Node \(i\)
+chooses an action according to a local policy
+\[
+A_t^i \sim \pi_i(Z_t^i).
+\]
+The organization produces a joint action
+\[
+A_t=g(A_t^1,\ldots,A_t^n)
+\]
+and receives utility \(U(X_t,A_t)\).
+
+The general organizational design problem is
+\[
+\max_{\calB,G,\Pi,F}
+\E\left[\sum_t U(X_t,A_t)\right]
+-C_{\mathrm{comm}}
+-C_{\mathrm{comp}}
+-C_{\mathrm{delay}}
+-C_{\mathrm{error}}
+-C_{\mathrm{misalign}}
+-C_{\mathrm{monitor}},
+\]
+where \(\Pi=\{\pi_i\}\) is the set of local policies and \(F=\{f_i\}\) is the
+set of compression or representation maps.
+
+\begin{table}[t]
+\centering
+\caption{Information-processing decomposition of coordination cost}
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+Term & Interpretation \\
+\midrule
+\(C_{\mathrm{comm}}\) & Meetings, messages, handoffs, routing, API calls, protocol overhead. \\
+\(C_{\mathrm{comp}}\) & Human or machine effort to analyze, summarize, decide, or execute. \\
+\(C_{\mathrm{delay}}\) & Loss from acting after the state has changed or the opportunity has decayed. \\
+\(C_{\mathrm{error}}\) & Loss from stale, incomplete, distorted, or misrouted information. \\
+\(C_{\mathrm{misalign}}\) & Loss from local actions that do not compose into good global action. \\
+\(C_{\mathrm{monitor}}\) & Governance, audit, review, compliance, and oversight burden. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+This decomposition is the Coase--Information move. Transaction cost is not a
+primitive. It is partly an information-processing quantity.
+
+\section{Endogenous Agent Boundaries}
+
+The boundary of an agent determines which observations, representations, and
+actions are internal to a shared control loop and which must cross an interface.
+Internal coordination can preserve richer context and reduce surprise, but it
+also creates communication, governance, and computation costs. External
+coordination can reduce internal burden and preserve modularity, but it can
+increase interpretation, monitoring, contracting, and delay costs.
+
+Let \(Z_t^B\) denote the internal representation held by a bounded agent \(B\).
+One idealized measure of surprise is
+\[
+S_t^B=-\log P_B(X_t\mid Z_t^B),
+\]
+the degree to which the true state is unexpected under the agent's
+representation. In decision settings, the same role can be played by prediction
+error or action loss \(L(X_t,A_t^B)\). The boundary-design problem can be stated
+as choosing a partition \(\calB\) that trades off expected surprise and action
+loss against coordination cost:
+\[
+\min_{\calB,G,F,\Pi}
+\E\left[\sum_t S_t(\calB)+L(X_t,A_t)\right]+C(\calB,G,F,\Pi).
+\]
+
+Two agents should coalesce when the merged boundary lowers expected surprise or
+action loss more than it raises internal coordination and governance cost:
+\[
+\E[S_{\mathrm{merged}}+L_{\mathrm{merged}}]+C_{\mathrm{merged}}
+<
+\E[S_{\mathrm{separate}}+L_{\mathrm{separate}}]+C_{\mathrm{separate}}.
+\]
+They should split when the inequality reverses. The boundary of the firm is a
+special case of a more general agent-boundary problem: where should the system
+draw the line between shared representation and protocol-mediated coordination?
+
+\begin{definition}[Agent boundary]
+An agent boundary is a partition of actors, observations, representations,
+policies, and actions into an internal control loop plus external interfaces.
+The boundary is efficient when moving it would not lower expected surprise,
+action loss, and coordination cost.
+\end{definition}
+
+\section{Organizational Agility}
+
+Speed alone is not agility. An organization can act quickly and incorrectly.
+Accuracy alone is not agility either. An organization can make a correct
+decision too late.
+
+Let \(\tau_t\) be the end-to-end latency from signal availability to coordinated
+action. Let decision quality be proxied by the mutual information between the
+latent world state and organizational action:
+\[
+Q_t=I(X_t;A_t).
+\]
+Define organizational agility as
+\[
+\calA_t=\frac{I(X_t;A_t)}{\tau_t}.
+\]
+A cost-adjusted version is
+\[
+\calA_t^{(c)}=\frac{I(X_t;A_t)}{\tau_t C_t},
+\]
+where \(C_t\) is the resource cost of producing the action.
+
+This definition captures the core intuition: higher information fidelity
+improves agility; lower latency improves agility; lower cost improves
+cost-adjusted agility; and delay and distortion can both destroy organizational
+performance.
+
+\subsection{Practical Proxies}
+
+In most organizational traces, \(I(X_t;A_t)\) will not be directly observable.
+The empirical version should use proxies, as shown in Table~\ref{tab:proxies}.
+
+\begin{table}[t]
+\centering
+\caption{Operational proxies for formal quantities}
+\label{tab:proxies}
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+Formal quantity & Operational proxy \\
+\midrule
+\(I(X_t;A_t)\) & Action correctness, SLA success, no rework, severity reduction, expert quality score. \\
+\(S_t\) or prediction surprise & Unexpected escalation, reopen, SLA miss, anomaly, decision reversal, incident severity surprise. \\
+\(\tau_t\) & Time to triage, time to decision, time to resolution. \\
+\(C_t\) & Handoffs, people involved, messages, meetings, queue time, tool calls. \\
+\(C_{\mathrm{error}}\) & Reopen rate, rollback rate, bad routing, decision reversal. \\
+\(C_{\mathrm{monitor}}\) & Approvals, audits, review steps, escalation requirements. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The theory should be honest: mutual information is the idealized concept;
+workflow telemetry provides measurable proxies.
+
+\section{Compression and Organizational Structure}
+
+Organizations rarely transmit the full state \(X_t\). Instead, they construct
+internal representations
+\[
+X_t \rightarrow Z_t \rightarrow A_t.
+\]
+Roles, dashboards, metrics, status reports, tickets, runbooks, APIs, schemas,
+plans, OKRs, approvals, and incident summaries are compression mechanisms. They
+reduce communication burden, but they can also destroy decision-relevant
+information.
+
+The organizational design problem has the structure of a rate-distortion
+problem:
+\[
+\min_f C_{\mathrm{repr}}(f)
++\lambda\,\E[L(X_t,A_t(f(X_t)))],
+\]
+where \(C_{\mathrm{repr}}(f)\) is the cost of maintaining and communicating
+representation \(f\), and \(L\) is decision loss. A dashboard that compresses a
+complex operational state into one green/yellow/red indicator is valuable if it
+preserves the information needed for action. It is dangerous if it hides the
+structure needed for diagnosis.
+
+\section{Software Agents as Organizational Nodes}
+
+A software agent can be modeled as a node
+\[
+\mathrm{Agent}_i=(\calO_i,\calM_i,\pi_i,\calT_i,\Gamma_i),
+\]
+where \(\calO_i\) is the set of observation channels, \(\calM_i\) is the
+message schema or protocol, \(\pi_i\) is the local decision policy, \(\calT_i\)
+is the set of tools or actuators, and \(\Gamma_i\) is the governance envelope:
+permissions, constraints, auditability, and escalation rules.
+
+Agents change the feasible set of organizational designs. They can observe
+continuously, summarize and route information, enforce schemas, call tools,
+monitor queues, escalate uncertainty, and execute routine actions. But agentic
+coordination is not automatically superior. It may increase local-global
+misalignment, proxy optimization, monitoring burden, structured propagation of
+bad assumptions, and compression loss from over-summary.
+
+The relevant comparison is conditional:
+
+\begin{quote}
+Agents improve organizational agility when tasks are sufficiently structured,
+protocols are sufficiently expressive, and governance is strong enough to
+control misalignment.
+\end{quote}
+
+\section{Boundary of the Firm}
+
+The boundary of the firm is one level of the broader boundary-selection problem.
+At any level, the question is whether coordination should happen through a
+shared internal representation or through an interface between separate agents.
+
+Let \(k\) index a coordination form:
+\[
+k\in\{\mathrm{internal},\mathrm{market},\mathrm{hybrid}\}.
+\]
+Each form has cost
+\[
+C_k=C_{\mathrm{search},k}
++C_{\mathrm{contract},k}
++C_{\mathrm{comm},k}
++C_{\mathrm{interp},k}
++C_{\mathrm{monitor},k}
++C_{\mathrm{delay},k}
++C_{\mathrm{error},k}
++C_{\mathrm{misalign},k}.
+\]
+The efficient boundary is selected by
+\[
+k^*=\arg\min_k C_k-\E[U_k].
+\]
+
+Classical hierarchy reduces some contracting and search costs but can increase
+internal communication delay and bureaucratic compression. Market coordination
+can reduce internal burden but increase search, contracting, monitoring, and
+interpretation costs. Agent-mediated hybrid coordination can reduce
+cross-boundary interpretation and delay if protocols and governance are strong
+enough.
+
+The claim is not that agents make firms smaller or markets always better. The
+claim is that software agents and machine-readable protocols alter enough cost
+terms to create a new efficient region between classic hierarchy and classic
+market contracting. The deeper claim is that firms, teams, vendors, and
+software agents are all boundary choices over information-processing units.
+Coalescence is valuable when shared state reduces surprise, delay, and
+misalignment more than it raises internal coordination cost. Splitting is
+valuable when modularity and local autonomy reduce cost more than they increase
+interface surprise.
+
+\section{Propositions}
+
+\begin{proposition}[Protocol informativeness]
+For a fixed organizational graph and decision policy class, improving protocol
+quality weakly increases achievable expected utility when it makes received
+representations more informative about the latent state without increasing
+delay or cost.
+\end{proposition}
+
+\noindent\textit{Intuition.} A machine-readable schema, API, or structured
+ticket that preserves relevant state is a less garbled signal. Better
+downstream decisions become feasible.
+
+\begin{proposition}[Latency under volatility]
+Suppose the relevance of information decays with environmental hazard rate
+\(\lambda\). If a decision is taken after latency \(\tau\), the value of
+otherwise correct information is approximately discounted by
+\(e^{-\lambda \tau}\). Therefore, the marginal value of latency reduction rises
+with volatility.
+\end{proposition}
+
+\noindent\textit{Sketch.} If the probability that the relevant state remains
+stable after delay \(\tau\) is \(e^{-\lambda \tau}\), then effective information
+available for action is proportional to \(I_0 e^{-\lambda \tau}\). Higher
+\(\lambda\) makes delay more costly.
+
+\begin{proposition}[Agentic routing]
+For structured or semi-structured workflows, agent nodes can increase
+organizational agility when their reduction in routing, interpretation, and
+execution latency exceeds their added monitoring and misalignment costs.
+\end{proposition}
+
+\noindent A sufficient condition is
+\[
+\Delta C_{\mathrm{delay}}
++\Delta C_{\mathrm{comm}}
++\Delta C_{\mathrm{interp}}
+>
+\Delta C_{\mathrm{monitor}}
++\Delta C_{\mathrm{misalign}}
++\Delta C_{\mathrm{error}}.
+\]
+
+\begin{proposition}[Boundary coalescence and splitting]
+When cross-boundary communication, interpretation, and monitoring become
+programmable, the efficient boundary shifts toward the partition of agents that
+minimizes expected surprise, action loss, and coordination cost.
+\end{proposition}
+
+\noindent\textit{Intuition.} APIs, schemas, shared observability, and agents
+reduce the information costs that traditionally made external coordination
+expensive. This can make splitting more attractive for modular work, while high
+interdependence can still make coalescence into a larger agent more efficient.
+
+\begin{proposition}[Governance limit]
+Agentic decentralization has diminishing or negative returns when governance
+quality is low because autonomy can increase misalignment and monitoring costs
+faster than it reduces delay.
+\end{proposition}
+
+\noindent\textit{Intuition.} A fast local optimizer is valuable only when its
+actions compose into the global objective.
+
+\section{Executable Illustrations}
+
+The companion repository includes five static web applications. The apps are
+executable diagrams, not calibrated causal estimates.
+
+\begin{itemize}
+  \item \textbf{Topology Lab} compares hierarchy, market coordination, and
+  agentic mesh under shared environmental assumptions.
+  \item \textbf{Incident Room} simulates deployment incidents, customer
+  escalations, lead routing failures, and vendor outages.
+  \item \textbf{Boundary Explorer} compares in-house, outsourced, and hybrid
+  agentic boundary choices using decomposed cost terms.
+  \item \textbf{Support Router} shows when structured intake, policy coverage,
+  agent autonomy, and knowledge quality improve first-touch accuracy, handoffs,
+  and resolution time.
+  \item \textbf{Workflow Trace Mapper} accepts a CSV event trace and computes
+  triage latency, resolution time, handoffs, agent-assisted share, rework, and
+  an agility proxy.
+\end{itemize}
+
+\section{Empirical Agenda}
+
+A first empirical study should use incident response or support routing traces.
+The minimal research design is:
+\begin{enumerate}
+  \item collect workflow traces,
+  \item map events to cases,
+  \item compute latency, handoffs, surprise, and action-quality proxies,
+  \item compare human-heavy, protocolized, and agent-assisted workflows,
+  \item estimate whether agentic coordination improves agility after
+  controlling for case complexity.
+\end{enumerate}
+
+A practical agility proxy is
+\[
+\widehat{\calA}
+=\frac{Q}{1+T_{\mathrm{resolution}}}\cdot\frac{1}{1+\alpha H},
+\]
+where \(Q\) is quality, \(T_{\mathrm{resolution}}\) is resolution time, \(H\) is
+handoff count, and \(\alpha\) is a handoff penalty. This proxy is not a direct
+mutual-information estimate. It is a practical measurement bridge.
+
+To study coalescing and splitting, compare whether a workflow performs better
+when work is handled inside one bounded agent, split across separate agents
+with an explicit protocol, or coordinated through a hybrid boundary such as an
+agent-managed vendor or escalation path. The empirical question is whether the
+boundary change lowers surprise and action loss enough to justify any added
+coordination or monitoring cost.
+
+\section{Limitations}
+
+This framework has several limitations.
+
+First, mutual information is not directly observable in most organizations. The
+paper must distinguish the idealized formal quantity from operational proxies.
+
+Second, agents do not universally improve coordination. They help most when
+workflows are structured, observability is high, and governance is clear.
+
+Third, some organizational knowledge is tacit and difficult to encode into
+protocols. Over-protocolization can compress away context.
+
+Fourth, the current apps are toy models. They illustrate mechanisms but do not
+yet estimate causal effects.
+
+Fifth, organizational utility is multi-objective. Speed, accuracy, compliance,
+safety, morale, and strategic learning may trade off.
+
+\section{Conclusion}
+
+Coase--Information Theory reframes the firm as an information architecture and
+then generalizes that idea. The key economic question is not only whether work
+should be coordinated by markets or hierarchy, but which agents should
+coalesce, which should split, and which should coordinate through protocols so
+that distributed observations become coordinated action.
+
+Organizational agility is the rate of this transformation. Software agents
+matter because they can change the latency, fidelity, and cost of coordination.
+Their importance is not simply that they automate tasks. It is that they alter
+where boundaries should be drawn: inside firms, across teams, between vendors,
+and between human and machine actors.
+
+The next generation of AI-native companies will be designed not merely around
+people using AI tools, but around software-mediated sensing, routing, decision,
+and execution loops. The purpose of Coase--Information Theory is to provide a
+language for designing and measuring those loops.
+
+\begin{thebibliography}{9}
+
+\bibitem{coase1937}
+Coase, R. H. (1937).
+\newblock The nature of the firm.
+\newblock \emph{Economica}, 4(16), 386--405.
+
+\bibitem{shannon1948}
+Shannon, C. E. (1948).
+\newblock A mathematical theory of communication.
+\newblock \emph{Bell System Technical Journal}, 27(3), 379--423.
+
+\bibitem{hayek1945}
+Hayek, F. A. (1945).
+\newblock The use of knowledge in society.
+\newblock \emph{American Economic Review}, 35(4), 519--530.
+
+\bibitem{simon1947}
+Simon, H. A. (1947).
+\newblock \emph{Administrative Behavior}.
+\newblock Macmillan.
+
+\bibitem{marschakradner1972}
+Marschak, J., and Radner, R. (1972).
+\newblock \emph{Economic Theory of Teams}.
+\newblock Yale University Press.
+
+\bibitem{galbraith1973}
+Galbraith, J. R. (1973).
+\newblock \emph{Designing Complex Organizations}.
+\newblock Addison-Wesley.
+
+\bibitem{williamson1985}
+Williamson, O. E. (1985).
+\newblock \emph{The Economic Institutions of Capitalism}.
+\newblock Free Press.
+
+\end{thebibliography}
+
+\end{document}
