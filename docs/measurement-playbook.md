@@ -7,15 +7,15 @@ This playbook turns Coase–Information Theory from a conceptual framework into 
 The objective is not to directly estimate Shannon mutual information in every setting. The objective is to estimate operational proxies for the theory's core quantities:
 
 \[
-\mathcal{A}_t \approx \frac{I(X_t; A_t)}{\tau_t C_t}
+\widehat{\mathcal{G}}_t \approx \frac{Q_t}{\tau_t(1+\widetilde C_t)}
 \]
 
 In practice:
 
-- \(I(X_t;A_t)\) is proxied by decision/action quality,
+- \(Q_t\), decision value, is proxied by decision/action quality or loss reduction,
 - surprise is proxied by unexpected escalations, reopens, SLA misses, anomaly severity, or decision reversals,
 - \(\tau_t\) is proxied by sensing-to-action latency,
-- \(C_t\) is proxied by handoffs, labor, events, messages, or queue time.
+- \(\widetilde C_t\) is proxied by handoffs, labor, events, messages, approvals, tool calls, or queue time.
 
 ## Minimal event schema
 
@@ -180,8 +180,8 @@ Paper mapping:
 | \(X_t\) | true incident state / severity / root cause |
 | \(Y_t^i\) | alerts, logs, customer reports, dashboards |
 | \(M_t^{ij}\) | Slack messages, tickets, escalations, handoffs |
-| \(A_t\) | mitigation, rollback, failover, customer communication |
-| \(I(X_t;A_t)\) | action correctness / severity reduction / no rework |
+| \(a_t\) | mitigation, rollback, failover, customer communication |
+| \(Q_t\) | action correctness / severity reduction / no rework |
 | \(\tau_t\) | time to decision or resolution |
 | \(C_t\) | handoffs, people involved, message volume, queue time |
 
@@ -201,4 +201,4 @@ This gives the paper a companion method:
 
 Do not claim the proxy is literal mutual information unless the data supports such estimation. Instead, say:
 
-> We use operational proxies for the information-to-action rate. These proxies are designed to be observable in workflow traces and can later be refined into more direct information-theoretic estimates when ground-truth state labels are available.
+> We use operational proxies for decision value per unit time. These proxies are designed to be observable in workflow traces and can later be refined into more direct information-theoretic estimates when ground-truth state labels are available.

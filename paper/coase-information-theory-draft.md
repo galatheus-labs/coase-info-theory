@@ -324,7 +324,7 @@ Agentic decentralization has diminishing or negative returns when governance qua
 
 ## 8. Executable illustrations
 
-The companion repo includes five static web apps.
+The companion repo includes six static web apps.
 
 ### Topology Lab
 
@@ -337,6 +337,10 @@ Simulates deployment incidents, customer escalations, lead routing failures, and
 ### Boundary Explorer
 
 Compares in-house, outsourced, and hybrid agentic boundary choices using decomposed cost terms.
+
+### Agent Boundary Simulation
+
+Runs a Monte Carlo model in which primitive agents observe a latent world state under alternative boundary partitions. It shows how protocol quality and task interdependence can create phase behavior across coalesced, split, market, and agent-mediated hybrid forms.
 
 ### Support Router
 

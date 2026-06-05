@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Coase–Information Theory Demo Suite</title>
+  <title>Agent Boundary Simulation · Coase–Information Theory</title>
   <style>
 :root {
   --bg: #0f172a;
@@ -23,200 +23,1238 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(180deg, #020617 0%, #0f172a 100%); color: var(--text); }
 a { color: inherit; }
-.container { max-width: 1180px; margin: 0 auto; padding: 24px; }
-.hero { border: 1px solid var(--border); background: linear-gradient(180deg, rgba(139,92,246,0.12), rgba(255,255,255,0.03)); padding: 28px; border-radius: 28px; box-shadow: 0 18px 40px rgba(0,0,0,0.26); }
+.container { max-width: 1480px; margin: 0 auto; padding: 24px; }
+.hero { border: 1px solid var(--border); background: linear-gradient(180deg, rgba(139,92,246,0.12), rgba(255,255,255,0.03)); padding: 26px; border-radius: 28px; box-shadow: 0 18px 40px rgba(0,0,0,0.26); }
 .eyebrow { display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#ddd6fe; padding:8px 12px; border-radius:999px; background: rgba(139,92,246,0.14); border:1px solid rgba(139,92,246,0.28); }
-h1 { font-size: clamp(32px, 5vw, 54px); line-height: 1.03; margin: 14px 0 10px; }
-h2 { font-size: 28px; margin: 0 0 8px; }
-h3 { font-size: 18px; margin: 0 0 8px; }
-p { color: var(--muted); line-height: 1.65; }
+h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.03; margin: 14px 0 10px; }
+h2 { font-size: 24px; margin: 0 0 8px; }
+h3 { font-size: 17px; margin: 0 0 8px; }
+p { color: var(--muted); line-height: 1.62; }
 .grid { display: grid; gap: 18px; }
-.grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.grid-2 { grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1.5fr); }
 .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.simulation-grid { display:grid; gap:18px; align-items:start; grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.65fr) minmax(260px, 0.82fr); }
+.simulation-grid > *, .grid > *, .stack > *, .card { min-width: 0; }
+.summary-grid { display:grid; gap:12px; grid-template-columns: repeat(2, minmax(0,1fr)); }
+@media (max-width: 1100px) {
+  .simulation-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 980px) {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr; }
 }
 .card { border:1px solid var(--border); background: var(--card); border-radius: var(--radius); padding: 18px; }
-.metric { font-size: 34px; font-weight: 700; margin: 6px 0; color: white; }
+.metric { font-size: 32px; font-weight: 700; margin: 6px 0; color: white; }
 .small { font-size: 12px; color: var(--muted); }
 .controls { display: grid; gap: 12px; }
-.control { border:1px solid var(--border); background: rgba(255,255,255,0.03); border-radius: 16px; padding: 14px; }
-.control label { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.control { border:1px solid var(--border); background: rgba(255,255,255,0.03); border-radius: 16px; padding: 13px; min-width: 0; overflow: hidden; }
+.control label { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 650; margin-bottom: 8px; }
 .control span { color: white; }
 input[type="range"], select { width: 100%; }
-select { background: #020617; color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+input[type="range"] { display: block; min-width: 0; max-width: 100%; }
+select, input[type="number"] { background: #020617; color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+input[type="number"] { width: 100%; }
+.control-pair { display:grid; grid-template-columns: 1fr; gap:12px; }
+button { cursor:pointer; border:0; }
+.button { display:inline-flex; align-items:center; justify-content:center; border-radius:999px; background: rgba(139,92,246,0.9); color:white; padding: 10px 14px; font-weight:700; min-height: 38px; }
+.button.secondary { background: rgba(255,255,255,0.08); color:#e2e8f0; border:1px solid var(--border); }
+.scenario-list { display:grid; gap:8px; }
+.scenario-option { width:100%; text-align:left; border-radius:14px; padding:11px; background:rgba(255,255,255,0.04); color:#e5e7eb; border:1px solid var(--border); }
+.scenario-option:hover, .scenario-option:focus { background:rgba(139,92,246,0.14); border-color:rgba(139,92,246,0.34); outline:none; }
+.scenario-option.active { background:rgba(139,92,246,0.2); border-color:rgba(139,92,246,0.52); }
+.scenario-option strong { display:block; color:white; font-size:13px; line-height:1.2; }
+.scenario-option span { display:block; color:#94a3b8; font-size:11px; line-height:1.35; margin-top:4px; }
+.use-case-line { margin: 8px 0 0; color:#dbeafe; font-size:12px; line-height:1.45; }
+.proxy-line { margin: 6px 0 0; color:#94a3b8; font-size:12px; line-height:1.45; }
+.semantic-controls { display:grid; gap:10px; margin-top:10px; }
+.semantic-help { display:flex; justify-content:space-between; gap:8px; color:#94a3b8; font-size:11px; margin-top:5px; }
+.abstract-grid { display:grid; gap:8px; margin-top:10px; }
+.abstract-row { display:grid; grid-template-columns: minmax(0,1fr) auto; gap:8px; align-items:center; font-size:12px; color:#cbd5e1; }
+.abstract-row b { color:white; font-size:12px; }
+.abstract-track { grid-column:1 / -1; height:6px; border-radius:999px; background:rgba(255,255,255,0.08); overflow:hidden; }
+.abstract-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, #60a5fa, #14b8a6); }
 .badge { display:inline-block; font-size:12px; padding: 5px 10px; border-radius:999px; background: rgba(96,165,250,0.13); color: #bfdbfe; border: 1px solid rgba(96,165,250,0.24); }
-.kicker { color:#c4b5fd; font-size:13px; font-weight:600; letter-spacing:.02em; }
+.kicker { color:#c4b5fd; font-size:13px; font-weight:650; letter-spacing:.02em; }
 .section { margin-top: 22px; }
 .topnav { display:flex; gap:12px; flex-wrap: wrap; margin: 18px 0 0; }
 .topnav a { text-decoration: none; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #e2e8f0; }
 .topnav a.active { background: rgba(139,92,246,0.18); border-color: rgba(139,92,246,0.36); color: white; }
-.stack { display:grid; gap: 10px; }
+.stack { display:grid; gap: 12px; }
 .bar-group { display:grid; gap:12px; }
+.metric-panel { border:1px solid var(--border); background: rgba(255,255,255,0.035); border-radius:16px; padding:14px; min-width:0; }
 .bar-row { display:grid; gap:6px; }
 .bar-label { display:flex; justify-content:space-between; font-size:13px; color:#cbd5e1; }
 .bar-track { width:100%; height:14px; background: rgba(255,255,255,0.06); border-radius:999px; overflow:hidden; }
-.bar-fill { height:100%; border-radius:999px; }
+.bar-fill { height:100%; border-radius:999px; transition: width 180ms ease; }
 .purple { background: linear-gradient(90deg, #a78bfa, #8b5cf6); }
 .blue { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
 .green { background: linear-gradient(90deg, #4ade80, #22c55e); }
 .orange { background: linear-gradient(90deg, #fb923c, #f97316); }
+.rose { background: linear-gradient(90deg, #fb7185, #e11d48); }
+.teal { background: linear-gradient(90deg, #2dd4bf, #14b8a6); }
 .slate { background: linear-gradient(90deg, #94a3b8, #64748b); }
 .table { width:100%; border-collapse: collapse; }
-.table th, .table td { padding: 10px 12px; text-align:left; border-bottom: 1px solid var(--border); }
+.table-wrap { overflow:auto; border:1px solid var(--border); border-radius:18px; }
+.table th, .table td { padding: 10px 12px; text-align:left; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .table th { color:#cbd5e1; font-size:13px; }
-.table td { color:#e5e7eb; }
-.timeline { display:grid; gap: 10px; }
-.event { border-left: 3px solid #8b5cf6; padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 0 14px 14px 0; }
-.event .time { font-size:12px; color:#ddd6fe; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.table td { color:#e5e7eb; font-size: 13px; }
 .note { border:1px dashed rgba(96,165,250,0.35); background: rgba(96,165,250,0.06); color:#dbeafe; padding: 14px; border-radius: 16px; }
 .footer { margin: 28px 0 8px; font-size: 12px; color: var(--muted); }
-.score { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.score { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap: wrap; }
+.score h3 { min-width: 0; }
 .score strong { font-size: 20px; color:white; }
-.cta-grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); margin-top: 18px; }
-@media (max-width: 980px) { .cta-grid { grid-template-columns: 1fr; } }
-.cta { border:1px solid var(--border); background: rgba(255,255,255,0.04); border-radius: 22px; padding: 18px; text-decoration:none; }
-.cta:hover { background: rgba(255,255,255,0.06); }
 .list { padding-left: 18px; color: var(--muted); }
 .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #ddd6fe; }
 .pill-row { display:flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
 .pill { padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); font-size: 13px; color:#e2e8f0; }
-.hero-grid { display:grid; gap:18px; grid-template-columns: 1.5fr 1fr; }
+.hero-grid { display:grid; gap:18px; grid-template-columns: 1.35fr 1fr; }
 @media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; } }
-</style>
+.canvas-shell { position: relative; border:1px solid var(--border); border-radius:18px; overflow:hidden; background: #020617; }
+canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
+.legend { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.legend-item { display:inline-flex; align-items:center; gap:7px; color:#cbd5e1; font-size: 12px; }
+.swatch { width: 12px; height: 12px; border-radius: 4px; display:inline-block; border:1px solid rgba(255,255,255,0.25); }
+.axis-note { display:flex; justify-content:space-between; gap:12px; color:#94a3b8; font-size: 12px; margin-top: 8px; }
+.boundary-shell { background:
+  radial-gradient(circle at 18% 22%, rgba(139,92,246,0.18), transparent 28%),
+  radial-gradient(circle at 80% 18%, rgba(59,130,246,0.12), transparent 24%),
+  #020617; }
+.field-stats { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin-top:12px; }
+.field-stat { border:1px solid var(--border); background: rgba(255,255,255,0.03); border-radius:14px; padding:10px; min-width:0; }
+.field-stat .label { color:#94a3b8; font-size:11px; margin-bottom:4px; }
+.field-stat .value { color:white; font-size:16px; font-weight:750; }
+.spectrum { margin-top:12px; display:grid; gap:8px; }
+.spectrum-track { position:relative; height:12px; border-radius:999px; background: linear-gradient(90deg, #8b5cf6 0%, #14b8a6 36%, #f97316 64%, #3b82f6 100%); border:1px solid rgba(255,255,255,0.18); }
+.spectrum-marker { position:absolute; top:50%; width:18px; height:18px; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 4px rgba(255,255,255,0.12); transform:translate(-50%, -50%); left:50%; }
+.spectrum-labels { display:flex; justify-content:space-between; gap:12px; color:#94a3b8; font-size:12px; }
+.model-grid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+@media (max-width: 980px) { .model-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 560px) { .model-grid { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .field-stats { grid-template-columns: 1fr; } }
+.mini-card { border:1px solid var(--border); border-radius:16px; padding: 12px; background: rgba(255,255,255,0.03); min-height: 92px; }
+.mini-card .name { display:flex; align-items:center; gap:8px; font-weight: 750; color: white; margin-bottom: 4px; }
+.mini-card p { margin: 0; font-size: 12px; line-height: 1.45; }
+.button-row { display:flex; gap:10px; flex-wrap:wrap; }
+  </style>
 </head>
 <body>
   <div class="container">
-    <div class="topnav"><a class="active" href="index.html">Home</a><a class="" href="topology-lab.html">Topology lab</a><a class="" href="incident-room.html">Incident room</a><a class="" href="boundary-explorer.html">Boundary explorer</a><a class="" href="support-router.html">Support router</a><a class="" href="workflow-trace-mapper.html">Trace mapper</a></div>
-    
+    <div class="topnav"><a class="active" href="index.html">Boundary simulation</a><a class="" href="paper/coase-information-theory.pdf">Paper PDF</a><a class="" href="paper/coase-information-theory.tex">TeX source</a></div>
+
 <section class="hero">
   <div class="hero-grid">
     <div>
-      <div class="eyebrow">Coase–Information Theory demo suite</div>
-      <h1>Make the paper real with web apps that show signal turning into coordinated action.</h1>
+      <div class="eyebrow">Agent boundary simulation</div>
+      <h1>Explore the paper’s use cases as boundary choices.</h1>
       <p>
-        The paper gets much stronger if the math is paired with reality-anchored software. These demos let a reader vary protocols,
-        agent coverage, observability, modularity, and approval layers, then watch organizational agility and firm boundaries move.
+        This Monte Carlo model turns the paper’s examples into one executable diagram. Incident rooms, support queues,
+        vendor interfaces, internal services, and blueprint-heavy plans all map to the same agent-boundary variables.
       </p>
       <div class="pill-row">
-        <div class="pill"><span class="code">Agility ≈ I(X;A) / τ</span></div>
-        <div class="pill">Delay matters</div>
-        <div class="pill">Distortion matters</div>
-        <div class="pill">Agents shift the boundary</div>
+        <div class="pill"><span class="code">min E[S + L] + C</span></div>
+        <div class="pill">Incident response</div>
+        <div class="pill">Support routing</div>
+        <div class="pill">Vendor / API boundaries</div>
+        <div class="pill">Blueprint vs reactive design</div>
       </div>
     </div>
     <div class="card">
-      <div class="kicker">Paper contribution</div>
-      <h3>Recast the firm as a distributed inference-and-control system.</h3>
+      <div class="kicker">Paper claim under test</div>
+      <h3>Boundaries are not fixed containers. They are information-processing choices.</h3>
       <p>
-        These apps are the empirical bridge. They translate the paper’s abstract quantities into software delivery,
-        support operations, vendor orchestration, and routing workflows that managers already recognize.
+        Each scenario is written in operator language, then translated into protocol quality, task interdependence,
+        observability, governance, market friction, software-agent coverage, volatility, and planning posture.
       </p>
       <div class="note">
-        Strong narrative: <strong>hierarchy</strong>, <strong>market</strong>, and <strong>agentic mesh</strong> are alternative information architectures.
+        A winning boundary lowers <span class="code">surprise + action loss + coordination cost + planning drag</span>.
+        It is not automatically the most centralized, decentralized, outsourced, or automated option.
       </div>
     </div>
   </div>
 </section>
 
-<section class="section">
-  <div class="cta-grid">
-    <a class="cta" href="topology-lab.html">
-      <div class="badge">App 1</div>
-      <h3>Topology lab</h3>
-      <p>Compare hierarchy, market, and agentic coordination under the same external environment.</p>
-      <ul class="list">
-        <li>Tests <span class="code">I(X;A)</span>, latency, capacity, and distortion</li>
-        <li>Shows when agents dominate</li>
-        <li>Best for the core theory section</li>
-      </ul>
-    </a>
-    <a class="cta" href="incident-room.html">
-      <div class="badge">App 2</div>
-      <h3>Incident room</h3>
-      <p>Simulate a deployment incident, customer escalation, lead routing failure, or vendor outage.</p>
-      <ul class="list">
-        <li>Anchors the theory in operations</li>
-        <li>Shows stage-by-stage latency reduction</li>
-        <li>Best for organizational agility</li>
-      </ul>
-    </a>
-    <a class="cta" href="boundary-explorer.html">
-      <div class="badge">App 3</div>
-      <h3>Boundary explorer</h3>
-      <p>Ask when work should stay in-house, move to the market, or sit in an agent-mediated hybrid boundary.</p>
-      <ul class="list">
-        <li>Extends classic Coase</li>
-        <li>Connects protocols and governance to boundary choice</li>
-        <li>Best for the theory-of-the-firm claim</li>
-      </ul>
-    </a>
-    <a class="cta" href="support-router.html">
-      <div class="badge">App 4</div>
-      <h3>Support router</h3>
-      <p>Show how software agents improve first-touch routing, handoffs, and resolution in a ticket workflow.</p>
-      <ul class="list">
-        <li>Concrete software-agent use case</li>
-        <li>Ties directly to APIs, schemas, and policies</li>
-        <li>Best for the agents section</li>
-      </ul>
-    </a>
-    <a class="cta" href="workflow-trace-mapper.html">
-      <div class="badge">App 5</div>
-      <h3>Workflow trace mapper</h3>
-      <p>Paste incident or support traces and compute operational proxies for agility.</p>
-      <ul class="list">
-        <li>Moves from toy models to observable traces</li>
-        <li>Computes latency, handoffs, agent share, and quality</li>
-        <li>Best for the empirical bridge</li>
-      </ul>
-    </a>
-  </div>
-</section>
-
-<section class="section grid grid-2">
+<section class="section simulation-grid">
   <div class="card">
-    <div class="kicker">Formal note structure</div>
-    <h3>How the demos map to the paper</h3>
-    <ul class="list">
-      <li><strong>Definitions:</strong> world state <span class="code">X_t</span>, local observations <span class="code">Y_t^i</span>, messages <span class="code">M_t^{ij}</span>, actions <span class="code">A_t^i</span>.</li>
-      <li><strong>Agility functional:</strong> use a proxy like <span class="code">A_g = I(X_t;A_t)/(τ_t·C_t)</span>.</li>
-      <li><strong>Proposition 1:</strong> better protocols increase usable information flow and reduce distortion.</li>
-      <li><strong>Proposition 2:</strong> agent nodes reduce sensing-to-action latency for structured tasks.</li>
-      <li><strong>Proposition 3:</strong> the efficient firm boundary shifts when machine-readable coordination improves.</li>
-    </ul>
-  </div>
-  <div class="card">
-    <div class="kicker">Reality anchors</div>
-    <h3>Use cases that make the theory believable</h3>
-    <ul class="list">
-      <li>Engineering incidents and rollback coordination</li>
-      <li>Customer support triage and escalation routing</li>
-      <li>Lead routing, enrichment, and CRM handoffs</li>
-      <li>Vendor outage coordination and compliance-heavy workflows</li>
-      <li>Procurement or finance approvals where approvals dominate latency</li>
-    </ul>
-    <div class="note">
-      Best empirical move: later replace toy formulas with real telemetry from Jira, PagerDuty, Zendesk, Salesforce, or internal workflow traces.
+    <h2>Scenario</h2>
+    <div class="controls">
+      <div id="scenarioList" class="scenario-list"></div>
+      <div class="control">
+        <label><span id="semanticTitle">Semantic levers</span></label>
+        <p class="small" id="scenarioDescription"></p>
+        <p class="use-case-line" id="scenarioUseCase"></p>
+        <p class="proxy-line" id="scenarioProxy"></p>
+        <div id="semanticControls" class="semantic-controls"></div>
+      </div>
+      <div class="control">
+        <label>Maps to abstract levers</label>
+        <div id="abstractMapping" class="abstract-grid"></div>
+      </div>
+      <div class="control-pair">
+        <div class="control"><label>Monte Carlo trials</label><select id="trials"><option value="300">300</option><option value="700" selected>700</option><option value="1200">1200</option><option value="2000">2000</option></select></div>
+        <div class="control"><label>Seed</label><input id="seed" type="number" min="1" max="999999" value="20260604"></div>
+      </div>
+      <div class="button-row">
+        <button id="runBtn" class="button">Run simulation</button>
+        <button id="newSeedBtn" class="button secondary">New seed</button>
+      </div>
     </div>
   </div>
+
+  <div class="stack">
+    <div class="summary-grid">
+      <div class="card"><div class="small">Winning boundary</div><div id="winnerName" class="metric">—</div><div class="small">Lowest objective at current settings.</div></div>
+      <div class="card"><div class="small">Objective</div><div id="winnerObjective" class="metric">—</div><div class="small">Surprise + loss + latency + cost + planning terms.</div></div>
+      <div class="card"><div class="small">Agility</div><div id="winnerAgility" class="metric">—</div><div class="small">Quality-adjusted speed proxy.</div></div>
+      <div class="card"><div class="small">Action quality</div><div id="winnerQuality" class="metric">—</div><div class="small">Correct action share.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="score"><div><div class="kicker">Boundary field</div><strong>Primitive agents coalesce, split, outsource, and route through brokers</strong></div><div class="badge" id="boundaryStatus">ready</div></div>
+      <div class="canvas-shell boundary-shell section" style="margin-top:14px;">
+        <canvas id="boundaryCanvas" width="920" height="620" aria-label="Animated agent boundary field"></canvas>
+      </div>
+      <div class="spectrum">
+        <div class="spectrum-track"><div class="spectrum-marker" id="boundaryMarker"></div></div>
+        <div class="spectrum-labels"><span>Everything in-house</span><span>Modules / vendors / brokers</span><span>Everything outsourced</span></div>
+      </div>
+      <div class="field-stats">
+        <div class="field-stat"><div class="label">Boundary pressure</div><div class="value" id="fieldPressure">—</div></div>
+        <div class="field-stat"><div class="label">Blueprint posture</div><div class="value" id="fieldPosture">—</div></div>
+        <div class="field-stat"><div class="label">Transition pressure</div><div class="value" id="fieldTransition">—</div></div>
+      </div>
+      <p class="small" id="fieldNarrative">Agents move as the model updates boundary costs.</p>
+    </div>
+
+    <div class="card">
+      <h2>Option table</h2>
+      <div class="table-wrap"><table class="table" id="resultTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2>How to read it</h2>
+      <ul class="list">
+        <li><strong>Surprise</strong> is prediction error under the boundary's internal representation.</li>
+        <li><strong>Loss</strong> is squared action error against the latent state.</li>
+        <li><strong>State/action fidelity</strong> is a Gaussian proxy from the simulated state/action correlation.</li>
+        <li><strong>Objective</strong> is the modeled boundary criterion, including surprise, action loss, latency, cost, and planning drag.</li>
+        <li><strong>Agility</strong> discounts quality-adjusted state/action fidelity by latency, cost, and volatility.</li>
+        <li><strong>Setup / Runtime / Rigid</strong> show whether blueprint depth moved cost up front, left surprise for runtime, or created brittle plans.</li>
+        <li><strong>Blueprint depth</strong> reduces runtime surprise when the world is stable, but adds up-front delay and rigidity when the world shifts.</li>
+        <li><strong>Use-case levers</strong> translate incident, support, vendor, service, and planning language into the same abstract model variables.</li>
+      </ul>
+      <div class="note">
+        This is a comparative design language. It identifies which cost terms should move under a boundary change;
+        calibration against incident or workflow traces is the next empirical step.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Current run metrics</h2>
+    <div id="metricBars" class="bar-group"></div>
+  </div>
 </section>
 
-    <div class="footer">Toy models for a Coase–Information Theory paper. These are illustrative prototypes, not calibrated causal estimates.</div>
+    <div class="footer">Monte Carlo companion for a Coase–Information Theory paper. This is a stylized simulation, not a causal estimate.</div>
   </div>
-  <script>
-function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
-function setText(id, value) { document.getElementById(id).textContent = value; }
-function setHTML(id, value) { document.getElementById(id).innerHTML = value; }
-function pct(value, max=100) { return Math.max(0, Math.min(100, (value / max) * 100)); }
+
+<script>
+const BOUNDARIES = [
+  {
+    id: 'coalesced',
+    name: 'Coalesced agent',
+    short: 'Coalesced',
+    cls: 'purple',
+    color: '#8b5cf6',
+    description: 'One integrated team or firm with shared state, richer context, and heavier internal coordination.'
+  },
+  {
+    id: 'split',
+    name: 'Split modular agents',
+    short: 'Split',
+    cls: 'teal',
+    color: '#14b8a6',
+    description: 'Separate teams or modules with local autonomy and protocol-mediated interfaces.'
+  },
+  {
+    id: 'market',
+    name: 'Market / vendor boundary',
+    short: 'Market',
+    cls: 'blue',
+    color: '#3b82f6',
+    description: 'External coordination with contracting, monitoring, vendor expertise, and cross-boundary interpretation.'
+  },
+  {
+    id: 'hybrid',
+    name: 'Agent-mediated hybrid',
+    short: 'Hybrid',
+    cls: 'orange',
+    color: '#f97316',
+    description: 'Software agents broker messages, enforce schemas, monitor queues, and escalate uncertainty.'
+  }
+];
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
+const fmt2 = n => (Math.round(n * 100) / 100).toFixed(2);
+const setText = (id, value) => { document.getElementById(id).textContent = value; };
+const setHTML = (id, value) => { document.getElementById(id).innerHTML = value; };
+const pct = (value, max=100) => clamp((value / max) * 100, 0, 100);
+
 function makeBar(label, value, max, cls, suffix='') {
-  return `<div class="bar-row"><div class="bar-label"><span>${label}</span><span>${value}${suffix}</span></div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct(value, max)}%"></div></div></div>`;
-}
-function fmt(n) {
-  return (Math.round(n * 10) / 10).toFixed(1);
+  return `<div class="bar-row"><div class="bar-label"><span>${label}</span><span>${fmt(value)}${suffix}</span></div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct(value, max)}%"></div></div></div>`;
 }
 
+const modelClamp = (value, min=0, max=100) => Math.round(clamp(value, min, max));
+const MODEL_LABELS = {
+  protocol: 'Protocol quality',
+  interdependence: 'Task interdependence',
+  observability: 'Observation quality',
+  agentCoverage: 'Agent coverage',
+  governance: 'Governance quality',
+  marketFriction: 'Market friction',
+  volatility: 'Volatility',
+  planning: 'Blueprint depth',
+  blueprintGain: 'Blueprint gain',
+  runtimeSurprise: 'Runtime surprise',
+  rigidityRisk: 'Rigidity risk',
+  upfrontDelay: 'Up-front delay',
+  agentCount: 'Primitive agents'
+};
+
+const SCENARIOS = [
+  {
+    id: 'incident',
+    name: 'Incident room forms',
+    caption: 'SRE, support, product, infra, vendor, and agent traces converge during an outage.',
+    description: 'Use this when the canonical paper example is active: partial observations must become a coherent mitigation before delay and misalignment compound.',
+    useCase: 'Paper use case: incident response as a temporary bounded agent.',
+    proxy: 'Trace proxies: time to triage, time to mitigation, handoff count, reopen rate, escalation rate, severity reduction.',
+    levers: [
+      { id: 'serviceCoupling', label: 'Service coupling', low: 'isolated service', high: 'shared blast radius', value: 84 },
+      { id: 'runbookSchema', label: 'Runbook / ticket schema', low: 'free-form updates', high: 'structured state', value: 46 },
+      { id: 'observabilityDepth', label: 'Observability depth', low: 'thin signals', high: 'logs, traces, metrics', value: 72 },
+      { id: 'agentTriage', label: 'Agent triage coverage', low: 'human relay', high: 'agent summaries', value: 58 },
+      { id: 'escalationGovernance', label: 'Escalation governance', low: 'unclear owners', high: 'clear authority', value: 67 },
+      { id: 'incidentVolatility', label: 'Incident volatility', low: 'stable failure', high: 'shifting incident', value: 70 },
+      { id: 'blueprintDepth', label: 'Preplanned response depth', low: 'reactive response', high: 'blueprint-heavy runbook', value: 52 }
+    ],
+    map: v => ({
+      protocol: modelClamp(v.runbookSchema),
+      interdependence: modelClamp(v.serviceCoupling),
+      observability: modelClamp(v.observabilityDepth),
+      agentCoverage: modelClamp(v.agentTriage),
+      governance: modelClamp(v.escalationGovernance + v.blueprintDepth * (1 - v.incidentVolatility / 100) * 0.12),
+      marketFriction: modelClamp(58 + v.serviceCoupling * 0.16 - v.runbookSchema * 0.24),
+      volatility: modelClamp(v.incidentVolatility),
+      planning: modelClamp(v.blueprintDepth),
+      agentCount: modelClamp(7 + v.serviceCoupling * 0.1 + v.agentTriage * 0.03, 4, 30)
+    })
+  },
+  {
+    id: 'support',
+    name: 'Support router absorbs handoffs',
+    caption: 'A software agent routes semi-structured customer or internal-service tickets.',
+    description: 'Use this when the paper’s agentic-routing proposition is the main question: can an agent reduce routing, interpretation, and execution latency without adding too much governance or error?',
+    useCase: 'Paper use case: support routing and workflow traces.',
+    proxy: 'Trace proxies: first-touch resolution, handoffs per ticket, time to decision, reopen rate, escalation rate, expert quality score.',
+    levers: [
+      { id: 'intakeStructure', label: 'Intake structure', low: 'free text', high: 'typed schema', value: 78 },
+      { id: 'caseAmbiguity', label: 'Case ambiguity', low: 'clear category', high: 'ambiguous intent', value: 46 },
+      { id: 'policyCoverage', label: 'Policy coverage', low: 'tribal rules', high: 'codified policy', value: 70 },
+      { id: 'agentAutonomy', label: 'Agent autonomy', low: 'suggest only', high: 'route and act', value: 68 },
+      { id: 'approvalBurden', label: 'Approval burden', low: 'light review', high: 'heavy oversight', value: 34 },
+      { id: 'ticketVolatility', label: 'Ticket volatility', low: 'repeating cases', high: 'novel cases', value: 38 },
+      { id: 'blueprintDepth', label: 'Workflow design depth', low: 'reactive queue', high: 'blueprint-heavy flow', value: 48 }
+    ],
+    map: v => ({
+      protocol: modelClamp((v.intakeStructure * 0.56) + (v.policyCoverage * 0.32) + (100 - v.caseAmbiguity) * 0.12),
+      interdependence: modelClamp(30 + v.caseAmbiguity * 0.56),
+      observability: modelClamp(35 + v.intakeStructure * 0.28 + v.policyCoverage * 0.34),
+      agentCoverage: modelClamp(v.agentAutonomy),
+      governance: modelClamp(42 + v.policyCoverage * 0.28 - v.approvalBurden * 0.16 + v.blueprintDepth * (1 - v.ticketVolatility / 100) * 0.1),
+      marketFriction: modelClamp(48 + v.caseAmbiguity * 0.18 - v.intakeStructure * 0.18),
+      volatility: modelClamp(v.ticketVolatility),
+      planning: modelClamp(v.blueprintDepth),
+      agentCount: modelClamp(8 + v.caseAmbiguity * 0.06 + v.agentAutonomy * 0.06, 4, 30)
+    })
+  },
+  {
+    id: 'vendor-api',
+    name: 'Vendor API boundary holds',
+    caption: 'A firm coordinates with an external provider through contracts, observability, and schemas.',
+    description: 'Use this when the boundary question is whether a vendor interface can preserve enough decision-relevant state to avoid bringing the capability in-house.',
+    useCase: 'Paper use case: vendor, API, and protocol-mediated coordination.',
+    proxy: 'Trace proxies: SLA success, vendor escalation latency, contract exceptions, monitoring steps, clarification requests, rework.',
+    levers: [
+      { id: 'contractCompleteness', label: 'Contract completeness', low: 'ambiguous terms', high: 'well specified', value: 78 },
+      { id: 'apiFidelity', label: 'API / schema fidelity', low: 'manual handoff', high: 'machine-readable', value: 82 },
+      { id: 'assetSpecificity', label: 'Asset specificity', low: 'generic service', high: 'firm-specific', value: 34 },
+      { id: 'vendorObservability', label: 'Vendor observability', low: 'opaque service', high: 'observable service', value: 66 },
+      { id: 'agentBrokerage', label: 'Agent brokerage', low: 'email escalation', high: 'agent-mediated', value: 45 },
+      { id: 'vendorVolatility', label: 'Vendor volatility', low: 'stable provider', high: 'unstable provider', value: 32 },
+      { id: 'blueprintDepth', label: 'Integration design depth', low: 'reactive integration', high: 'blueprint-heavy integration', value: 70 }
+    ],
+    map: v => ({
+      protocol: modelClamp(v.apiFidelity * 0.58 + v.contractCompleteness * 0.32),
+      interdependence: modelClamp(v.assetSpecificity),
+      observability: modelClamp(v.vendorObservability),
+      agentCoverage: modelClamp(v.agentBrokerage),
+      governance: modelClamp(22 + v.contractCompleteness * 0.26 + v.vendorObservability * 0.18 + v.blueprintDepth * (1 - v.vendorVolatility / 100) * 0.08),
+      marketFriction: modelClamp(70 - v.apiFidelity * 0.32 + v.assetSpecificity * 0.34 - v.contractCompleteness * 0.18),
+      volatility: modelClamp(v.vendorVolatility),
+      planning: modelClamp(v.blueprintDepth),
+      agentCount: modelClamp(7 + v.assetSpecificity * 0.08 + v.agentBrokerage * 0.05, 4, 30)
+    })
+  },
+  {
+    id: 'services',
+    name: 'Internal services modularize',
+    caption: 'Teams or services split into bounded modules when interfaces preserve enough state.',
+    description: 'Use this when the paper’s modularity claim is the center: internal mini-monoliths can beat one giant boundary if protocols carry the right state.',
+    useCase: 'Paper use case: teams, services, workflows, and software architecture.',
+    proxy: 'Trace proxies: cross-team handoffs, API/schema breaks, deployment rollback rate, queue time, review depth, local decision quality.',
+    levers: [
+      { id: 'interfaceClarity', label: 'Interface clarity', low: 'implicit handoffs', high: 'explicit contracts', value: 74 },
+      { id: 'dependencyDensity', label: 'Dependency density', low: 'loosely coupled', high: 'cross-cutting', value: 56 },
+      { id: 'serviceObservability', label: 'Service observability', low: 'opaque internals', high: 'traces and dashboards', value: 70 },
+      { id: 'localAutonomy', label: 'Local autonomy', low: 'central approvals', high: 'local control', value: 66 },
+      { id: 'agentOpsCoverage', label: 'Agent ops coverage', low: 'manual queueing', high: 'agent-managed queues', value: 36 },
+      { id: 'releaseVolatility', label: 'Release volatility', low: 'stable roadmap', high: 'volatile roadmap', value: 48 },
+      { id: 'blueprintDepth', label: 'Architecture planning depth', low: 'reactive design', high: 'blueprint-heavy design', value: 62 }
+    ],
+    map: v => ({
+      protocol: modelClamp(v.interfaceClarity),
+      interdependence: modelClamp(v.dependencyDensity),
+      observability: modelClamp(v.serviceObservability),
+      agentCoverage: modelClamp(18 + v.agentOpsCoverage * 0.58 + v.localAutonomy * 0.12),
+      governance: modelClamp(32 + v.localAutonomy * 0.22 + v.blueprintDepth * (1 - v.releaseVolatility / 100) * 0.18),
+      marketFriction: modelClamp(62 - v.interfaceClarity * 0.22 + v.dependencyDensity * 0.16),
+      volatility: modelClamp(v.releaseVolatility),
+      planning: modelClamp(v.blueprintDepth),
+      agentCount: modelClamp(9 + v.localAutonomy * 0.09 + v.dependencyDensity * 0.04, 4, 30)
+    })
+  },
+  {
+    id: 'datacenter',
+    name: 'Blueprint plan gets stress-tested',
+    caption: 'Detailed infrastructure plans reduce runtime surprise until volatility turns them rigid.',
+    description: 'Use this when the practical question is planning posture: how much up-front blueprinting should be bought before the environment starts changing underneath it?',
+    useCase: 'Paper use case: blueprint-heavy versus reactive design as an information investment.',
+    proxy: 'Trace proxies: design lead time, change orders, incident rate, approval latency, rollback/rework, deviation from plan.',
+    levers: [
+      { id: 'blueprintDetail', label: 'Blueprint detail', low: 'minimal upfront plan', high: 'full datacenter blueprint', value: 88 },
+      { id: 'environmentStability', label: 'Environment stability', low: 'requirements shifting', high: 'stable requirements', value: 64 },
+      { id: 'buildInterdependence', label: 'Build interdependence', low: 'modular components', high: 'coupled systems', value: 72 },
+      { id: 'interfaceStandards', label: 'Interface standards', low: 'bespoke interfaces', high: 'standard interfaces', value: 58 },
+      { id: 'telemetryDepth', label: 'Telemetry depth', low: 'late discovery', high: 'early signals', value: 62 },
+      { id: 'governanceLoad', label: 'Governance load', low: 'light approvals', high: 'formal gates', value: 70 },
+      { id: 'agentPlanningAssist', label: 'Agent planning assist', low: 'manual planning', high: 'agent-assisted simulation', value: 42 }
+    ],
+    map: v => {
+      const volatility = modelClamp(100 - v.environmentStability);
+      return {
+        protocol: modelClamp(v.interfaceStandards),
+        interdependence: modelClamp(v.buildInterdependence),
+        observability: modelClamp(v.telemetryDepth),
+        agentCoverage: modelClamp(v.agentPlanningAssist),
+        governance: modelClamp(24 + v.governanceLoad * 0.46 + v.blueprintDetail * (v.environmentStability / 100) * 0.18),
+        marketFriction: modelClamp(52 + v.buildInterdependence * 0.16 - v.interfaceStandards * 0.18),
+        volatility,
+        planning: modelClamp(v.blueprintDetail),
+        agentCount: modelClamp(10 + v.buildInterdependence * 0.08 + v.governanceLoad * 0.04, 4, 30)
+      };
+    }
+  },
+  {
+    id: 'inhouse',
+    name: 'Capability comes in-house',
+    caption: 'High-context, specific work where failed interfaces are expensive.',
+    description: 'Use this when coordination is so context-heavy that ownership and shared representation beat contracts.',
+    useCase: 'Paper use case: the classical firm boundary as one instance of the broader agent-boundary problem.',
+    proxy: 'Trace proxies: clarification loops, vendor escalations, rework, decision latency, monitoring burden, internal quality score.',
+    levers: [
+      { id: 'coupling', label: 'Coordination density', low: 'independent tasks', high: 'tightly coupled', value: 90 },
+      { id: 'interfaceMaturity', label: 'Interface maturity', low: 'bespoke handoffs', high: 'clean protocols', value: 18 },
+      { id: 'vendorFit', label: 'Vendor fit', low: 'no outside match', high: 'mature supplier', value: 12 },
+      { id: 'internalContext', label: 'Internal context depth', low: 'thin context', high: 'rich shared context', value: 86 },
+      { id: 'changeVolatility', label: 'Change volatility', low: 'stable', high: 'surprising', value: 36 },
+      { id: 'blueprintDepth', label: 'Boundary planning depth', low: 'reactive org design', high: 'blueprint-heavy org design', value: 74 }
+    ],
+    map: v => ({
+      protocol: modelClamp(v.interfaceMaturity),
+      interdependence: modelClamp(v.coupling),
+      observability: modelClamp(28 + v.internalContext * 0.58),
+      agentCoverage: modelClamp(v.vendorFit * 0.25),
+      governance: modelClamp(30 + v.internalContext * 0.44 + v.blueprintDepth * (1 - v.changeVolatility / 100) * 0.2),
+      marketFriction: modelClamp(100 - v.vendorFit * 0.82 + v.coupling * 0.08),
+      volatility: modelClamp(v.changeVolatility),
+      planning: modelClamp(v.blueprintDepth),
+      agentCount: modelClamp(8 + v.coupling * 0.09, 4, 30)
+    })
+  }
+];
+
+const appState = {
+  scenarioId: 'incident',
+  semanticValues: {}
+};
+
+function activeScenario() {
+  return SCENARIOS.find(scenario => scenario.id === appState.scenarioId) || SCENARIOS[0];
+}
+
+function defaultSemanticValues(scenario) {
+  return Object.fromEntries(scenario.levers.map(lever => [lever.id, lever.value]));
+}
+
+function ensureSemanticValues() {
+  const scenario = activeScenario();
+  if (!appState.semanticValues[scenario.id]) {
+    appState.semanticValues[scenario.id] = defaultSemanticValues(scenario);
+  }
+  return appState.semanticValues[scenario.id];
+}
+
+function planningTerms(cfg) {
+  const plan = cfg.planning / 100;
+  const volatility = cfg.volatility / 100;
+  const stability = 1 - volatility;
+  const reactiveShare = 1 - plan;
+  return {
+    plan,
+    volatilityFactor: volatility,
+    stability,
+    reactiveShare,
+    blueprintGain: plan * (0.22 + stability * 0.78),
+    runtimeSurprise: reactiveShare * (0.18 + volatility * 0.82),
+    rigidityRisk: plan * volatility,
+    upfrontDelay: plan * (2.2 + (cfg.interdependence / 100) * 5.8 + cfg.agentCount * 0.11),
+    planningCost: plan * plan * (10 + (cfg.interdependence / 100) * 18 + cfg.agentCount * 0.32)
+  };
+}
+
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function() {
+    a += 0x6D2B79F5;
+    let t = a;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function normal(rng) {
+  const u = Math.max(rng(), 1e-9);
+  const v = Math.max(rng(), 1e-9);
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+function mean(values) {
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function correlation(xs, ys) {
+  const mx = mean(xs);
+  const my = mean(ys);
+  let num = 0;
+  let dx = 0;
+  let dy = 0;
+  for (let i = 0; i < xs.length; i += 1) {
+    const ax = xs[i] - mx;
+    const ay = ys[i] - my;
+    num += ax * ay;
+    dx += ax * ax;
+    dy += ay * ay;
+  }
+  return dx > 0 && dy > 0 ? num / Math.sqrt(dx * dy) : 0;
+}
+
+function readConfig() {
+  const scenario = activeScenario();
+  const cfg = scenario.map(ensureSemanticValues());
+  Object.assign(cfg, planningTerms(cfg));
+  cfg.trials = Number(document.getElementById('trials').value);
+  cfg.seed = Number(document.getElementById('seed').value) || 1;
+  renderAbstractMapping(cfg);
+  return cfg;
+}
+
+function boundaryStructure(optionId, cfg) {
+  let p = cfg.protocol / 100;
+  const d = cfg.interdependence / 100;
+  const obs = cfg.observability / 100;
+  const a = cfg.agentCoverage / 100;
+  let g = cfg.governance / 100;
+  let m = cfg.marketFriction / 100;
+  const terms = cfg.blueprintGain === undefined ? planningTerms(cfg) : cfg;
+  const plan = terms.plan;
+  const blueprint = terms.blueprintGain;
+  const surpriseDrift = terms.runtimeSurprise;
+  const rigidity = terms.rigidityRisk;
+  const volatility = terms.volatilityFactor;
+  const planDelay = terms.upfrontDelay / 10;
+  const n = cfg.agentCount;
+  p = clamp(p + blueprint * 0.16 - surpriseDrift * 0.1 - rigidity * 0.06, 0.05, 0.98);
+  g = clamp(g + blueprint * 0.13 - surpriseDrift * 0.09 - rigidity * 0.05, 0.05, 0.98);
+  m = clamp(m - blueprint * 0.12 + surpriseDrift * 0.1 + rigidity * 0.05, 0.02, 0.98);
+  const obsNoise = 1.35 - obs * 0.95;
+  if (optionId === 'coalesced') {
+    return {
+      predVar: 0.05 + (obsNoise * obsNoise) / n + d * 0.05 + surpriseDrift * 0.1 + rigidity * 0.08 - blueprint * 0.025,
+      extraNoise: 0.04 + d * 0.08 + surpriseDrift * 0.06 + rigidity * 0.04,
+      latency: clamp(7.5 + n * 0.22 + d * 7.8 + volatility * 1.5 + surpriseDrift * 3.6 + rigidity * 4.5 + planDelay * 0.9 - blueprint * 0.8, 4, 32),
+      cost: clamp(38 + n * 1.55 + d * 34 + g * 8 + terms.planningCost * 0.55 + surpriseDrift * 6 + rigidity * 16, 35, 140),
+      monitor: clamp(12 + d * 12 + g * 6 + surpriseDrift * 6 + rigidity * 8, 8, 44),
+      planningDelay: terms.upfrontDelay * 1.15,
+      rigidityRisk: rigidity * 100,
+      runtimeSurprise: surpriseDrift * 100
+    };
+  }
+  if (optionId === 'split') {
+    const interfaceNoise = Math.max(0.04, (1 - p) * (0.55 + d * 0.9) + d * 0.18 + surpriseDrift * 0.16 + rigidity * 0.06 - blueprint * 0.09);
+    return {
+      predVar: 0.06 + (obsNoise * obsNoise) / Math.max(2, n * 0.7) + interfaceNoise * interfaceNoise * 0.55,
+      extraNoise: interfaceNoise / 1.9,
+      latency: clamp(4.2 + d * (9.5 - p * 6.2) + (1 - p) * 2.2 + surpriseDrift * 2.5 + rigidity * 2 + planDelay * 0.65 - blueprint * 0.5, 2.5, 28),
+      cost: clamp(23 + n * 0.85 + d * (34 - p * 24) + (1 - p) * 12 + terms.planningCost * 0.35 + surpriseDrift * 5 + rigidity * 8, 18, 110),
+      monitor: clamp(9 + d * 8 + (1 - p) * 8 + surpriseDrift * 5 + rigidity * 6, 6, 38),
+      planningDelay: terms.upfrontDelay * 0.9,
+      rigidityRisk: rigidity * 100,
+      runtimeSurprise: surpriseDrift * 100
+    };
+  }
+  if (optionId === 'market') {
+    const contractNoise = Math.max(0.04, m * 0.35 + (1 - p) * 0.32 + d * 0.24 + surpriseDrift * 0.13 + rigidity * 0.09 - blueprint * 0.08);
+    const specificityPenalty = d * (1 - p) * m;
+    return {
+      predVar: 0.05 + (obsNoise * obsNoise) / Math.max(2, n * (0.55 + (1 - m) * 0.25)) + contractNoise * contractNoise * 0.55 + specificityPenalty * 0.08,
+      extraNoise: contractNoise / 2.4,
+      latency: clamp(3.8 + m * 9 + d * 4 + (1 - p) * 2.2 + surpriseDrift * 2.8 + rigidity * 2.4 + planDelay * 0.55 - blueprint * 0.7 + specificityPenalty * 5, 2.5, 31),
+      cost: clamp(14 + m * 45 + d * 12 + (1 - p) * 10 + terms.planningCost * 0.3 + surpriseDrift * 7 + rigidity * 8 + specificityPenalty * 38, 14, 125),
+      monitor: clamp(14 + m * 22 + (1 - g) * 8 + surpriseDrift * 7 + rigidity * 8 + specificityPenalty * 16, 8, 62),
+      planningDelay: terms.upfrontDelay * 0.8,
+      rigidityRisk: rigidity * 100,
+      runtimeSurprise: surpriseDrift * 100
+    };
+  }
+  const coverageGap = 1 - a;
+  const mediationGap = coverageGap * d * (1 - p);
+  const brokerNoise = Math.max(0.02, (obsNoise / Math.sqrt(Math.max(2, n * (1.1 + a * 1.9)))) +
+    (1 - p) * (0.28 - a * 0.2) +
+    (1 - g) * a * 0.35 +
+    d * (1 - p) * (0.24 - a * 0.18) +
+    surpriseDrift * (0.12 - a * 0.07) +
+    rigidity * 0.08 -
+    blueprint * g * 0.05);
+  return {
+    predVar: 0.035 + brokerNoise * brokerNoise + (1 - g) * a * 0.11 + mediationGap * 0.24,
+    extraNoise: brokerNoise,
+    latency: clamp(4.2 + d * (5.5 - a * 4.8) + (1 - p) * 1.8 - a * 2.6 + (1 - g) * a * 2.4 + surpriseDrift * 2.2 + rigidity * 2.4 + planDelay * 0.7 - blueprint * 0.9 + mediationGap * 7, 1.8, 29),
+    cost: clamp(24 + n * 0.8 + a * 10 + g * 6 + d * (14 - p * 10) + terms.planningCost * 0.32 + surpriseDrift * 5 + rigidity * 8 + mediationGap * 36 + m * coverageGap * 10, 18, 122),
+    monitor: clamp(8 + a * (12 - g * 8) + (1 - g) * 14 + surpriseDrift * 5 + rigidity * 7 + mediationGap * 16, 6, 58),
+    planningDelay: terms.upfrontDelay * 0.85,
+    rigidityRisk: rigidity * 100,
+    runtimeSurprise: surpriseDrift * 100
+  };
+}
+
+function simulateBoundary(option, cfg, seedOffset=0) {
+  const rng = mulberry32((cfg.seed + seedOffset) >>> 0);
+  const n = cfg.agentCount;
+  const xVals = [];
+  const estVals = [];
+  let totalLoss = 0;
+  let totalSurprise = 0;
+  let correct = 0;
+  const structure = boundaryStructure(option.id, cfg);
+  const obsNoise = 1.35 - (cfg.observability / 100) * 0.95;
+  for (let t = 0; t < cfg.trials; t += 1) {
+    const x = normal(rng);
+    const signals = [];
+    for (let i = 0; i < n; i += 1) signals.push(x + normal(rng) * obsNoise);
+    let baseEstimate = mean(signals);
+    if (option.id === 'split') {
+      const groups = 3;
+      const groupMeans = [];
+      for (let g = 0; g < groups; g += 1) {
+        const slice = signals.filter((_, idx) => idx % groups === g);
+        groupMeans.push(mean(slice));
+      }
+      baseEstimate = mean(groupMeans);
+    } else if (option.id === 'market') {
+      const vendorShare = 0.55 + (1 - cfg.marketFriction / 100) * 0.25;
+      baseEstimate = mean(signals.slice(0, Math.max(2, Math.round(n * vendorShare))));
+    }
+    const estimate = baseEstimate + normal(rng) * structure.extraNoise;
+    const loss = Math.pow(estimate - x, 2);
+    const predVar = Math.max(structure.predVar, 0.015);
+    const surprise = Math.max(0, 0.5 * Math.log(predVar) + loss / (2 * predVar) + 0.7);
+    totalLoss += loss;
+    totalSurprise += surprise;
+    if ((estimate >= 0) === (x >= 0)) correct += 1;
+    xVals.push(x);
+    estVals.push(estimate);
+  }
+  const corr = clamp(correlation(xVals, estVals), -0.999, 0.999);
+  const mi = -0.5 * Math.log2(Math.max(1 - corr * corr, 0.001));
+  const information = clamp(mi * 34, 0, 100);
+  const quality = (correct / cfg.trials) * 100;
+  const surprise = totalSurprise / cfg.trials;
+  const loss = totalLoss / cfg.trials;
+  const latency = structure.latency;
+  const cost = structure.cost + structure.monitor * 0.55;
+  const terms = cfg.blueprintGain === undefined ? planningTerms(cfg) : cfg;
+  const planningDelay = structure.planningDelay ?? terms.upfrontDelay;
+  const rigidityRisk = structure.rigidityRisk ?? terms.rigidityRisk * 100;
+  const runtimeSurprise = structure.runtimeSurprise ?? terms.runtimeSurprise * 100;
+  const volatilityPenalty = 1 + terms.volatilityFactor * (latency / 16) * (0.65 + terms.runtimeSurprise * 0.72 + terms.rigidityRisk * 0.58);
+  const transitionCost = terms.runtimeSurprise * latency * 0.28 + terms.rigidityRisk * latency * 0.22;
+  const objective = surprise * 16 + loss * 18 + latency * (0.55 + cfg.volatility / 130) + cost * 0.16 +
+    planningDelay * 0.46 + rigidityRisk * 0.06 + runtimeSurprise * 0.04 + transitionCost;
+  const agility = clamp((information * (quality / 100) * 18) /
+    Math.max(4, (latency + planningDelay * 0.35) * (cost / 55) * volatilityPenalty), 0, 100);
+  return { ...option, surprise, loss, latency, cost, planningDelay, rigidityRisk, runtimeSurprise, quality, information, agility, objective, corr };
+}
+
+function runSimulation(cfg) {
+  return BOUNDARIES
+    .map((option, idx) => simulateBoundary(option, cfg, idx * 10007))
+    .sort((a,b) => a.objective - b.objective);
+}
+
+function phaseWinner(baseCfg, protocol, interdependence, cellIndex) {
+  const cfg = { ...baseCfg, protocol, interdependence, trials: Math.min(baseCfg.trials, 260), seed: baseCfg.seed + cellIndex * 17 };
+  return runSimulation(cfg)[0];
+}
+
+function renderLegend() {
+  setHTML('legend', BOUNDARIES.map(b => `<span class="legend-item"><span class="swatch" style="background:${b.color}"></span>${b.short}</span>`).join(''));
+}
+
+function renderModelCards() {
+  setHTML('modelCards', BOUNDARIES.map(b => `
+    <div class="mini-card">
+      <div class="name"><span class="swatch" style="background:${b.color}"></span>${b.name}</div>
+      <p>${b.description}</p>
+    </div>
+  `).join(''));
+}
+
+function colorAlpha(hex, alpha) {
+  const clean = hex.replace('#', '');
+  const value = parseInt(clean, 16);
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function drawElasticBoundary(ctx, cx, cy, rx, ry, color, t, wobble, label, dashed=false) {
+  const steps = 42;
+  ctx.save();
+  if (dashed) ctx.setLineDash([9, 8]);
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i += 1) {
+    const a = (i / steps) * Math.PI * 2;
+    const pulse = 1 + Math.sin(a * 3 + t * 1.4) * wobble + Math.cos(a * 5 - t * 0.9) * wobble * 0.45;
+    const x = cx + Math.cos(a) * rx * pulse;
+    const y = cy + Math.sin(a) * ry * pulse;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = colorAlpha(color, dashed ? 0.07 : 0.15);
+  ctx.strokeStyle = colorAlpha(color, dashed ? 0.5 : 0.88);
+  ctx.lineWidth = dashed ? 2 : 3;
+  ctx.fill();
+  ctx.stroke();
+  ctx.setLineDash([]);
+  if (label) {
+    ctx.fillStyle = colorAlpha(color, 0.95);
+    ctx.font = '700 13px Inter, system-ui, sans-serif';
+    ctx.fillText(label, cx - ctx.measureText(label).width / 2, cy - ry - 12);
+  }
+  ctx.restore();
+}
+
+function drawAgent(ctx, agent, t, posture) {
+  const glow = clamp(posture.reactive * 0.85 + posture.rigidity * 0.55, 0, 1);
+  ctx.save();
+  ctx.shadowColor = colorAlpha(agent.color, 0.45 + glow * 0.2);
+  ctx.shadowBlur = 9 + glow * 12;
+  ctx.beginPath();
+  ctx.arc(agent.x, agent.y, agent.r, 0, Math.PI * 2);
+  ctx.fillStyle = '#dbeafe';
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = colorAlpha(agent.color, 0.95);
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = colorAlpha(agent.color, 0.9);
+  ctx.beginPath();
+  ctx.arc(agent.x + Math.sin(t + agent.seed) * 1.5, agent.y + Math.cos(t * 0.8 + agent.seed) * 1.5, 2.3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function centersFor(count, mode, w, h) {
+  const maps = {
+    coalesced: [{ x: w * 0.48, y: h * 0.52 }],
+    split: [
+      { x: w * 0.33, y: h * 0.35 },
+      { x: w * 0.64, y: h * 0.36 },
+      { x: w * 0.49, y: h * 0.66 },
+      { x: w * 0.27, y: h * 0.63 },
+      { x: w * 0.72, y: h * 0.62 }
+    ],
+    hybrid: [
+      { x: w * 0.30, y: h * 0.36 },
+      { x: w * 0.66, y: h * 0.36 },
+      { x: w * 0.48, y: h * 0.68 },
+      { x: w * 0.76, y: h * 0.60 }
+    ],
+    market: [
+      { x: w * 0.28, y: h * 0.26 },
+      { x: w * 0.52, y: h * 0.25 },
+      { x: w * 0.76, y: h * 0.28 },
+      { x: w * 0.34, y: h * 0.55 },
+      { x: w * 0.60, y: h * 0.56 },
+      { x: w * 0.82, y: h * 0.58 },
+      { x: w * 0.47, y: h * 0.78 },
+      { x: w * 0.72, y: h * 0.78 }
+    ]
+  };
+  return maps[mode].slice(0, count);
+}
+
+function groupCountFor(mode, cfg) {
+  if (mode === 'coalesced') return 1;
+  if (mode === 'market') return Math.min(cfg.agentCount, 8);
+  if (mode === 'hybrid') return clamp(Math.round(2 + cfg.agentCoverage / 36 + cfg.volatility / 80), 3, 4);
+  return clamp(Math.round(2 + cfg.protocol / 42 + cfg.interdependence / 65), 2, 5);
+}
+
+function boundaryPosition(row, cfg) {
+  const base = { coalesced: 8, split: 40, hybrid: 61, market: 92 }[row.id] ?? 50;
+  const marketPull = (100 - cfg.marketFriction) * 0.08 + cfg.protocol * 0.04 - cfg.interdependence * 0.05;
+  return clamp(base + marketPull, 3, 97);
+}
+
+function transitionPressure(rows) {
+  if (rows.length < 2) return 0;
+  return clamp(1 - ((rows[1].objective - rows[0].objective) / 10), 0, 1);
+}
+
+function renderFieldStats(cfg, rows) {
+  const best = rows[0];
+  const pressure = boundaryPosition(best, cfg);
+  const transition = transitionPressure(rows);
+  const terms = cfg.blueprintGain === undefined ? planningTerms(cfg) : cfg;
+  let posture = 'adaptive mix';
+  if (cfg.planning >= 72 && terms.rigidityRisk >= 0.34) posture = 'brittle blueprint';
+  else if (cfg.planning >= 72) posture = 'deep blueprint';
+  else if (cfg.planning <= 32 && terms.runtimeSurprise >= 0.38) posture = 'reactive surprise';
+  else if (cfg.planning <= 32) posture = 'emergent design';
+  const pressureLabel = pressure < 28 ? 'in-house pull' : pressure > 74 ? 'outsourcing pull' : 'intermediate forms';
+  setText('boundaryStatus', best.short);
+  setText('fieldPressure', `${pressureLabel} · ${Math.round(pressure)}%`);
+  setText('fieldPosture', `${posture} · ${cfg.planning}/100`);
+  setText('fieldTransition', transition > 0.68 ? 'high' : transition > 0.34 ? 'medium' : 'low');
+  document.getElementById('boundaryMarker').style.left = `${pressure}%`;
+  const descriptions = {
+    coalesced: 'The model is pulling capability in-house: shared context beats the cost of managing interfaces.',
+    split: 'The model is forming internal mini-monoliths: modules preserve local context without forcing one giant boundary.',
+    market: 'The model is outsourcing: low-friction interfaces make separate market-facing entities cheaper than ownership.',
+    hybrid: 'The model is using broker agents: software mediation absorbs surprise without fully merging the organizations.'
+  };
+  let planningNarrative = 'Planning and reaction are balanced, so the boundary can adapt without absorbing every surprise at runtime.';
+  if (terms.runtimeSurprise > 0.45) planningNarrative = 'Low blueprint depth keeps setup fast, but more unresolved surprise arrives during operation.';
+  else if (terms.rigidityRisk > 0.35) planningNarrative = 'The deep blueprint removes ambiguity up front, but volatility turns some of that detail into rigidity.';
+  else if (terms.plan > 0.62) planningNarrative = 'Blueprint detail is buying predictability at the price of visible setup delay.';
+  setText('fieldNarrative', `${descriptions[best.id]} ${planningNarrative}`);
+}
+
+function drawBackgroundField(ctx, w, h, compact=false) {
+  ctx.clearRect(0, 0, w, h);
+  const gradient = ctx.createLinearGradient(0, 0, w, h);
+  gradient.addColorStop(0, '#020617');
+  gradient.addColorStop(0.48, '#07111f');
+  gradient.addColorStop(1, '#0b1220');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(148,163,184,0.07)';
+  ctx.lineWidth = 1;
+  for (let x = 36; x < w; x += 54) {
+    ctx.beginPath();
+    ctx.moveTo(x, 30);
+    ctx.lineTo(x, h - 42);
+    ctx.stroke();
+  }
+  for (let y = 44; y < h; y += 54) {
+    ctx.beginPath();
+    ctx.moveTo(28, y);
+    ctx.lineTo(w - 28, y);
+    ctx.stroke();
+  }
+  if (!compact) {
+    ctx.fillStyle = 'rgba(226,232,240,0.82)';
+    ctx.font = '700 13px Inter, system-ui, sans-serif';
+    ctx.fillText('in-house integration', 36, 38);
+    ctx.fillText('market / vendors', w - 156, 38);
+  }
+  ctx.strokeStyle = 'rgba(226,232,240,0.22)';
+  ctx.setLineDash([8, 8]);
+  ctx.beginPath();
+  ctx.moveTo(46, h - 50);
+  ctx.lineTo(w - 46, h - 50);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  if (!compact) {
+    ctx.fillStyle = 'rgba(148,163,184,0.84)';
+    ctx.font = '12px Inter, system-ui, sans-serif';
+    ctx.fillText('ownership boundary', 48, h - 24);
+    ctx.fillText('contract boundary', w - 146, h - 24);
+  }
+}
+
+function drawBoundaryFieldCanvas(canvas, cfg, rows, t, compact=false) {
+  if (!cfg || !rows.length) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const scale = Math.min(w / 920, h / 620);
+  const best = rows[0];
+  const runner = rows[1];
+  const mode = best.id;
+  const terms = cfg.blueprintGain === undefined ? planningTerms(cfg) : cfg;
+  const posture = {
+    plan: terms.plan,
+    reactive: terms.runtimeSurprise,
+    volatility: terms.volatilityFactor,
+    rigidity: terms.rigidityRisk
+  };
+  const wobble = 0.012 + (posture.reactive + posture.rigidity * 0.7) * 0.08;
+  const rng = mulberry32((cfg.seed + 9137) >>> 0);
+  const groupCount = groupCountFor(mode, cfg);
+  const centers = centersFor(groupCount, mode, w, h);
+  const agents = [];
+
+  for (let i = 0; i < cfg.agentCount; i += 1) {
+    const group = mode === 'coalesced' ? 0 : i % groupCount;
+    const center = centers[group];
+    const angle = (i / Math.max(1, cfg.agentCount)) * Math.PI * 2 + group * 0.73;
+    const spread = (mode === 'market' ? 26 : mode === 'coalesced' ? 140 : 62) * scale;
+    const ring = mode === 'coalesced' ? (0.35 + rng() * 0.65) : (0.35 + rng() * 0.85);
+    const drift = Math.sin(t * (0.5 + posture.reactive * 1.4) + i * 1.9) * (4 + (posture.reactive + posture.rigidity * 0.6) * cfg.volatility / 8);
+    agents.push({
+      group,
+      color: best.color,
+      x: center.x + Math.cos(angle) * spread * ring + drift,
+      y: center.y + Math.sin(angle) * spread * ring + Math.cos(t * 0.6 + i) * (3 + posture.reactive * 3 + posture.rigidity * 1.5),
+      r: Math.max(4.5, (mode === 'market' ? 8 : 9) * scale),
+      seed: rng() * Math.PI * 2
+    });
+  }
+
+  drawBackgroundField(ctx, w, h, compact);
+
+  if (transitionPressure(rows) > 0.45 && runner) {
+    const pressure = boundaryPosition(runner, cfg);
+    drawElasticBoundary(ctx, w * (0.18 + pressure / 155), h * 0.52, 120 * scale, 180 * scale, runner.color, t + 1.1, wobble * 0.65, compact ? '' : `${runner.short} pressure`, true);
+  }
+
+  if (mode === 'coalesced') {
+    drawElasticBoundary(ctx, w * 0.48, h * 0.52, 242 * scale, 202 * scale, best.color, t, wobble, compact ? '' : 'firm boundary');
+  } else if (mode === 'split') {
+    centers.forEach((center, idx) => {
+      drawElasticBoundary(ctx, center.x, center.y, 92 * scale, 76 * scale, best.color, t + idx, wobble * 0.9, compact ? '' : `module ${idx + 1}`);
+    });
+  } else if (mode === 'hybrid') {
+    centers.forEach((center, idx) => {
+      drawElasticBoundary(ctx, center.x, center.y, 82 * scale, 70 * scale, '#14b8a6', t + idx, wobble * 0.8, compact ? '' : `mini-boundary ${idx + 1}`);
+    });
+    const brokers = [
+      { x: w * 0.49, y: h * 0.44 },
+      { x: w * 0.54, y: h * 0.57 }
+    ];
+    ctx.strokeStyle = colorAlpha(best.color, 0.72);
+    ctx.lineWidth = 3;
+    centers.forEach(center => brokers.forEach(broker => {
+      ctx.beginPath();
+      ctx.moveTo(center.x, center.y);
+      ctx.quadraticCurveTo((center.x + broker.x) / 2, (center.y + broker.y) / 2 - 18, broker.x, broker.y);
+      ctx.stroke();
+    }));
+    brokers.forEach((broker, idx) => {
+      drawElasticBoundary(ctx, broker.x, broker.y, 34 * scale, 28 * scale, best.color, t + idx * 0.8, wobble * 1.4, '');
+      if (!compact) {
+        ctx.fillStyle = '#fff7ed';
+        ctx.font = '800 12px Inter, system-ui, sans-serif';
+        ctx.fillText('broker', broker.x - 19, broker.y + 4);
+      }
+    });
+  } else {
+    centers.forEach((center, idx) => {
+      drawElasticBoundary(ctx, center.x, center.y, 52 * scale, 42 * scale, best.color, t + idx, wobble * 0.7, '');
+      ctx.strokeStyle = colorAlpha(best.color, 0.55);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(center.x, center.y);
+      ctx.lineTo(w - 72, h * (0.24 + (idx % 5) * 0.12));
+      ctx.stroke();
+    });
+    drawElasticBoundary(ctx, w - 76 * scale, h * 0.50, 58 * scale, 230 * scale, best.color, t, wobble * 0.55, compact ? '' : 'market');
+  }
+
+  agents.forEach(agent => drawAgent(ctx, agent, t, posture));
+
+  if (posture.reactive > 0.42) {
+    ctx.strokeStyle = 'rgba(251,113,133,0.34)';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 5; i += 1) {
+      const y = (92 + i * 78) * scale + Math.sin(t * 2 + i) * 8;
+      ctx.beginPath();
+      ctx.moveTo(70 * scale, y);
+      ctx.bezierCurveTo(260 * scale, y - 50 * scale, 430 * scale, y + 70 * scale, w - 90 * scale, y - 20 * scale);
+      ctx.stroke();
+    }
+  }
+
+  if (posture.plan > 0.62) {
+    ctx.strokeStyle = 'rgba(96,165,250,0.35)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 7]);
+    for (let i = 0; i < 3; i += 1) {
+      drawElasticBoundary(ctx, w * 0.50, h * 0.52, (302 - i * 48) * scale, (236 - i * 38) * scale, '#60a5fa', t * 0.3 + i, 0.004, '', true);
+    }
+    ctx.setLineDash([]);
+  }
+
+  if (posture.rigidity > 0.34) {
+    ctx.strokeStyle = 'rgba(244,63,94,0.28)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([12, 10]);
+    for (let i = 0; i < 2; i += 1) {
+      drawElasticBoundary(ctx, w * 0.50, h * 0.52, (250 - i * 54) * scale, (198 - i * 42) * scale, '#fb7185', t * 0.18 + i, 0.003, '', true);
+    }
+    ctx.setLineDash([]);
+  }
+}
+
+function drawBoundaryField(cfg, rows, t) {
+  drawBoundaryFieldCanvas(document.getElementById('boundaryCanvas'), cfg, rows, t, false);
+}
+
+let lastPhase = [];
+const gridSize = 25;
+
+function drawPhaseDiagram(cfg) {
+  const canvas = document.getElementById('phaseCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const padL = 68;
+  const padR = 22;
+  const padT = 24;
+  const padB = 58;
+  const plotW = w - padL - padR;
+  const plotH = h - padT - padB;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(0, 0, w, h);
+  lastPhase = [];
+  setText('phaseStatus', 'simulating');
+  for (let y = 0; y < gridSize; y += 1) {
+    for (let x = 0; x < gridSize; x += 1) {
+      const protocol = Math.round((x / (gridSize - 1)) * 100);
+      const interdependence = Math.round((1 - y / (gridSize - 1)) * 100);
+      const winner = phaseWinner(cfg, protocol, interdependence, y * gridSize + x);
+      lastPhase.push({ x, y, protocol, interdependence, winner });
+      ctx.fillStyle = winner.color;
+      ctx.globalAlpha = 0.78;
+      ctx.fillRect(padL + x * plotW / gridSize, padT + y * plotH / gridSize, Math.ceil(plotW / gridSize) + 1, Math.ceil(plotH / gridSize) + 1);
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(padL, padT, plotW, plotH);
+  for (let i = 0; i <= 5; i += 1) {
+    const gx = padL + (i / 5) * plotW;
+    const gy = padT + (i / 5) * plotH;
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.beginPath();
+    ctx.moveTo(gx, padT);
+    ctx.lineTo(gx, padT + plotH);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(padL, gy);
+    ctx.lineTo(padL + plotW, gy);
+    ctx.stroke();
+  }
+  const cx = padL + (cfg.protocol / 100) * plotW;
+  const cy = padT + (1 - cfg.interdependence / 100) * plotH;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - 12, cy);
+  ctx.lineTo(cx + 12, cy);
+  ctx.moveTo(cx, cy - 12);
+  ctx.lineTo(cx, cy + 12);
+  ctx.stroke();
+  ctx.fillStyle = '#e5e7eb';
+  ctx.font = '600 14px Inter, system-ui, sans-serif';
+  ctx.fillText('Protocol quality', padL + plotW / 2 - 52, h - 18);
+  ctx.save();
+  ctx.translate(20, padT + plotH / 2 + 70);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Task interdependence', 0, 0);
+  ctx.restore();
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '12px Inter, system-ui, sans-serif';
+  ctx.fillText('0', padL - 4, h - 39);
+  ctx.fillText('100', padL + plotW - 22, h - 39);
+  ctx.fillText('100', 34, padT + 5);
+  ctx.fillText('0', 47, padT + plotH + 4);
+  setText('phaseStatus', 'complete');
+}
+
+function renderResults(rows) {
+  const best = rows[0];
+  setText('winnerName', best.short);
+  setText('winnerObjective', fmt(best.objective));
+  setText('winnerAgility', fmt(best.agility));
+  setText('winnerQuality', fmt(best.quality) + '%');
+  setHTML('metricBars', rows.map(row => `
+    <div class="metric-panel">
+      <div class="score"><h3>${row.name}</h3><span class="badge">objective ${fmt(row.objective)}</span></div>
+      ${makeBar('Surprise', row.surprise, 5, row.cls)}
+      ${makeBar('Action loss', row.loss, 2.5, 'rose')}
+      ${makeBar('State/action fidelity', row.information, 100, 'green')}
+      ${makeBar('Latency', row.latency, 28, 'blue', 'm')}
+      ${makeBar('Up-front delay', row.planningDelay, 14, 'slate')}
+      ${makeBar('Runtime surprise', row.runtimeSurprise, 100, 'rose')}
+      ${makeBar('Rigidity risk', row.rigidityRisk, 100, 'purple')}
+      ${makeBar('Coordination cost', row.cost, 125, 'orange')}
+      ${makeBar('Agility', row.agility, 100, 'teal')}
+    </div>
+  `).join(''));
+  setHTML('resultTable', `
+    <thead><tr><th>Boundary</th><th>Objective</th><th>Surprise</th><th>Loss</th><th>Fidelity</th><th>Quality</th><th>Latency</th><th>Setup</th><th>Runtime</th><th>Rigid</th><th>Cost</th><th>Agility</th></tr></thead>
+    <tbody>${rows.map(row => `<tr><td>${row.name}</td><td>${fmt(row.objective)}</td><td>${fmt2(row.surprise)}</td><td>${fmt2(row.loss)}</td><td>${fmt(row.information)}</td><td>${fmt(row.quality)}%</td><td>${fmt(row.latency)}m</td><td>${fmt(row.planningDelay)}</td><td>${fmt(row.runtimeSurprise)}</td><td>${fmt(row.rigidityRisk)}</td><td>${fmt(row.cost)}</td><td>${fmt(row.agility)}</td></tr>`).join('')}</tbody>
+  `);
+}
+
+let currentCfg = null;
+let currentRows = [];
+
+function render() {
+  const cfg = readConfig();
+  const rows = runSimulation(cfg);
+  currentCfg = cfg;
+  currentRows = rows;
+  renderFieldStats(cfg, rows);
+  renderResults(rows);
+}
+
+document.getElementById('runBtn').addEventListener('click', render);
+document.getElementById('newSeedBtn').addEventListener('click', () => {
+  document.getElementById('seed').value = Math.floor(100000 + Math.random() * 899999);
+  render();
+});
+
+function renderScenarioList() {
+  setHTML('scenarioList', SCENARIOS.map(scenario => `
+    <button class="scenario-option ${scenario.id === appState.scenarioId ? 'active' : ''}" data-scenario="${scenario.id}">
+      <strong>${scenario.name}</strong>
+      <span>${scenario.caption}</span>
+    </button>
+  `).join(''));
+  document.querySelectorAll('[data-scenario]').forEach(button => {
+    button.addEventListener('click', () => setScenario(button.dataset.scenario));
+  });
+}
+
+function renderSemanticControls() {
+  const scenario = activeScenario();
+  const values = ensureSemanticValues();
+  setText('semanticTitle', `Drivers for: ${scenario.name}`);
+  setText('scenarioDescription', scenario.description);
+  setText('scenarioUseCase', scenario.useCase || '');
+  setText('scenarioProxy', scenario.proxy || '');
+  setHTML('semanticControls', scenario.levers.map(lever => `
+    <div>
+      <label>${lever.label} <span id="semantic-${lever.id}-value">${values[lever.id]}</span></label>
+      <input id="semantic-${lever.id}" data-semantic="${lever.id}" type="range" min="0" max="100" value="${values[lever.id]}">
+      <div class="semantic-help"><span>${lever.low}</span><span>${lever.high}</span></div>
+    </div>
+  `).join(''));
+  document.querySelectorAll('[data-semantic]').forEach(input => {
+    input.addEventListener('input', event => {
+      const current = ensureSemanticValues();
+      current[event.target.dataset.semantic] = Number(event.target.value);
+      setText(`semantic-${event.target.dataset.semantic}-value`, event.target.value);
+      render();
+    });
+  });
+}
+
+function renderAbstractMapping(cfg) {
+  const rows = [
+    { key: 'protocol', max: 100 },
+    { key: 'interdependence', max: 100 },
+    { key: 'observability', max: 100 },
+    { key: 'agentCoverage', max: 100 },
+    { key: 'governance', max: 100 },
+    { key: 'marketFriction', max: 100 },
+    { key: 'volatility', max: 100 },
+    { key: 'planning', max: 100 },
+    { key: 'blueprintGain', max: 1, display: value => Math.round(value * 100) },
+    { key: 'runtimeSurprise', max: 1, display: value => Math.round(value * 100) },
+    { key: 'rigidityRisk', max: 1, display: value => Math.round(value * 100) },
+    { key: 'upfrontDelay', max: 14, display: value => fmt(value) },
+    { key: 'agentCount', max: 30 }
+  ];
+  setHTML('abstractMapping', rows.map(row => {
+    const value = cfg[row.key];
+    const displayValue = row.display ? row.display(value) : value;
+    return `
+      <div class="abstract-row">
+        <span>${MODEL_LABELS[row.key]}</span><b>${displayValue}</b>
+        <div class="abstract-track"><div class="abstract-fill" style="width:${pct(value, row.max)}%"></div></div>
+      </div>
+    `;
+  }).join(''));
+}
+
+function setScenario(id) {
+  if (!SCENARIOS.some(scenario => scenario.id === id)) return false;
+  appState.scenarioId = id;
+  ensureSemanticValues();
+  renderScenarioList();
+  renderSemanticControls();
+  render();
+  if (typeof history !== 'undefined') history.replaceState(null, '', `#${id}`);
+  return true;
+}
+
+['trials','seed'].forEach(id => {
+  document.getElementById(id).addEventListener(id === 'trials' ? 'change' : 'input', render);
+});
+
+renderScenarioList();
+const initialScenario = typeof location !== 'undefined' ? location.hash.replace('#', '') : '';
+setScenario(SCENARIOS.some(scenario => scenario.id === initialScenario) ? initialScenario : appState.scenarioId);
+
+function animateBoundaryField(now) {
+  drawBoundaryField(currentCfg, currentRows, now / 1000);
+  requestAnimationFrame(animateBoundaryField);
+}
+
+requestAnimationFrame(animateBoundaryField);
 </script>
 </body>
 </html>

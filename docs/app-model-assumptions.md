@@ -1,10 +1,12 @@
 # App Model Assumptions
 
-## Status of the current apps
+## Status of the current example site
 
-The current web apps are illustrative toy models. They are designed to make comparative statics visible, not to provide calibrated causal estimates.
+The canonical example site is `index.html`. The older prototype pages redirect there so public readers do not land on stale concepts.
 
-They are useful because they let a reader change variables that correspond to the paper's formal terms:
+The current simulation is an illustrative model. It is designed to make comparative statics visible, not to provide calibrated causal estimates.
+
+It is useful because it lets a reader choose paper-aligned use cases and change variables that correspond to the formal terms:
 
 - protocol quality,
 - agent coverage,
@@ -16,6 +18,15 @@ They are useful because they let a reader change variables that correspond to th
 - monitoring load,
 - modularity,
 - asset specificity.
+
+The current scenarios are:
+
+- incident response as a temporary bounded agent,
+- support routing and workflow traces,
+- vendor/API boundary coordination,
+- internal service modularization,
+- blueprint-heavy versus reactive planning,
+- classical in-house capability formation.
 
 They should be presented as executable diagrams.
 
@@ -30,19 +41,9 @@ The formulas are useful if the paper clearly states:
 
 ## How to calibrate later
 
-For each app, replace arbitrary coefficients with estimates from traces.
+For the canonical simulation, replace arbitrary coefficients with estimates from traces.
 
-### Topology Lab
-
-Potential calibration data:
-
-- number of teams involved,
-- approval layers,
-- observed response latency,
-- message/meeting volume,
-- action quality or rework rate.
-
-### Incident Room
+### Incident response
 
 Potential calibration data:
 
@@ -54,7 +55,7 @@ Potential calibration data:
 - reopens/rollbacks,
 - severity reduction.
 
-### Boundary Explorer
+### Vendor/API boundary
 
 Potential calibration data:
 
@@ -65,7 +66,21 @@ Potential calibration data:
 - audit/review cost,
 - rework/error rates.
 
-### Support Router
+### Agent boundary simulation
+
+Potential calibration data:
+
+- ground-truth incident or ticket state labels,
+- team or vendor ownership partitions,
+- cross-boundary handoff latency,
+- reopen/escalation/surprise events,
+- action correctness or expert outcome scores,
+- protocol maturity and schema completeness,
+- monitoring and governance effort.
+
+The boundary simulation is a computational illustration of the formal objective. It should be read as: under these modeled coefficients, protocol quality and task interdependence change which boundary partition minimizes surprise, action loss, and coordination cost.
+
+### Support routing
 
 Potential calibration data:
 
@@ -77,9 +92,9 @@ Potential calibration data:
 - policy coverage,
 - agent escalation rate.
 
-### Workflow Trace Mapper
+### Workflow traces
 
-This app is the bridge to real calibration. It accepts event traces and computes observable proxies that can later replace toy assumptions.
+Workflow traces are the bridge to real calibration. Incident and support CSV samples are included as starting points for observable proxies that can later replace toy assumptions.
 
 ## Recommended language in the paper
 

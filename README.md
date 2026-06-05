@@ -10,22 +10,30 @@ The practical implication:
 
 > Organizations are information architectures. Their economic performance depends on how efficiently they convert distributed, noisy signals into coordinated action under latency, cost, and distortion constraints.
 
-The demos translate that claim into tangible software.
+The browser demo translates that claim into tangible software.
+
+The current example site follows the paper's main use cases:
+
+- incident response as a temporary bounded agent,
+- support routing and workflow traces,
+- vendor/API boundaries,
+- internal service modularization,
+- blueprint-heavy versus reactive planning,
+- classical in-house versus market coordination.
 
 ## Contents
 
-### Apps
+### App
 
-- `index.html` — suite homepage
-- `topology-lab.html` — compare hierarchy, market, and agentic coordination under the same environment
-- `incident-room.html` — simulate incidents, escalations, vendor outages, and routing failures
-- `boundary-explorer.html` — explore when work should stay in-house, move to the market, or sit in an agent-mediated hybrid boundary
-- `support-router.html` — show when software agents can improve routing, handoffs, and resolution in service workflows
-- `workflow-trace-mapper.html` — paste workflow CSV traces and compute empirical agility proxies
+- `index.html` — the canonical browser simulation. It runs the scenario-driven Monte Carlo model where paper use cases map into the same abstract boundary levers: protocol quality, interdependence, observability, agent coverage, governance, market friction, volatility, and planning depth.
+
+The earlier prototype pages now redirect to `index.html` so old links do not open stale concepts.
 
 ### Paper and analysis
 
-- `paper/coase-information-theory-draft.md` — improved working-paper draft
+- `paper/coase-information-theory.tex` — canonical working-paper source
+- `paper/coase-information-theory.pdf` — rendered working-paper PDF
+- `paper/coase-information-theory-draft.md` — earlier prose draft, retained for reference
 - `docs/formal-paper-analysis.md` — original mathematical framing, propositions, agent extension, and completion plan
 - `docs/formal-note.md` — compact note tying the apps back to the theory
 - `docs/paper-completion-plan.md` — concrete path from note to finished paper
@@ -38,11 +46,11 @@ The demos translate that claim into tangible software.
 - `sample-data/incident-trace.csv`
 - `sample-data/support-ticket-trace.csv`
 
-These samples can be pasted into `workflow-trace-mapper.html`.
+These samples are retained for future calibration work.
 
 ## How to use
 
-These prototypes are static HTML files. You can either open `index.html` directly in a browser or serve the repo locally:
+The simulation is a static HTML file. You can either open `index.html` directly in a browser or serve the repo locally:
 
 ```bash
 python3 -m http.server 8000
@@ -52,18 +60,19 @@ Then open `http://localhost:8000/`.
 
 ## Why these apps matter
 
-The paper is strongest when it does four things together:
+The paper is strongest when it does five things together:
 
 1. **Formalizes agents** as bounded information-processing units: individuals, teams, firms, vendors, and software agents.
 2. **Explains boundaries** as coalescing/splitting choices around surprise reduction and coordination cost.
 3. **Defines agility** as the rate at which information becomes coordinated action.
 4. **Shows executable examples** where software agents shift latency, distortion, monitoring, and the effective boundary of the firm.
+5. **Runs a simulation** where the formal objective produces boundary phase behavior across protocol quality and task interdependence.
 
-The apps are deliberately simple. They are not calibrated causal estimates. They are executable illustrations and measurement scaffolds.
+The simulation is deliberately simple. It is not a calibrated causal estimate. It is an executable illustration and measurement scaffold.
 
 ## Most important next step
 
-Choose one empirical spine — preferably incident response, support routing, or datacenter/vendor coordination — and replace one toy scenario with real telemetry. The new `workflow-trace-mapper.html` is the first step toward that.
+Choose one empirical spine — preferably incident response or support routing — and replace the current stylized coefficients with real trace calibration.
 
 ## Public positioning
 
