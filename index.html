@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent Boundary Simulation · Coase–Information Theory</title>
+  <title>From the Boundary of the Firm to the Boundary of the Agent</title>
   <style>
 :root {
   --bg: #0f172a;
@@ -30,6 +30,7 @@ h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.03; margin: 14px 0 10px; 
 h2 { font-size: 24px; margin: 0 0 8px; }
 h3 { font-size: 17px; margin: 0 0 8px; }
 p { color: var(--muted); line-height: 1.62; }
+h1, h2, h3, p, .pill, .movie-stage, .scenario-option { overflow-wrap: break-word; }
 .grid { display: grid; gap: 18px; }
 .grid-2 { grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1.5fr); }
 .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
@@ -110,6 +111,41 @@ button { cursor:pointer; border:0; }
 .pill { padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); font-size: 13px; color:#e2e8f0; }
 .hero-grid { display:grid; gap:18px; grid-template-columns: 1.35fr 1fr; }
 @media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; } }
+.movie-panel { margin-top:18px; border:1px solid var(--border); background:rgba(2,6,23,0.72); border-radius:24px; overflow:hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); min-width:0; }
+.movie-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:start; padding:16px 18px 12px; border-bottom:1px solid var(--border); }
+.movie-head h2 { margin:3px 0 4px; font-size:22px; }
+.movie-head p { margin:0; font-size:13px; line-height:1.5; max-width: 820px; }
+.movie-side { display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+.movie-actions { display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; }
+.movie-actions .button { min-height:34px; padding:8px 12px; font-size:12px; }
+.movie-actions button:disabled { cursor:not-allowed; opacity:0.52; }
+.movie-actions .sound-off { background: rgba(255,255,255,0.05); color:#94a3b8; }
+.movie-canvas-wrap { background:#020617; min-width:0; overflow:hidden; }
+.movie-canvas { width:100%; max-width:100%; min-width:0; height:auto; aspect-ratio:2.28 / 1; }
+.usecase-movie { margin-top:16px; }
+.movie-stages { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:rgba(255,255,255,0.07); border-top:1px solid var(--border); }
+.movie-stage { padding:10px 11px; min-height:56px; background:rgba(15,23,42,0.88); color:#94a3b8; font-size:11px; line-height:1.3; transition:background 180ms ease, color 180ms ease; }
+.movie-stage strong { display:block; color:#cbd5e1; font-size:12px; margin-bottom:3px; }
+.movie-stage.active { background:rgba(139,92,246,0.19); color:#e5e7eb; }
+.movie-stage.active strong { color:white; }
+@media (max-width: 980px) {
+  .movie-head { grid-template-columns:1fr; }
+  .movie-side { align-items:flex-start; }
+  .movie-stages { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 560px) {
+  .container { padding:14px; }
+  .hero { padding:16px; border-radius:22px; }
+  h1 { font-size:28px; line-height:1.08; }
+  h2, .movie-head h2 { font-size:20px; }
+  .topnav { gap:8px; }
+  .topnav a { padding:9px 12px; }
+  .pill { font-size:12px; padding:7px 10px; }
+  .movie-head { padding:14px; }
+  .movie-actions { justify-content:flex-start; }
+  .movie-stages { grid-template-columns:1fr; }
+  .movie-stage { min-height:auto; padding:9px 11px; }
+}
 .canvas-shell { position: relative; border:1px solid var(--border); border-radius:18px; overflow:hidden; background: #020617; }
 canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
 .legend { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
@@ -140,43 +176,67 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
 </head>
 <body>
   <div class="container">
-    <div class="topnav"><a class="active" href="index.html">Boundary simulation</a><a class="" href="paper/coase-information-theory.pdf">Paper PDF</a><a class="" href="paper/coase-information-theory.tex">TeX source</a></div>
+    <div class="topnav"><a class="active" href="index.html">Examples</a><a class="" href="paper/coase-information-theory.pdf">Paper PDF</a><a class="" href="paper/coase-information-theory.tex">TeX source</a></div>
 
 <section class="hero">
   <div class="hero-grid">
     <div>
-      <div class="eyebrow">Agent boundary simulation</div>
-      <h1>Explore the paper’s use cases as boundary choices.</h1>
+      <div class="eyebrow">Coase-information theory</div>
+      <h1>From the Boundary of the Firm to the Boundary of the Agent</h1>
       <p>
-        This Monte Carlo model turns the paper’s examples into one executable diagram. Incident rooms, support queues,
-        vendor interfaces, internal services, and blueprint-heavy plans all map to the same agent-boundary variables.
+        Boundaries move when an outside dependency creates more surprise, delay, error, or misalignment than it saves
+        in cost. The examples below turn that tradeoff into a visual simulation.
       </p>
       <div class="pill-row">
-        <div class="pill"><span class="code">min E[S + L] + C</span></div>
-        <div class="pill">Incident response</div>
-        <div class="pill">Support routing</div>
-        <div class="pill">Vendor / API boundaries</div>
-        <div class="pill">Blueprint vs reactive design</div>
+        <div class="pill">Database dependency</div>
+        <div class="pill">Support triage</div>
+        <div class="pill">Coding agents</div>
+        <div class="pill">Security operations</div>
+        <div class="pill">Procurement automation</div>
       </div>
     </div>
     <div class="card">
-      <div class="kicker">Paper claim under test</div>
-      <h3>Boundaries are not fixed containers. They are information-processing choices.</h3>
+      <div class="kicker">Boundary test</div>
+      <h3>Keep a capability outside only while the interface is worth it.</h3>
       <p>
-        Each scenario is written in operator language, then translated into protocol quality, task interdependence,
-        observability, governance, market friction, software-agent coverage, volatility, and planning posture.
+        A firm pulls work inside when shared state beats market coordination. It pushes work outside when a vendor,
+        API, or agent can carry enough state more cheaply. If the interface fails, the boundary should move again.
       </p>
       <div class="note">
-        A winning boundary lowers <span class="code">surprise + action loss + coordination cost + planning drag</span>.
-        It is not automatically the most centralized, decentralized, outsourced, or automated option.
+        Same engine, different settings: surprise, action loss, latency, governance, interpretation cost, and planning drag.
       </div>
+    </div>
+  </div>
+
+  <div class="movie-panel usecase-movie">
+    <div class="movie-head">
+      <div>
+        <div class="kicker">Database boundary</div>
+        <h2 id="useCaseMovieTitle">Market coordination is expensive.</h2>
+        <p id="useCaseMovieCaption">Separate suppliers can make the product, but search, contracting, interpretation, and delay keep the market price high.</p>
+      </div>
+      <div class="movie-side">
+        <div class="movie-actions">
+          <button id="useCaseMoviePlayBtn" class="button" type="button">Play example</button>
+          <button id="useCaseMovieSoundBtn" class="button secondary" type="button" aria-pressed="false">Mute</button>
+        </div>
+      </div>
+    </div>
+    <div class="movie-canvas-wrap">
+      <canvas id="coaseMovieCanvas" class="movie-canvas" width="1280" height="560" aria-label="Animated Coase-to-agent database-boundary use case"></canvas>
+    </div>
+    <div class="movie-stages" id="useCaseMovieStages">
+      <div class="movie-stage active" data-usecase-stage="0"><strong>Market cost</strong>Search, contracts, translation, and delay keep price high.</div>
+      <div class="movie-stage" data-usecase-stage="1"><strong>Firm lowers price</strong>A shared boundary turns lower coordination cost into a cheaper offer.</div>
+      <div class="movie-stage" data-usecase-stage="2"><strong>Database moves out</strong>The external capability becomes cheaper than building it inside.</div>
+      <div class="movie-stage" data-usecase-stage="3"><strong>Boundary moves</strong>SLA surprise makes internal, external, and hybrid boundaries live choices.</div>
     </div>
   </div>
 </section>
 
 <section class="section simulation-grid">
   <div class="card">
-    <h2>Scenario</h2>
+    <h2>Current problems</h2>
     <div class="controls">
       <div id="scenarioList" class="scenario-list"></div>
       <div class="control">
@@ -241,11 +301,11 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
         <li><strong>Agility</strong> discounts quality-adjusted state/action fidelity by latency, cost, and volatility.</li>
         <li><strong>Setup / Runtime / Rigid</strong> show whether blueprint depth moved cost up front, left surprise for runtime, or created brittle plans.</li>
         <li><strong>Blueprint depth</strong> reduces runtime surprise when the world is stable, but adds up-front delay and rigidity when the world shifts.</li>
-        <li><strong>Use-case levers</strong> translate incident, support, vendor, service, and planning language into the same abstract model variables.</li>
+        <li><strong>Use-case levers</strong> translate database, support, coding, security, and procurement language into the same abstract model variables.</li>
       </ul>
       <div class="note">
         This is a comparative design language. It identifies which cost terms should move under a boundary change;
-        calibration against incident or workflow traces is the next empirical step.
+        calibration against production, support, security, or finance workflow traces is the next empirical step.
       </div>
     </div>
   </div>
@@ -306,6 +366,579 @@ function makeBar(label, value, max, cls, suffix='') {
   return `<div class="bar-row"><div class="bar-label"><span>${label}</span><span>${fmt(value)}${suffix}</span></div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct(value, max)}%"></div></div></div>`;
 }
 
+const EXEC_MOVIE_SECONDS = 10;
+const USECASE_MOVIE_SECONDS = 14;
+const EXEC_STAGE_CUTS = [0, 0.25, 0.5, 0.75, 1.01];
+const USECASE_STAGE_CUTS = [0, 0.26, 0.5, 0.74, 1.01];
+let movieSoundEnabled = true;
+
+const execMovieState = { start: 0, elapsed: 0, playing: false };
+const useCaseMovieState = { start: 0, elapsed: 0, playing: false };
+
+const EXEC_MOVIE_STAGES = [
+  {
+    title: 'What belongs inside the boundary?',
+    caption: 'A firm or agent is a boundary around a control loop. Dependencies stay outside while interfaces remain cheap, reliable, and informative.'
+  },
+  {
+    title: 'External agents work when interfaces stay healthy.',
+    caption: 'Vendors, services, and teams can remain outside the boundary when protocols carry enough state at low surprise and cost.'
+  },
+  {
+    title: 'A failing interface creates boundary pressure.',
+    caption: 'When the line turns red, the dependency adds surprise, delay, error, and monitoring burden to the bounded entity.'
+  },
+  {
+    title: 'The boundary expands around the capability.',
+    caption: 'The dependency moves inside as an in-house capability or hybrid sub-agent. The agent is the larger bounded control loop.'
+  }
+];
+
+const EXEC_MOVIE_NARRATION = 'What is a firm or agent? It is a boundary around a control loop. Capabilities can stay outside while the interface is green. When surprise, delay, or error turns the line red, the boundary should move. The dependency becomes in-house, or a hybrid sub-agent, because the bounded entity itself has changed.';
+
+const USECASE_MOVIE_STAGES = [
+  {
+    title: 'Market coordination is expensive.',
+    caption: 'Separate suppliers can make the product, but search, contracting, interpretation, and delay keep the market price high.'
+  },
+  {
+    title: 'A firm forms and lowers the market price.',
+    caption: 'The company pulls production, support, and planning inside one boundary. Shared state lowers internal cost, and the product gets cheaper.'
+  },
+  {
+    title: 'A database becomes cheaper outside the boundary.',
+    caption: 'A managed database gets good enough and cheap enough that building one internally no longer pays. The boundary moves outward.'
+  },
+  {
+    title: 'The bounded agent changes shape.',
+    caption: 'When connectivity degrades and SLA surprise rises, the firm-agent expands around internal fallback or a hybrid database boundary.'
+  }
+];
+
+const USECASE_MOVIE_NARRATION = 'Here is the same logic as a database boundary. At first, market coordination is costly, so the firm pulls work inside. Later, a managed database is cheaper outside. When that interface degrades, the bounded firm-agent changes shape: it brings fallback state inside, creates a hybrid boundary, or re-internalizes the capability.';
+
+function smoothstep(edge0, edge1, x) {
+  const t = clamp((x - edge0) / Math.max(edge1 - edge0, 0.0001), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function movieStageFor(progress, cuts, stageCount) {
+  for (let i = 0; i < cuts.length - 1; i += 1) {
+    if (progress >= cuts[i] && progress < cuts[i + 1]) return i;
+  }
+  return stageCount - 1;
+}
+
+function drawMovieRoundRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + w - radius, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+  ctx.lineTo(x + w, y + h - radius);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+  ctx.lineTo(x + radius, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function drawMovieLabel(ctx, text, x, y, color = '#e5e7eb', size = 15, weight = 700, align = 'center') {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.font = `${weight} ${size}px Inter, system-ui, sans-serif`;
+  ctx.textAlign = align;
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function drawMovieNode(ctx, x, y, w, h, title, detail, color, alpha = 1) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  drawMovieRoundRect(ctx, x, y, w, h, 18);
+  ctx.fillStyle = colorAlpha(color, 0.12);
+  ctx.strokeStyle = colorAlpha(color, 0.82);
+  ctx.lineWidth = 2;
+  ctx.fill();
+  ctx.stroke();
+  drawMovieLabel(ctx, title, x + w / 2, y + h * 0.42, '#ffffff', 16, 800);
+  if (detail) drawMovieLabel(ctx, detail, x + w / 2, y + h * 0.68, '#cbd5e1', 12, 600);
+  ctx.restore();
+}
+
+function drawMovieArrow(ctx, x1, y1, x2, y2, color, alpha = 1, dashed = false, width = 2) {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = width;
+  if (dashed) ctx.setLineDash([10, 8]);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - Math.cos(angle - 0.45) * 14, y2 - Math.sin(angle - 0.45) * 14);
+  ctx.lineTo(x2 - Math.cos(angle + 0.45) * 14, y2 - Math.sin(angle + 0.45) * 14);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawMovieMetric(ctx, x, y, w, label, value, color, max = 140, suffix = '') {
+  const fill = clamp(value / max, 0, 1);
+  const display = suffix === '$' ? `$${Math.round(value)}` : `${Math.round(value)}${suffix}`;
+  drawMovieLabel(ctx, label, x, y - 13, '#cbd5e1', 12, 650, 'left');
+  drawMovieLabel(ctx, display, x + w, y - 13, '#ffffff', 13, 800, 'right');
+  drawMovieRoundRect(ctx, x, y, w, 12, 6);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.fill();
+  drawMovieRoundRect(ctx, x, y, w * fill, 12, 6);
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+function drawExecutiveKpi(ctx, x, y, w, h, label, value, detail, color, alpha = 1) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  drawMovieRoundRect(ctx, x, y, w, h, 18);
+  ctx.fillStyle = 'rgba(15,23,42,0.88)';
+  ctx.strokeStyle = colorAlpha(color, 0.55);
+  ctx.lineWidth = 2;
+  ctx.fill();
+  ctx.stroke();
+  drawMovieLabel(ctx, label, x + 18, y + 21, '#94a3b8', 12, 750, 'left');
+  drawMovieLabel(ctx, value, x + 18, y + 54, '#ffffff', 28, 850, 'left');
+  drawMovieLabel(ctx, detail, x + 18, y + h - 18, color, 12, 750, 'left');
+  ctx.restore();
+}
+
+function drawDecisionTrack(ctx, x, y, w, progress) {
+  const steps = [
+    { label: 'Market', color: '#60a5fa' },
+    { label: 'Firm', color: '#8b5cf6' },
+    { label: 'Vendor', color: '#22c55e' },
+    { label: 'Agent hybrid', color: '#f97316' }
+  ];
+  const marker = x + w * clamp(progress, 0, 1);
+  drawMovieRoundRect(ctx, x, y, w, 12, 6);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.fill();
+  const grad = ctx.createLinearGradient(x, y, x + w, y);
+  grad.addColorStop(0, '#60a5fa');
+  grad.addColorStop(0.35, '#8b5cf6');
+  grad.addColorStop(0.68, '#22c55e');
+  grad.addColorStop(1, '#f97316');
+  drawMovieRoundRect(ctx, x, y, Math.max(marker - x, 8), 12, 6);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  steps.forEach((step, index) => {
+    const sx = x + (w * index) / (steps.length - 1);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(sx, y + 6, 8, 0, Math.PI * 2);
+    ctx.fillStyle = step.color;
+    ctx.fill();
+    ctx.restore();
+    drawMovieLabel(ctx, step.label, sx, y + 33, '#cbd5e1', 12, 750);
+  });
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(marker, y + 6, 15, 0, Math.PI * 2);
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = 'rgba(255,255,255,0.45)';
+  ctx.shadowBlur = 16;
+  ctx.fill();
+  ctx.restore();
+}
+
+function updateExecMovieReadout(stageIndex, seconds) {
+  const stage = EXEC_MOVIE_STAGES[stageIndex];
+  setText('execMovieTitle', stage.title);
+  setText('execMovieCaption', stage.caption);
+  document.querySelectorAll('[data-exec-stage]').forEach((node, idx) => {
+    node.classList.toggle('active', idx === stageIndex);
+  });
+}
+
+function drawExecutiveMovie(canvas, seconds) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const elapsed = clamp(seconds, 0, EXEC_MOVIE_SECONDS);
+  const progress = elapsed / EXEC_MOVIE_SECONDS;
+  const stageIndex = movieStageFor(progress, EXEC_STAGE_CUTS, EXEC_MOVIE_STAGES.length);
+  updateExecMovieReadout(stageIndex, elapsed);
+
+  const dependencies = smoothstep(0.18, 0.38, progress);
+  const degrade = smoothstep(0.46, 0.68, progress);
+  const internalize = smoothstep(0.70, 0.94, progress);
+  const pulse = Math.sin(seconds * 4.6) * 0.5 + 0.5;
+
+  const cx = 640;
+  const cy = 252;
+  const boundaryRadius = 118 + internalize * 82;
+  const dbExternal = { x: 1010, y: 142 };
+  const dbInternal = { x: 730, y: 214 };
+  const db = {
+    x: dbExternal.x + (dbInternal.x - dbExternal.x) * internalize,
+    y: dbExternal.y + (dbInternal.y - dbExternal.y) * internalize
+  };
+  const interfaceQuality = 92 - degrade * 66 + internalize * 36;
+  const surprise = 18 + degrade * 62 - internalize * 34;
+  const coordinationCost = 44 + degrade * 38 - internalize * 24;
+
+  ctx.clearRect(0, 0, w, h);
+  const bg = ctx.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, '#020617');
+  bg.addColorStop(0.58, '#07111f');
+  bg.addColorStop(1, '#111827');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = 'rgba(148,163,184,0.08)';
+  ctx.lineWidth = 1;
+  for (let x = 48; x < w; x += 72) {
+    ctx.beginPath();
+    ctx.moveTo(x, 34);
+    ctx.lineTo(x, h - 36);
+    ctx.stroke();
+  }
+  for (let y = 44; y < h; y += 72) {
+    ctx.beginPath();
+    ctx.moveTo(38, y);
+    ctx.lineTo(w - 38, y);
+    ctx.stroke();
+  }
+
+  const qualityColor = quality => {
+    if (quality > 70) return '#22c55e';
+    if (quality > 42) return '#f59e0b';
+    return '#fb7185';
+  };
+
+  const drawInterface = (fromX, fromY, toX, toY, quality, alpha = 1) => {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = qualityColor(quality);
+    ctx.lineWidth = 3.5;
+    if (quality < 45) ctx.setLineDash([10, 8]);
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(toX, toY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  };
+
+  const drawBubble = (x, y, r, title, detail, color, alpha = 1) => {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = colorAlpha(color, 0.14);
+    ctx.strokeStyle = colorAlpha(color, 0.88);
+    ctx.lineWidth = 3;
+    ctx.fill();
+    ctx.stroke();
+    drawMovieLabel(ctx, title, x, y - 6, '#ffffff', 15, 850);
+    drawMovieLabel(ctx, detail, x, y + 15, '#cbd5e1', 11, 700);
+    ctx.restore();
+  };
+
+  drawMovieLabel(ctx, 'A firm or agent is the boundary around a control loop', 70, 54, '#e5e7eb', 18, 850, 'left');
+  drawMovieLabel(ctx, 'External agents / dependencies', 1018, 54, '#bfdbfe', 14, 850);
+
+  const vendors = [
+    { x: 300, y: 110, r: 48, title: 'Payments', detail: 'vendor', quality: 86, color: '#60a5fa', alpha: 0.35 + dependencies * 0.65 },
+    { x: 250, y: 362, r: 50, title: 'Logistics', detail: 'vendor', quality: 82, color: '#60a5fa', alpha: 0.35 + dependencies * 0.65 },
+    { x: 1040, y: 358, r: 48, title: 'Support', detail: 'partner', quality: 78, color: '#60a5fa', alpha: 0.35 + dependencies * 0.65 },
+    { x: 650, y: 86, r: 44, title: 'Analytics', detail: 'service', quality: 74, color: '#60a5fa', alpha: 0.35 + dependencies * 0.65 }
+  ];
+
+  vendors.forEach(vendor => {
+    drawInterface(cx, cy, vendor.x, vendor.y, vendor.quality, vendor.alpha * 0.9);
+  });
+  drawInterface(cx, cy, db.x, db.y, interfaceQuality, (0.38 + dependencies * 0.62) * (1 - internalize * 0.55));
+
+  vendors.forEach(vendor => drawBubble(vendor.x, vendor.y, vendor.r, vendor.title, vendor.detail, vendor.color, vendor.alpha));
+  drawBubble(db.x, db.y, 54, 'Database', internalize > 0.62 ? 'moving inside' : 'vendor', qualityColor(interfaceQuality), 0.45 + dependencies * 0.55);
+
+  if (degrade > 0.08 && internalize < 0.82) {
+    ctx.save();
+    ctx.globalAlpha = 0.18 + degrade * 0.72;
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.arc(db.x, db.y, 72 + pulse * 8, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    drawMovieLabel(ctx, 'surprise + delay', db.x, db.y + 92, '#fecdd3', 13, 850);
+    ctx.restore();
+  }
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, boundaryRadius, 0, Math.PI * 2);
+  ctx.fillStyle = colorAlpha('#8b5cf6', 0.13);
+  ctx.strokeStyle = colorAlpha(internalize > 0.4 ? '#f97316' : '#a78bfa', 0.72);
+  ctx.lineWidth = 4;
+  ctx.fill();
+  ctx.stroke();
+  if (internalize > 0.18) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, boundaryRadius + 10 + pulse * 4, 0, Math.PI * 2);
+    ctx.strokeStyle = colorAlpha('#f97316', internalize * 0.45);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  drawMovieLabel(ctx, 'bounded control loop', cx, cy - 84, '#ddd6fe', 15, 850);
+  drawBubble(cx - 62, cy - 6, 42, 'Product', 'inside', '#8b5cf6', 1);
+  drawBubble(cx + 54, cy + 48, 42, 'Ops', 'inside', '#8b5cf6', 1);
+  if (internalize > 0.2) drawBubble(cx + 100, cy - 52, 42, 'DB', 'in-house', '#f97316', internalize);
+
+  const decisionText = internalize > 0.75
+    ? 'boundary expands'
+    : degrade > 0.55
+      ? 'change pressure rising'
+      : dependencies > 0.42
+        ? 'dependencies healthy'
+        : 'ask the boundary question';
+
+  drawMovieRoundRect(ctx, 70, 414, 1138, 54, 18);
+  ctx.fillStyle = 'rgba(15,23,42,0.86)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+  ctx.lineWidth = 1;
+  ctx.fill();
+  ctx.stroke();
+  drawMovieMetric(ctx, 108, 447, 190, 'Interface quality', interfaceQuality, qualityColor(interfaceQuality), 100, '%');
+  drawMovieMetric(ctx, 356, 447, 190, 'Surprise / delay', surprise, qualityColor(100 - surprise), 100, '%');
+  drawMovieMetric(ctx, 604, 447, 190, 'Coordination cost', coordinationCost, qualityColor(100 - coordinationCost), 100, '%');
+  drawMovieLabel(ctx, decisionText, 996, 447, internalize > 0.55 ? '#fdba74' : '#bfdbfe', 18, 850);
+}
+
+function updateUseCaseMovieReadout(stageIndex, seconds) {
+  const stage = USECASE_MOVIE_STAGES[stageIndex];
+  setText('useCaseMovieTitle', stage.title);
+  setText('useCaseMovieCaption', stage.caption);
+  document.querySelectorAll('[data-usecase-stage]').forEach((node, idx) => {
+    node.classList.toggle('active', idx === stageIndex);
+  });
+}
+
+function drawCoaseMovie(canvas, seconds) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const elapsed = clamp(seconds, 0, USECASE_MOVIE_SECONDS);
+  const progress = elapsed / USECASE_MOVIE_SECONDS;
+  const stageIndex = movieStageFor(progress, USECASE_STAGE_CUTS, USECASE_MOVIE_STAGES.length);
+  updateUseCaseMovieReadout(stageIndex, elapsed);
+
+  const firm = smoothstep(0.22, 0.4, progress);
+  const product = smoothstep(0.34, 0.5, progress);
+  const vendor = smoothstep(0.47, 0.64, progress);
+  const degraded = smoothstep(0.74, 0.92, progress);
+  const boundaryShift = smoothstep(0.84, 0.99, progress);
+  const pulse = Math.sin(seconds * 4.2) * 0.5 + 0.5;
+
+  const marketCost = 88 - firm * 28 - product * 10 + degraded * 12 - boundaryShift * 16;
+  const internalCost = 78 - firm * 30 - product * 8 + vendor * 10 + degraded * 8 - boundaryShift * 12;
+  const externalDbCost = 112 - vendor * 75 + degraded * 6 - boundaryShift * 4;
+  const productPrice = 132 - firm * 24 - product * 30 - vendor * 8 + degraded * 10 - boundaryShift * 6;
+  const dbSla = 99 - degraded * 21 + boundaryShift * 12;
+
+  ctx.clearRect(0, 0, w, h);
+  const bg = ctx.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, '#020617');
+  bg.addColorStop(0.52, '#07111f');
+  bg.addColorStop(1, '#0b1220');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = 'rgba(148,163,184,0.08)';
+  ctx.lineWidth = 1;
+  for (let x = 44; x < w; x += 64) {
+    ctx.beginPath();
+    ctx.moveTo(x, 32);
+    ctx.lineTo(x, h - 42);
+    ctx.stroke();
+  }
+  for (let y = 44; y < h; y += 64) {
+    ctx.beginPath();
+    ctx.moveTo(34, y);
+    ctx.lineTo(w - 34, y);
+    ctx.stroke();
+  }
+
+  drawMovieLabel(ctx, 'marketplace', 130, 52, '#93c5fd', 14, 800);
+  drawMovieLabel(ctx, 'firm boundary', 560, 52, firm > 0.1 ? '#ddd6fe' : 'rgba(221,214,254,0.35)', 14, 800);
+  drawMovieLabel(ctx, 'customer market', 1080, 52, '#bbf7d0', 14, 800);
+
+  drawMovieNode(ctx, 56, 116, 152, 62, 'Supplier A', 'part', '#60a5fa', 1);
+  drawMovieNode(ctx, 92, 246, 152, 62, 'Supplier B', 'assembly', '#60a5fa', 1);
+  drawMovieNode(ctx, 48, 376, 152, 62, 'Support shop', 'service', '#60a5fa', 1);
+
+  const contractAlpha = 1 - firm * 0.62;
+  drawMovieArrow(ctx, 208, 147, 420, 220, 'rgba(96,165,250,0.72)', contractAlpha, true, 2);
+  drawMovieArrow(ctx, 244, 277, 420, 270, 'rgba(96,165,250,0.72)', contractAlpha, true, 2);
+  drawMovieArrow(ctx, 200, 407, 420, 320, 'rgba(96,165,250,0.72)', contractAlpha, true, 2);
+  drawMovieLabel(ctx, 'contracts + search + delay', 265, 218, colorAlpha('#60a5fa', contractAlpha), 13, 650);
+
+  ctx.save();
+  ctx.globalAlpha = 0.12 + firm * 0.88;
+  drawMovieRoundRect(ctx, 360, 94, 410, 310, 32);
+  ctx.fillStyle = colorAlpha('#8b5cf6', 0.13 + firm * 0.09);
+  ctx.strokeStyle = colorAlpha('#a78bfa', 0.45 + firm * 0.38);
+  ctx.lineWidth = 3;
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  drawMovieNode(ctx, 420, 150, 138, 58, 'Production', 'inside', '#8b5cf6', 0.45 + firm * 0.55);
+  drawMovieNode(ctx, 585, 150, 126, 58, 'Planning', 'shared', '#8b5cf6', 0.45 + firm * 0.55);
+  drawMovieNode(ctx, 420, 270, 138, 58, 'Support', 'inside', '#8b5cf6', 0.45 + firm * 0.55);
+  drawMovieNode(ctx, 585, 270, 126, 58, 'Build DB', 'costly', '#8b5cf6', Math.max(0.35, 1 - vendor * 0.72));
+
+  drawMovieArrow(ctx, 558, 179, 585, 179, 'rgba(221,214,254,0.82)', firm, false, 2.5);
+  drawMovieArrow(ctx, 489, 208, 489, 270, 'rgba(221,214,254,0.82)', firm, false, 2.5);
+  drawMovieArrow(ctx, 648, 208, 648, 270, 'rgba(221,214,254,0.82)', firm, false, 2.5);
+
+  const productAlpha = 0.32 + product * 0.68;
+  drawMovieNode(ctx, 850, 246, 164, 72, 'Product', `$${Math.round(productPrice)}`, '#22c55e', productAlpha);
+  drawMovieNode(ctx, 1078, 246, 146, 72, 'Customer', 'market price', '#22c55e', productAlpha);
+  drawMovieArrow(ctx, 770, 254, 850, 276, 'rgba(34,197,94,0.78)', productAlpha, false, 3);
+  drawMovieArrow(ctx, 1014, 282, 1078, 282, 'rgba(34,197,94,0.78)', productAlpha, false, 3);
+  if (product > 0.2 && vendor < 0.14 && degraded < 0.28) drawMovieLabel(ctx, 'lower internal cost → cheaper product', 932, 218, '#bbf7d0', 13, 750);
+
+  const dbX = 968;
+  const dbY = 106 + degraded * Math.sin(seconds * 12) * 3;
+  drawMovieNode(ctx, dbX, dbY, 190, 72, 'Managed DB', `$${Math.round(externalDbCost)} / SLA ${Math.round(dbSla)}%`, degraded > 0.45 ? '#f97316' : '#3b82f6', vendor);
+  drawMovieArrow(ctx, 710, 298, dbX, dbY + 42, degraded > 0.45 ? 'rgba(249,115,22,0.78)' : 'rgba(59,130,246,0.78)', vendor, degraded > 0.35, 3);
+  if (vendor > 0.1) drawMovieLabel(ctx, 'external capability gets cheaper', 910, 92, '#bfdbfe', 13, 750);
+
+  if (degraded > 0.05) {
+    const warn = 0.25 + degraded * 0.75;
+    ctx.save();
+    ctx.globalAlpha = warn;
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([8, 7]);
+    ctx.beginPath();
+    ctx.arc(dbX + 95, dbY + 36, 62 + pulse * 8, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    drawMovieLabel(ctx, 'interface surprise', dbX + 95, dbY + 118, '#fecdd3', 13, 800);
+    ctx.restore();
+    drawMovieNode(ctx, 586, 270, 136, 58, 'In-house DB', 'fallback', '#fb7185', degraded * 0.82);
+  }
+
+  if (boundaryShift > 0.02) {
+    ctx.save();
+    ctx.globalAlpha = boundaryShift;
+    drawMovieRoundRect(ctx, 344, 82, 482, 338, 38);
+    ctx.fillStyle = colorAlpha('#f97316', 0.08);
+    ctx.strokeStyle = colorAlpha('#f97316', 0.9);
+    ctx.lineWidth = 3;
+    ctx.fill();
+    ctx.stroke();
+    drawMovieLabel(ctx, 'firm-agent boundary expands', 585, 394, '#fed7aa', 14, 850);
+    ctx.restore();
+    drawMovieArrow(ctx, 705, 292, dbX, dbY + 36, 'rgba(249,115,22,0.82)', boundaryShift, true, 3);
+    drawMovieLabel(ctx, 'internal fallback or hybrid dependency', 780, 376, colorAlpha('#fed7aa', boundaryShift), 14, 850);
+  }
+
+  drawMovieRoundRect(ctx, 54, 466, 1172, 62, 20);
+  ctx.fillStyle = 'rgba(15,23,42,0.84)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+  ctx.lineWidth = 1;
+  ctx.fill();
+  ctx.stroke();
+  drawMovieMetric(ctx, 84, 502, 218, 'Market transaction cost', marketCost, '#60a5fa', 120);
+  drawMovieMetric(ctx, 350, 502, 218, 'Internal operating cost', internalCost, '#8b5cf6', 120);
+  drawMovieMetric(ctx, 616, 502, 218, 'Product price', productPrice, '#22c55e', 150, '$');
+  drawMovieMetric(ctx, 882, 502, 218, 'Database SLA', dbSla, degraded > 0.45 ? '#fb7185' : '#3b82f6', 100, '%');
+  if (boundaryShift > 0.12) drawMovieMetric(ctx, 1116, 502, 70, 'Boundary', boundaryShift * 100, '#f97316', 100, '%');
+}
+
+function cancelMovieVoiceover() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+function speakMovieNarration(text) {
+  if (!movieSoundEnabled || !('speechSynthesis' in window)) return;
+  cancelMovieVoiceover();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 1.03;
+  utterance.pitch = 1;
+  utterance.volume = 0.95;
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(voice => voice.lang && voice.lang.startsWith('en') && /Samantha|Alex|Google|Microsoft/i.test(voice.name))
+    || voices.find(voice => voice.lang && voice.lang.startsWith('en'));
+  if (preferred) utterance.voice = preferred;
+  window.speechSynthesis.speak(utterance);
+}
+
+function updateMovieSoundButtons() {
+  document.querySelectorAll('[id$="MovieSoundBtn"]').forEach(button => {
+    if (button.disabled) return;
+    button.textContent = movieSoundEnabled ? 'Mute' : 'Sound on';
+    button.classList.toggle('sound-off', !movieSoundEnabled);
+    button.setAttribute('aria-pressed', movieSoundEnabled ? 'false' : 'true');
+  });
+}
+
+function toggleMovieSound() {
+  movieSoundEnabled = !movieSoundEnabled;
+  if (!movieSoundEnabled) cancelMovieVoiceover();
+  updateMovieSoundButtons();
+}
+
+function updateMoviePlayButtons() {
+  const useCaseButton = document.getElementById('useCaseMoviePlayBtn');
+  if (useCaseButton) useCaseButton.textContent = useCaseMovieState.playing ? 'Restart' : (useCaseMovieState.elapsed > 0 ? 'Replay example' : 'Play example');
+}
+
+function playUseCaseMovie() {
+  useCaseMovieState.start = performance.now() / 1000;
+  useCaseMovieState.elapsed = 0;
+  useCaseMovieState.playing = true;
+  updateMoviePlayButtons();
+  speakMovieNarration(USECASE_MOVIE_NARRATION);
+}
+
+function initMovieControls() {
+  const useCasePlayButton = document.getElementById('useCaseMoviePlayBtn');
+
+  if (!('speechSynthesis' in window)) {
+    movieSoundEnabled = false;
+    document.querySelectorAll('[id$="MovieSoundBtn"]').forEach(button => {
+      button.textContent = 'Sound unavailable';
+      button.disabled = true;
+    });
+  } else {
+    document.querySelectorAll('[id$="MovieSoundBtn"]').forEach(button => {
+      button.addEventListener('click', toggleMovieSound);
+    });
+  }
+
+  if (useCasePlayButton) useCasePlayButton.addEventListener('click', playUseCaseMovie);
+  updateMoviePlayButtons();
+  updateMovieSoundButtons();
+}
+
 const modelClamp = (value, min=0, max=100) => Math.round(clamp(value, min, max));
 const MODEL_LABELS = {
   protocol: 'Protocol quality',
@@ -325,179 +958,152 @@ const MODEL_LABELS = {
 
 const SCENARIOS = [
   {
-    id: 'incident',
-    name: 'Incident room forms',
-    caption: 'SRE, support, product, infra, vendor, and agent traces converge during an outage.',
-    description: 'Use this when the canonical paper example is active: partial observations must become a coherent mitigation before delay and misalignment compound.',
-    useCase: 'Paper use case: incident response as a temporary bounded agent.',
-    proxy: 'Trace proxies: time to triage, time to mitigation, handoff count, reopen rate, escalation rate, severity reduction.',
+    id: 'managed-db',
+    name: 'Managed database dependency',
+    caption: 'A cheap external database works until latency, outages, or lock-in make the interface expensive.',
+    description: 'Use this for the lead Coase example: build inside when market coordination is costly, outsource when the provider is better, and move the boundary again when the interface starts creating surprise.',
+    useCase: 'Current problem: managed data platforms, vector stores, and SaaS APIs are faster to adopt than rebuild, but reliability and state access decide whether they stay outside.',
+    proxy: 'Trace proxies: p95 latency, error budget burn, failover events, vendor escalations, data freshness, rollback rate, internal platform toil.',
     levers: [
-      { id: 'serviceCoupling', label: 'Service coupling', low: 'isolated service', high: 'shared blast radius', value: 84 },
-      { id: 'runbookSchema', label: 'Runbook / ticket schema', low: 'free-form updates', high: 'structured state', value: 46 },
-      { id: 'observabilityDepth', label: 'Observability depth', low: 'thin signals', high: 'logs, traces, metrics', value: 72 },
-      { id: 'agentTriage', label: 'Agent triage coverage', low: 'human relay', high: 'agent summaries', value: 58 },
-      { id: 'escalationGovernance', label: 'Escalation governance', low: 'unclear owners', high: 'clear authority', value: 67 },
-      { id: 'incidentVolatility', label: 'Incident volatility', low: 'stable failure', high: 'shifting incident', value: 70 },
-      { id: 'blueprintDepth', label: 'Preplanned response depth', low: 'reactive response', high: 'blueprint-heavy runbook', value: 52 }
+      { id: 'interfaceHealth', label: 'Database interface health', low: 'flaky SLA / network', high: 'reliable API / SLA', value: 58 },
+      { id: 'workloadCoupling', label: 'Workload coupling', low: 'side workload', high: 'core product path', value: 72 },
+      { id: 'vendorEconomics', label: 'Provider economics', low: 'expensive / lock-in', high: 'cheap managed service', value: 78 },
+      { id: 'internalCapability', label: 'Internal platform strength', low: 'thin team', high: 'strong platform team', value: 42 },
+      { id: 'observabilityDepth', label: 'State observability', low: 'opaque provider', high: 'traces, logs, exports', value: 66 },
+      { id: 'agentOpsCoverage', label: 'Agent ops coverage', low: 'manual runbooks', high: 'agent-managed failover', value: 50 },
+      { id: 'changeVolatility', label: 'Workload volatility', low: 'steady workload', high: 'rapidly shifting', value: 46 },
+      { id: 'blueprintDepth', label: 'Migration planning', low: 'reactive migration', high: 'rehearsed fallback plan', value: 58 }
     ],
     map: v => ({
-      protocol: modelClamp(v.runbookSchema),
-      interdependence: modelClamp(v.serviceCoupling),
-      observability: modelClamp(v.observabilityDepth),
-      agentCoverage: modelClamp(v.agentTriage),
-      governance: modelClamp(v.escalationGovernance + v.blueprintDepth * (1 - v.incidentVolatility / 100) * 0.12),
-      marketFriction: modelClamp(58 + v.serviceCoupling * 0.16 - v.runbookSchema * 0.24),
-      volatility: modelClamp(v.incidentVolatility),
+      protocol: modelClamp(v.interfaceHealth * 0.58 + v.observabilityDepth * 0.26 + v.vendorEconomics * 0.12),
+      interdependence: modelClamp(v.workloadCoupling),
+      observability: modelClamp(v.observabilityDepth * 0.65 + v.interfaceHealth * 0.2 + v.internalCapability * 0.15),
+      agentCoverage: modelClamp(v.agentOpsCoverage),
+      governance: modelClamp(30 + v.observabilityDepth * 0.18 + v.internalCapability * 0.2 + v.blueprintDepth * (1 - v.changeVolatility / 100) * 0.14),
+      marketFriction: modelClamp(86 - v.vendorEconomics * 0.55 + v.workloadCoupling * 0.22 - v.interfaceHealth * 0.18),
+      volatility: modelClamp(v.changeVolatility),
       planning: modelClamp(v.blueprintDepth),
-      agentCount: modelClamp(7 + v.serviceCoupling * 0.1 + v.agentTriage * 0.03, 4, 30)
+      agentCount: modelClamp(8 + v.workloadCoupling * 0.05 + v.agentOpsCoverage * 0.05, 4, 30)
     })
   },
   {
-    id: 'support',
-    name: 'Support router absorbs handoffs',
-    caption: 'A software agent routes semi-structured customer or internal-service tickets.',
-    description: 'Use this when the paper’s agentic-routing proposition is the main question: can an agent reduce routing, interpretation, and execution latency without adding too much governance or error?',
-    useCase: 'Paper use case: support routing and workflow traces.',
-    proxy: 'Trace proxies: first-touch resolution, handoffs per ticket, time to decision, reopen rate, escalation rate, expert quality score.',
+    id: 'support-triage',
+    name: 'Support triage agent',
+    caption: 'A customer-support agent routes, summarizes, resolves routine cases, and escalates exceptions.',
+    description: 'Use this when the practical question is whether a support workflow should stay outsourced, move in-house, or become an agent-mediated hybrid with humans handling exceptions.',
+    useCase: 'Current problem: teams want AI to reduce ticket handoffs and first-response time without increasing bad refunds, wrong answers, or policy violations.',
+    proxy: 'Trace proxies: first-contact resolution, handoffs per ticket, reopen rate, refund error rate, escalation latency, CSAT, expert quality score.',
     levers: [
-      { id: 'intakeStructure', label: 'Intake structure', low: 'free text', high: 'typed schema', value: 78 },
+      { id: 'intakeStructure', label: 'Intake structure', low: 'free-text tickets', high: 'typed issue schema', value: 78 },
       { id: 'caseAmbiguity', label: 'Case ambiguity', low: 'clear category', high: 'ambiguous intent', value: 46 },
       { id: 'policyCoverage', label: 'Policy coverage', low: 'tribal rules', high: 'codified policy', value: 70 },
-      { id: 'agentAutonomy', label: 'Agent autonomy', low: 'suggest only', high: 'route and act', value: 68 },
-      { id: 'approvalBurden', label: 'Approval burden', low: 'light review', high: 'heavy oversight', value: 34 },
+      { id: 'agentAuthority', label: 'Agent resolution authority', low: 'suggest only', high: 'route and resolve', value: 66 },
+      { id: 'escalationClarity', label: 'Escalation clarity', low: 'unclear owners', high: 'clear human owner', value: 64 },
       { id: 'ticketVolatility', label: 'Ticket volatility', low: 'repeating cases', high: 'novel cases', value: 38 },
       { id: 'blueprintDepth', label: 'Workflow design depth', low: 'reactive queue', high: 'blueprint-heavy flow', value: 48 }
     ],
     map: v => ({
-      protocol: modelClamp((v.intakeStructure * 0.56) + (v.policyCoverage * 0.32) + (100 - v.caseAmbiguity) * 0.12),
-      interdependence: modelClamp(30 + v.caseAmbiguity * 0.56),
-      observability: modelClamp(35 + v.intakeStructure * 0.28 + v.policyCoverage * 0.34),
-      agentCoverage: modelClamp(v.agentAutonomy),
-      governance: modelClamp(42 + v.policyCoverage * 0.28 - v.approvalBurden * 0.16 + v.blueprintDepth * (1 - v.ticketVolatility / 100) * 0.1),
-      marketFriction: modelClamp(48 + v.caseAmbiguity * 0.18 - v.intakeStructure * 0.18),
+      protocol: modelClamp(v.intakeStructure * 0.5 + v.policyCoverage * 0.34 + (100 - v.caseAmbiguity) * 0.12),
+      interdependence: modelClamp(28 + v.caseAmbiguity * 0.58),
+      observability: modelClamp(32 + v.intakeStructure * 0.28 + v.policyCoverage * 0.26 + v.escalationClarity * 0.18),
+      agentCoverage: modelClamp(v.agentAuthority),
+      governance: modelClamp(24 + v.policyCoverage * 0.28 + v.escalationClarity * 0.3 + v.blueprintDepth * (1 - v.ticketVolatility / 100) * 0.12),
+      marketFriction: modelClamp(54 + v.caseAmbiguity * 0.18 - v.intakeStructure * 0.18 - v.policyCoverage * 0.08),
       volatility: modelClamp(v.ticketVolatility),
       planning: modelClamp(v.blueprintDepth),
-      agentCount: modelClamp(8 + v.caseAmbiguity * 0.06 + v.agentAutonomy * 0.06, 4, 30)
+      agentCount: modelClamp(8 + v.caseAmbiguity * 0.06 + v.agentAuthority * 0.06, 4, 30)
     })
   },
   {
-    id: 'vendor-api',
-    name: 'Vendor API boundary holds',
-    caption: 'A firm coordinates with an external provider through contracts, observability, and schemas.',
-    description: 'Use this when the boundary question is whether a vendor interface can preserve enough decision-relevant state to avoid bringing the capability in-house.',
-    useCase: 'Paper use case: vendor, API, and protocol-mediated coordination.',
-    proxy: 'Trace proxies: SLA success, vendor escalation latency, contract exceptions, monitoring steps, clarification requests, rework.',
+    id: 'coding-agent',
+    name: 'Coding maintenance agent',
+    caption: 'A repo-bound coding agent handles bugs, upgrades, and tests inside explicit permissions.',
+    description: 'Use this when software work is moving between contractors, internal engineering, and an agent that operates inside the repo with tests, CI, and review gates.',
+    useCase: 'Current problem: teams want coding agents to clear maintenance queues, but context access, test coverage, and review cost decide whether the agent is useful or noisy.',
+    proxy: 'Trace proxies: PR cycle time, test pass rate, review iterations, regression rate, issue reopen rate, escaped defects, maintainer interruption time.',
     levers: [
-      { id: 'contractCompleteness', label: 'Contract completeness', low: 'ambiguous terms', high: 'well specified', value: 78 },
-      { id: 'apiFidelity', label: 'API / schema fidelity', low: 'manual handoff', high: 'machine-readable', value: 82 },
-      { id: 'assetSpecificity', label: 'Asset specificity', low: 'generic service', high: 'firm-specific', value: 34 },
-      { id: 'vendorObservability', label: 'Vendor observability', low: 'opaque service', high: 'observable service', value: 66 },
-      { id: 'agentBrokerage', label: 'Agent brokerage', low: 'email escalation', high: 'agent-mediated', value: 45 },
-      { id: 'vendorVolatility', label: 'Vendor volatility', low: 'stable provider', high: 'unstable provider', value: 32 },
-      { id: 'blueprintDepth', label: 'Integration design depth', low: 'reactive integration', high: 'blueprint-heavy integration', value: 70 }
+      { id: 'repoContext', label: 'Repo context access', low: 'shallow prompt', high: 'code, issues, docs', value: 76 },
+      { id: 'testCoverage', label: 'Test / CI coverage', low: 'weak tests', high: 'strong verification', value: 68 },
+      { id: 'changeCoupling', label: 'Change coupling', low: 'localized edits', high: 'cross-system change', value: 54 },
+      { id: 'agentPermissions', label: 'Agent permissions', low: 'draft patches', high: 'branch, run, propose', value: 62 },
+      { id: 'reviewGovernance', label: 'Review governance', low: 'ad hoc review', high: 'clear approval gates', value: 72 },
+      { id: 'issueNovelty', label: 'Issue novelty', low: 'routine maintenance', high: 'ambiguous design', value: 42 },
+      { id: 'blueprintDepth', label: 'Design planning depth', low: 'reactive patching', high: 'planned refactor', value: 50 }
     ],
     map: v => ({
-      protocol: modelClamp(v.apiFidelity * 0.58 + v.contractCompleteness * 0.32),
-      interdependence: modelClamp(v.assetSpecificity),
-      observability: modelClamp(v.vendorObservability),
-      agentCoverage: modelClamp(v.agentBrokerage),
-      governance: modelClamp(22 + v.contractCompleteness * 0.26 + v.vendorObservability * 0.18 + v.blueprintDepth * (1 - v.vendorVolatility / 100) * 0.08),
-      marketFriction: modelClamp(70 - v.apiFidelity * 0.32 + v.assetSpecificity * 0.34 - v.contractCompleteness * 0.18),
-      volatility: modelClamp(v.vendorVolatility),
+      protocol: modelClamp(v.repoContext * 0.36 + v.testCoverage * 0.34 + v.reviewGovernance * 0.16),
+      interdependence: modelClamp(v.changeCoupling),
+      observability: modelClamp(v.testCoverage * 0.52 + v.repoContext * 0.3 + v.reviewGovernance * 0.12),
+      agentCoverage: modelClamp(v.agentPermissions),
+      governance: modelClamp(26 + v.reviewGovernance * 0.4 + v.testCoverage * 0.16 + v.blueprintDepth * (1 - v.issueNovelty / 100) * 0.14),
+      marketFriction: modelClamp(60 + v.changeCoupling * 0.2 + v.issueNovelty * 0.16 - v.repoContext * 0.16),
+      volatility: modelClamp(v.issueNovelty),
       planning: modelClamp(v.blueprintDepth),
-      agentCount: modelClamp(7 + v.assetSpecificity * 0.08 + v.agentBrokerage * 0.05, 4, 30)
+      agentCount: modelClamp(9 + v.changeCoupling * 0.06 + v.agentPermissions * 0.05, 4, 30)
     })
   },
   {
-    id: 'services',
-    name: 'Internal services modularize',
-    caption: 'Teams or services split into bounded modules when interfaces preserve enough state.',
-    description: 'Use this when the paper’s modularity claim is the center: internal mini-monoliths can beat one giant boundary if protocols carry the right state.',
-    useCase: 'Paper use case: teams, services, workflows, and software architecture.',
-    proxy: 'Trace proxies: cross-team handoffs, API/schema breaks, deployment rollback rate, queue time, review depth, local decision quality.',
+    id: 'security-triage',
+    name: 'Security alert triage',
+    caption: 'An alert-triage loop decides what stays with an MSSP, what moves inside, and what an agent can filter.',
+    description: 'Use this when alert overload makes the boundary question concrete: outsourced SOC, internal security, and agentic triage each move delay, false positives, monitoring, and error risk.',
+    useCase: 'Current problem: security teams want agents to reduce alert fatigue without missing real incidents or creating unauditable response paths.',
+    proxy: 'Trace proxies: mean time to triage, false-positive rate, missed escalation rate, analyst touches, audit steps, containment time, incident severity.',
     levers: [
-      { id: 'interfaceClarity', label: 'Interface clarity', low: 'implicit handoffs', high: 'explicit contracts', value: 74 },
-      { id: 'dependencyDensity', label: 'Dependency density', low: 'loosely coupled', high: 'cross-cutting', value: 56 },
-      { id: 'serviceObservability', label: 'Service observability', low: 'opaque internals', high: 'traces and dashboards', value: 70 },
-      { id: 'localAutonomy', label: 'Local autonomy', low: 'central approvals', high: 'local control', value: 66 },
-      { id: 'agentOpsCoverage', label: 'Agent ops coverage', low: 'manual queueing', high: 'agent-managed queues', value: 36 },
-      { id: 'releaseVolatility', label: 'Release volatility', low: 'stable roadmap', high: 'volatile roadmap', value: 48 },
-      { id: 'blueprintDepth', label: 'Architecture planning depth', low: 'reactive design', high: 'blueprint-heavy design', value: 62 }
+      { id: 'signalQuality', label: 'Alert signal quality', low: 'noisy alerts', high: 'high-signal detections', value: 48 },
+      { id: 'systemCoupling', label: 'System coupling', low: 'isolated asset', high: 'shared blast radius', value: 76 },
+      { id: 'msspFit', label: 'External SOC fit', low: 'generic provider', high: 'high-context partner', value: 46 },
+      { id: 'telemetryDepth', label: 'Telemetry depth', low: 'thin logs', high: 'logs, EDR, traces', value: 70 },
+      { id: 'agentTriage', label: 'Agent triage coverage', low: 'human queue', high: 'agent-filtered queue', value: 58 },
+      { id: 'auditClarity', label: 'Audit and authority', low: 'unclear action rights', high: 'clear policy gates', value: 68 },
+      { id: 'threatVolatility', label: 'Threat volatility', low: 'known patterns', high: 'novel attacks', value: 62 },
+      { id: 'blueprintDepth', label: 'Response planning depth', low: 'reactive response', high: 'rehearsed playbooks', value: 56 }
     ],
     map: v => ({
-      protocol: modelClamp(v.interfaceClarity),
-      interdependence: modelClamp(v.dependencyDensity),
-      observability: modelClamp(v.serviceObservability),
-      agentCoverage: modelClamp(18 + v.agentOpsCoverage * 0.58 + v.localAutonomy * 0.12),
-      governance: modelClamp(32 + v.localAutonomy * 0.22 + v.blueprintDepth * (1 - v.releaseVolatility / 100) * 0.18),
-      marketFriction: modelClamp(62 - v.interfaceClarity * 0.22 + v.dependencyDensity * 0.16),
-      volatility: modelClamp(v.releaseVolatility),
+      protocol: modelClamp(v.signalQuality * 0.34 + v.auditClarity * 0.28 + v.msspFit * 0.18),
+      interdependence: modelClamp(v.systemCoupling),
+      observability: modelClamp(v.telemetryDepth * 0.62 + v.signalQuality * 0.22),
+      agentCoverage: modelClamp(v.agentTriage),
+      governance: modelClamp(28 + v.auditClarity * 0.42 + v.telemetryDepth * 0.12 + v.blueprintDepth * (1 - v.threatVolatility / 100) * 0.14),
+      marketFriction: modelClamp(74 - v.msspFit * 0.38 + v.systemCoupling * 0.18 + v.threatVolatility * 0.14),
+      volatility: modelClamp(v.threatVolatility),
       planning: modelClamp(v.blueprintDepth),
-      agentCount: modelClamp(9 + v.localAutonomy * 0.09 + v.dependencyDensity * 0.04, 4, 30)
+      agentCount: modelClamp(10 + v.systemCoupling * 0.07 + v.agentTriage * 0.04, 4, 30)
     })
   },
   {
-    id: 'datacenter',
-    name: 'Blueprint plan gets stress-tested',
-    caption: 'Detailed infrastructure plans reduce runtime surprise until volatility turns them rigid.',
-    description: 'Use this when the practical question is planning posture: how much up-front blueprinting should be bought before the environment starts changing underneath it?',
-    useCase: 'Paper use case: blueprint-heavy versus reactive design as an information investment.',
-    proxy: 'Trace proxies: design lead time, change orders, incident rate, approval latency, rollback/rework, deviation from plan.',
+    id: 'procurement-ap',
+    name: 'Procurement and AP agent',
+    caption: 'An agent codes invoices, checks policy, routes approvals, and escalates exceptions.',
+    description: 'Use this when back-office automation is the concrete boundary choice: outsourced processing, internal finance ops, and agent-mediated exception handling all trade cost for control.',
+    useCase: 'Current problem: finance teams want agents to reduce invoice queues and vendor follow-up without creating audit gaps or bad approvals.',
+    proxy: 'Trace proxies: cycle time, touchless processing rate, exception rate, duplicate payments, policy violations, approval latency, vendor follow-up count.',
     levers: [
-      { id: 'blueprintDetail', label: 'Blueprint detail', low: 'minimal upfront plan', high: 'full datacenter blueprint', value: 88 },
-      { id: 'environmentStability', label: 'Environment stability', low: 'requirements shifting', high: 'stable requirements', value: 64 },
-      { id: 'buildInterdependence', label: 'Build interdependence', low: 'modular components', high: 'coupled systems', value: 72 },
-      { id: 'interfaceStandards', label: 'Interface standards', low: 'bespoke interfaces', high: 'standard interfaces', value: 58 },
-      { id: 'telemetryDepth', label: 'Telemetry depth', low: 'late discovery', high: 'early signals', value: 62 },
-      { id: 'governanceLoad', label: 'Governance load', low: 'light approvals', high: 'formal gates', value: 70 },
-      { id: 'agentPlanningAssist', label: 'Agent planning assist', low: 'manual planning', high: 'agent-assisted simulation', value: 42 }
-    ],
-    map: v => {
-      const volatility = modelClamp(100 - v.environmentStability);
-      return {
-        protocol: modelClamp(v.interfaceStandards),
-        interdependence: modelClamp(v.buildInterdependence),
-        observability: modelClamp(v.telemetryDepth),
-        agentCoverage: modelClamp(v.agentPlanningAssist),
-        governance: modelClamp(24 + v.governanceLoad * 0.46 + v.blueprintDetail * (v.environmentStability / 100) * 0.18),
-        marketFriction: modelClamp(52 + v.buildInterdependence * 0.16 - v.interfaceStandards * 0.18),
-        volatility,
-        planning: modelClamp(v.blueprintDetail),
-        agentCount: modelClamp(10 + v.buildInterdependence * 0.08 + v.governanceLoad * 0.04, 4, 30)
-      };
-    }
-  },
-  {
-    id: 'inhouse',
-    name: 'Capability comes in-house',
-    caption: 'High-context, specific work where failed interfaces are expensive.',
-    description: 'Use this when coordination is so context-heavy that ownership and shared representation beat contracts.',
-    useCase: 'Paper use case: the classical firm boundary as one instance of the broader agent-boundary problem.',
-    proxy: 'Trace proxies: clarification loops, vendor escalations, rework, decision latency, monitoring burden, internal quality score.',
-    levers: [
-      { id: 'coupling', label: 'Coordination density', low: 'independent tasks', high: 'tightly coupled', value: 90 },
-      { id: 'interfaceMaturity', label: 'Interface maturity', low: 'bespoke handoffs', high: 'clean protocols', value: 18 },
-      { id: 'vendorFit', label: 'Vendor fit', low: 'no outside match', high: 'mature supplier', value: 12 },
-      { id: 'internalContext', label: 'Internal context depth', low: 'thin context', high: 'rich shared context', value: 86 },
-      { id: 'changeVolatility', label: 'Change volatility', low: 'stable', high: 'surprising', value: 36 },
-      { id: 'blueprintDepth', label: 'Boundary planning depth', low: 'reactive org design', high: 'blueprint-heavy org design', value: 74 }
+      { id: 'invoiceStructure', label: 'Invoice structure', low: 'PDF/email chaos', high: 'structured EDI/API', value: 64 },
+      { id: 'policyCoverage', label: 'Policy coverage', low: 'tribal approvals', high: 'codified rules', value: 74 },
+      { id: 'exceptionRate', label: 'Exception rate', low: 'routine invoices', high: 'many edge cases', value: 36 },
+      { id: 'supplierCriticality', label: 'Supplier criticality', low: 'commodity vendors', high: 'critical suppliers', value: 54 },
+      { id: 'agentAuthority', label: 'Agent approval authority', low: 'draft only', high: 'approve routine cases', value: 60 },
+      { id: 'auditLoad', label: 'Audit load', low: 'light controls', high: 'strict controls', value: 72 },
+      { id: 'spendVolatility', label: 'Spend volatility', low: 'steady spend', high: 'surprising demand', value: 40 },
+      { id: 'blueprintDepth', label: 'Process design depth', low: 'reactive process', high: 'blueprint-heavy flow', value: 62 }
     ],
     map: v => ({
-      protocol: modelClamp(v.interfaceMaturity),
-      interdependence: modelClamp(v.coupling),
-      observability: modelClamp(28 + v.internalContext * 0.58),
-      agentCoverage: modelClamp(v.vendorFit * 0.25),
-      governance: modelClamp(30 + v.internalContext * 0.44 + v.blueprintDepth * (1 - v.changeVolatility / 100) * 0.2),
-      marketFriction: modelClamp(100 - v.vendorFit * 0.82 + v.coupling * 0.08),
-      volatility: modelClamp(v.changeVolatility),
+      protocol: modelClamp(v.invoiceStructure * 0.42 + v.policyCoverage * 0.36 + (100 - v.exceptionRate) * 0.1),
+      interdependence: modelClamp(32 + v.supplierCriticality * 0.42 + v.exceptionRate * 0.18),
+      observability: modelClamp(v.invoiceStructure * 0.34 + v.policyCoverage * 0.26 + v.auditLoad * 0.22),
+      agentCoverage: modelClamp(v.agentAuthority),
+      governance: modelClamp(26 + v.policyCoverage * 0.28 + v.auditLoad * 0.34 + v.blueprintDepth * (1 - v.spendVolatility / 100) * 0.12),
+      marketFriction: modelClamp(58 + v.exceptionRate * 0.22 + v.supplierCriticality * 0.12 - v.invoiceStructure * 0.18),
+      volatility: modelClamp(v.spendVolatility),
       planning: modelClamp(v.blueprintDepth),
-      agentCount: modelClamp(8 + v.coupling * 0.09, 4, 30)
+      agentCount: modelClamp(7 + v.supplierCriticality * 0.05 + v.agentAuthority * 0.05, 4, 30)
     })
   }
 ];
 
 const appState = {
-  scenarioId: 'incident',
+  scenarioId: 'managed-db',
   semanticValues: {}
 };
 
@@ -1254,7 +1860,26 @@ function animateBoundaryField(now) {
   requestAnimationFrame(animateBoundaryField);
 }
 
+function updateMoviePlayback(state, duration, seconds) {
+  if (!state.playing) return;
+  state.elapsed = seconds - state.start;
+  if (state.elapsed >= duration) {
+    state.elapsed = duration;
+    state.playing = false;
+    updateMoviePlayButtons();
+  }
+}
+
+function animateCoaseMovie(now) {
+  const seconds = now / 1000;
+  updateMoviePlayback(useCaseMovieState, USECASE_MOVIE_SECONDS, seconds);
+  drawCoaseMovie(document.getElementById('coaseMovieCanvas'), useCaseMovieState.elapsed);
+  requestAnimationFrame(animateCoaseMovie);
+}
+
+initMovieControls();
 requestAnimationFrame(animateBoundaryField);
+requestAnimationFrame(animateCoaseMovie);
 </script>
 </body>
 </html>

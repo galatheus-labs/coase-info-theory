@@ -41,6 +41,18 @@ The earlier prototype pages now redirect to `index.html` so old links do not ope
 - `docs/measurement-playbook.md` — how to estimate theory quantities from workflow traces
 - `docs/app-model-assumptions.md` — assumptions and calibration plan for the demo apps
 
+## Citation
+
+```bibtex
+@misc{guarraci2026boundaryagent,
+  author = {Guarraci, Brian},
+  title = {From the Boundary of the Firm to the Boundary of the Agent: Coase-Information Theory for AI-Mediated Organizations},
+  year = {2026},
+  howpublished = {Working paper},
+  url = {https://github.com/galatheus-labs/coase-info-theory}
+}
+```
+
 ### Sample data
 
 - `sample-data/incident-trace.csv`

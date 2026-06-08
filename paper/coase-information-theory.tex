@@ -68,6 +68,12 @@ execution programmable, they change the relative cost of hierarchy, market, and
 hybrid organization.
 \end{abstract}
 
+\noindent\textbf{Keywords:} multi-agent systems; organizational design;
+transaction-cost economics; software agents; information processing;
+organizational agility
+
+\vspace{0.75em}
+
 \section{Introduction: The Boundary Problem After Software Agents}
 
 Coase framed the firm as a response to the costs of using the price mechanism:
@@ -226,7 +232,10 @@ The organization produces a joint action
 a_t=g(a_t^1,\ldots,a_t^n)
 \]
 and receives utility \(U(X_t,a_t)\), or equivalently incurs loss
-\(L(X_t,a_t)\).
+\(L(X_t,a_t)\). Unless otherwise stated, \(L\) denotes direct task or decision
+loss from the chosen action; coordination, delay, monitoring, interpretation,
+and governance burdens enter through separate cost terms so that they are not
+counted twice.
 
 The general organizational design problem is
 \[
@@ -252,7 +261,7 @@ The Coase--Information move is to treat transaction and coordination costs as
 partly information-processing quantities. Table~\ref{tab:costs} gives the
 minimal decomposition used in the rest of the paper.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Information-processing decomposition of coordination cost}
 \label{tab:costs}
@@ -263,9 +272,9 @@ Term & Interpretation \\
 \(C_{\mathrm{comm}}\) & Meetings, messages, handoffs, routing, API calls, protocol overhead. \\
 \(C_{\mathrm{comp}}\) & Human or machine effort to analyze, summarize, decide, or execute. \\
 \(C_{\mathrm{interp}}\) & Translation and interpretation across boundaries: schema mismatch, jargon, missing context, tool-output interpretation, vendor/customer translation, and semantic ambiguity. \\
-\(C_{\mathrm{delay}}\) & Loss from acting after the state has changed or the opportunity has decayed. \\
-\(C_{\mathrm{error}}\) & Loss from stale, incomplete, distorted, or misrouted information. \\
-\(C_{\mathrm{misalign}}\) & Loss from local actions that do not compose into good global action. \\
+\(C_{\mathrm{delay}}\) & Incremental process loss from acting after the state has changed or the opportunity has decayed. \\
+\(C_{\mathrm{error}}\) & Incremental process loss from stale, incomplete, distorted, or misrouted information. \\
+\(C_{\mathrm{misalign}}\) & Incremental process loss from local actions that do not compose into good global action. \\
 \(C_{\mathrm{monitor}}\) & Measurable governance burden: audit, review, compliance, approval, and oversight steps. \\
 \bottomrule
 \end{tabularx}
@@ -284,7 +293,7 @@ oversight work.
 Formally, each boundary architecture induces a performance vector
 \[
 \begin{aligned}
-V(\calB,G,F,\Pi)=(&
+\Phi(\calB,G,F,\Pi)=(&
 \E\sum_t S_t,\;
 \E\sum_t L(X_t,a_t),\;
 C_{\mathrm{comm}},\;
@@ -354,7 +363,9 @@ planning costs. External coordination can reduce internal burden and preserve
 modularity, but it can increase interpretation, monitoring, contracting, and
 delay costs.
 
-Let \(Z_t^B\) denote the internal representation held by a bounded agent \(B\).
+Let \(Z_t^B\) denote the internal representation held by a bounded agent \(B\),
+and let \(a_t^B\) denote the action induced by that boundary's representation
+and policy.
 One idealized measure of surprise is
 \[
 S_t^B=-\log P_B(X_t\mid Z_t^B),
@@ -377,7 +388,10 @@ treated as a proxy or leading indicator rather than double-counted with \(L\).
 In other applications, surprise is itself costly because it consumes attention,
 triggers escalation, creates risk, or forces expensive re-planning. The
 empirical specification should decide whether surprise enters as an independent
-cost term or as a measurement proxy for future loss.
+cost term or as a measurement proxy for future loss. The same convention
+applies to delay, error, and misalignment costs: they should be interpreted as
+incremental process losses not already included in \(L(X_t,a_t)\), or else
+absorbed into \(L\) and omitted as separate terms.
 
 Two agents should coalesce when the merged boundary lowers expected surprise or
 action loss more than it raises internal coordination and governance cost:
@@ -396,7 +410,9 @@ Let \(k\) index a coordination form:
 \[
 k\in\{\mathrm{internal},\mathrm{market},\mathrm{hybrid}\}.
 \]
-Each form has cost
+In the general performance vector, search and contracting burdens are folded
+into communication, interpretation, monitoring, and delay costs as appropriate.
+When comparing coordination forms, it is useful to write them separately:
 \[
 C_k=C_{\mathrm{search},k}
 +C_{\mathrm{contract},k}
@@ -420,9 +436,9 @@ cross-boundary interpretation and delay if protocols and governance are strong
 enough.
 
 The claim is not that agents make firms smaller or markets always better. The
-claim is that software agents and machine-readable protocols alter enough cost
-terms to create a new efficient region between classic hierarchy and classic
-market contracting.
+claim is that software agents and machine-readable protocols can alter enough
+cost terms to create a new efficient region between classic hierarchy and
+classic market contracting.
 
 \section{Organizational Agility}
 
@@ -588,7 +604,7 @@ full organizational merger.
 
 \begin{proposition}[Protocol-mediated coordination]
 For a fixed organizational graph and decision-policy class, replacing protocol
-\(P\) with protocol \(P'\) weakly increases achievable expected utility if
+\(P\) with protocol \(P'\) weakly increases achievable net objective value if
 \(P'\) is at least as informative about every decision-relevant statistic of
 \(X_t\), reduces or preserves interpretation cost, and does not increase delay,
 rigidity, or monitoring cost by more than the value created.
@@ -631,10 +647,13 @@ at the interface, so separate agents can preserve autonomy without large
 interpretation losses.
 
 \begin{proposition}[Agentic routing]
-For structured or semi-structured workflows, agent nodes increase
-organizational agility when reductions in routing, communication,
-interpretation, and execution latency exceed induced monitoring, governance,
-misalignment, and error costs.
+For structured or semi-structured workflows, agent nodes improve the net
+boundary objective when reductions in routing, communication, interpretation,
+and execution latency exceed induced monitoring, governance, misalignment, and
+error costs. They increase cost-adjusted organizational agility when those
+reductions also raise decision value \(Q_t\), lower latency \(\tau_t\), or
+lower normalized resource cost \(\widetilde C_t\) enough to improve
+\(\calG_t^{(c)}=Q_t/(\tau_t(1+\widetilde C_t))\).
 \end{proposition}
 
 \noindent A sufficient condition is
@@ -652,7 +671,9 @@ I_{\mathrm{monitor}}
 where \(R_x\) denotes cost reductions and \(I_x\) denotes induced costs.
 Here \(I_{\mathrm{monitor}}\) denotes measurable oversight work, while
 \(I_{\mathrm{governance}}\) denotes broader policy, permissioning,
-auditability, and escalation overhead.
+auditability, and escalation overhead. The inequality is a net-objective
+condition; for agility it must operate through the numerator \(Q_t\), latency
+\(\tau_t\), or normalized cost index \(\widetilde C_t\).
 
 \begin{proposition}[Governance limit]
 Agentic decentralization has diminishing or negative returns when governance
@@ -666,17 +687,15 @@ actions compose into the global objective.
 \section{Executable Illustration}
 
 The companion web-based simulation is an executable diagram, not a
-calibrated causal estimate. It samples a latent world state, gives primitive
-agents noisy local observations, and evaluates alternative boundary forms:
-coalesced, split, market/vendor, and agent-mediated hybrid. The objective
-includes surprise, action loss, latency, coordination cost, up-front blueprint
-delay, runtime surprise, and rigidity risk. The public companion repository
-includes the implementation as the static web page \texttt{index.html}:
-\url{https://github.com/galatheus-labs/coase-info-theory}.
-
-The framework is intended first as a comparative design language: it identifies
-which cost terms should move under a boundary change, not a universal predictive
-model of all organizations.
+calibrated causal estimate. The framework is intended first as a comparative
+design language: it identifies which cost terms should move under a boundary
+change, not a universal predictive model of all organizations. The simulation
+samples a latent world state, gives primitive agents noisy local observations,
+and evaluates alternative boundary forms: coalesced, split, market/vendor, and
+agent-mediated hybrid. The objective includes surprise, action loss, latency,
+coordination cost, up-front blueprint delay, runtime surprise, and rigidity
+risk. The public companion repository includes the implementation as the static
+web page \texttt{index.html}.\footnote{\href{https://github.com/galatheus-labs/coase-info-theory}{github.com/galatheus-labs/coase-info-theory}.}
 
 Figure~\ref{fig:regimes} reports the qualitative regime map generated by the
 simulation's core comparative statics.
@@ -749,7 +768,7 @@ In most organizational traces, neither \(X_t\) nor \(I(X_t;a_t)\) is directly
 observable. The empirical version should use loss-reduction and quality
 proxies, as shown in Table~\ref{tab:proxies}.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Operational proxies for formal quantities}
 \label{tab:proxies}
@@ -844,31 +863,39 @@ language for designing and measuring those loops.
 Coase, R. H. (1937).
 \newblock The nature of the firm.
 \newblock \emph{Economica}, 4(16), 386--405.
+\newblock \href{https://doi.org/10.1111/j.1468-0335.1937.tb00002.x}{doi:10.1111/j.1468-0335.1937.tb00002.x}.
 
 \bibitem{shannon1948}
 Shannon, C. E. (1948).
 \newblock A mathematical theory of communication.
-\newblock \emph{Bell System Technical Journal}, 27(3), 379--423.
+\newblock \emph{Bell System Technical Journal}, 27(3), 379--423; 27(4),
+623--656.
+\newblock \href{https://doi.org/10.1002/j.1538-7305.1948.tb01338.x}{doi:10.1002/j.1538-7305.1948.tb01338.x};
+\href{https://doi.org/10.1002/j.1538-7305.1948.tb00917.x}{doi:10.1002/j.1538-7305.1948.tb00917.x}.
 
 \bibitem{blackwell1953}
 Blackwell, D. (1953).
 \newblock Equivalent comparisons of experiments.
 \newblock \emph{Annals of Mathematical Statistics}, 24(2), 265--272.
+\newblock \href{https://doi.org/10.1214/aoms/1177729032}{doi:10.1214/aoms/1177729032}.
 
 \bibitem{hayek1945}
 Hayek, F. A. (1945).
 \newblock The use of knowledge in society.
 \newblock \emph{American Economic Review}, 35(4), 519--530.
+\newblock \href{https://www.aeaweb.org/aer/top20/35.4.519-530.pdf}{American
+Economic Association reprint}.
 
 \bibitem{simon1947}
 Simon, H. A. (1947).
-\newblock \emph{Administrative Behavior}.
+\newblock \emph{Administrative Behavior: A Study of Decision-Making Processes
+in Administrative Organization}.
 \newblock Macmillan.
 
 \bibitem{marchsimon1958}
 March, J. G., and Simon, H. A. (1958).
 \newblock \emph{Organizations}.
-\newblock Wiley.
+\newblock With the collaboration of H. Guetzkow. Wiley.
 
 \bibitem{cyertmarch1963}
 Cyert, R. M., and March, J. G. (1963).
@@ -878,11 +905,12 @@ Cyert, R. M., and March, J. G. (1963).
 \bibitem{marschakradner1972}
 Marschak, J., and Radner, R. (1972).
 \newblock \emph{Economic Theory of Teams}.
-\newblock Yale University Press.
+\newblock Cowles Foundation Monograph 22. Yale University Press.
 
 \bibitem{thompson1967}
 Thompson, J. D. (1967).
-\newblock \emph{Organizations in Action}.
+\newblock \emph{Organizations in Action: Social Science Bases of Administrative
+Theory}.
 \newblock McGraw-Hill.
 
 \bibitem{galbraith1973}
@@ -892,34 +920,41 @@ Galbraith, J. R. (1973).
 
 \bibitem{williamson1985}
 Williamson, O. E. (1985).
-\newblock \emph{The Economic Institutions of Capitalism}.
+\newblock \emph{The Economic Institutions of Capitalism: Firms, Markets,
+Relational Contracting}.
 \newblock Free Press.
 
 \bibitem{malonecrowston1994}
 Malone, T. W., and Crowston, K. (1994).
 \newblock The interdisciplinary study of coordination.
 \newblock \emph{ACM Computing Surveys}, 26(1), 87--119.
+\newblock \href{https://doi.org/10.1145/174666.174668}{doi:10.1145/174666.174668}.
 
 \bibitem{conway1968}
 Conway, M. E. (1968).
 \newblock How do committees invent?
 \newblock \emph{Datamation}, 14(4), 28--31.
+\newblock \url{https://www.melconway.com/Home/pdf/committees.pdf}.
 
 \bibitem{parnas1972}
 Parnas, D. L. (1972).
 \newblock On the criteria to be used in decomposing systems into modules.
 \newblock \emph{Communications of the ACM}, 15(12), 1053--1058.
+\newblock \href{https://doi.org/10.1145/361598.361623}{doi:10.1145/361598.361623}.
 
 \bibitem{hendersonclark1990}
 Henderson, R. M., and Clark, K. B. (1990).
 \newblock Architectural innovation: The reconfiguration of existing product
 technologies and the failure of established firms.
 \newblock \emph{Administrative Science Quarterly}, 35(1), 9--30.
+\newblock \href{https://doi.org/10.2307/2393549}{doi:10.2307/2393549}.
 
 \bibitem{baldwinclark2000}
 Baldwin, C. Y., and Clark, K. B. (2000).
-\newblock \emph{Design Rules: The Power of Modularity}.
+\newblock \emph{Design Rules, Volume 1: The Power of Modularity}.
 \newblock MIT Press.
+\newblock \href{https://doi.org/10.7551/mitpress/2366.001.0001}{doi:10.7551/mitpress/2366.001.0001}.
+\newblock \url{https://mitpress.mit.edu/9780262538206/design-rules-volume-1/}.
 
 \bibitem{amershi2019}
 Amershi, S., Weld, D., Vorvoreanu, M., Fourney, A., Nushi, B., Collisson, P.,
@@ -927,19 +962,23 @@ Suh, J., Iqbal, S., Bennett, P. N., Inkpen, K., Teevan, J., Kikin-Gil, R., and
 Horvitz, E. (2019).
 \newblock Guidelines for human-AI interaction.
 \newblock \emph{Proceedings of the 2019 CHI Conference on Human Factors in
-Computing Systems}.
+Computing Systems}, 1--13.
+\newblock \href{https://doi.org/10.1145/3290605.3300233}{doi:10.1145/3290605.3300233}.
 
 \bibitem{yao2023}
 Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K., and Cao, Y.
 (2023).
 \newblock ReAct: Synergizing reasoning and acting in language models.
 \newblock \emph{International Conference on Learning Representations}.
+\newblock \url{https://openreview.net/forum?id=WE_vluYUL-X}.
 
 \bibitem{schick2023}
 Schick, T., Dwivedi-Yu, J., Dess{\`i}, R., Raileanu, R., Lomeli, M., Hambro, E.,
 Zettlemoyer, L., Cancedda, N., and Scialom, T. (2023).
 \newblock Toolformer: Language models can teach themselves to use tools.
-\newblock \emph{Advances in Neural Information Processing Systems}, 36.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36,
+68539--68551.
+\newblock \href{https://doi.org/10.52202/075280-2997}{doi:10.52202/075280-2997}.
 
 \bibitem{wu2023autogen}
 Wu, Q., Bansal, G., Zhang, J., Wu, Y., Li, B., Zhu, E., Jiang, L., Zhang, X.,
@@ -948,6 +987,7 @@ Zhang, S., Liu, J., Awadallah, A. H., White, R. W., Burger, D., and Wang, C.
 \newblock AutoGen: Enabling next-gen LLM applications via multi-agent
 conversation.
 \newblock \emph{arXiv preprint arXiv:2308.08155}.
+\newblock \href{https://doi.org/10.48550/arXiv.2308.08155}{doi:10.48550/arXiv.2308.08155}.
 
 \bibitem{yang2024sweagent}
 Yang, J., Jimenez, C. E., Wettig, A., Lieret, K., Yao, S., Narasimhan, K., and
@@ -955,13 +995,15 @@ Press, O. (2024).
 \newblock SWE-agent: Agent-computer interfaces enable automated software
 engineering.
 \newblock \emph{arXiv preprint arXiv:2405.15793}.
+\newblock \href{https://doi.org/10.48550/arXiv.2405.15793}{doi:10.48550/arXiv.2405.15793}.
 
 \bibitem{park2023}
 Park, J. S., O'Brien, J. C., Cai, C. J., Morris, M. R., Liang, P., and
 Bernstein, M. S. (2023).
 \newblock Generative agents: Interactive simulacra of human behavior.
 \newblock \emph{Proceedings of the 36th Annual ACM Symposium on User Interface
-Software and Technology}.
+Software and Technology}, 1--22.
+\newblock \href{https://doi.org/10.1145/3586183.3606763}{doi:10.1145/3586183.3606763}.
 
 \end{thebibliography}
 
