@@ -1,5 +1,7 @@
 # Coase–Information Theory Demo Repo
 
+**▶ Live interactive companion → https://galatheus-labs.github.io/coase-info-theory/**  ·  [Paper (PDF)](paper/coase-information-theory.pdf)  ·  [Paper (TeX)](paper/coase-information-theory.tex)
+
 This repo packages a small set of static web apps plus formal paper material for the **Coase–Information Theory** project.
 
 The central claim is:
@@ -12,14 +14,16 @@ The practical implication:
 
 The browser demo translates that claim into tangible software.
 
-The current example site follows the paper's main use cases:
+The companion page opens with a 60-second animated walkthrough of the thesis — a firm is an agent in a market, and is itself made of agents — then lets you drive the model across concrete "current problems":
 
-- incident response as a temporary bounded agent,
-- support routing and workflow traces,
-- vendor/API boundaries,
-- internal service modularization,
-- blueprint-heavy versus reactive planning,
-- classical in-house versus market coordination.
+- monolith vs microservices (the granularity sweet spot, `m* = √(A/B)`),
+- managed database / vendor dependency,
+- support triage agent,
+- coding maintenance agent,
+- security alert triage,
+- procurement and AP automation.
+
+A boundary **phase map** shows which architecture wins across protocol quality and task interdependence, with the `R* = κ` capacity threshold drawn in.
 
 ## Contents
 
@@ -62,7 +66,7 @@ These samples are retained for future calibration work.
 
 ## How to use
 
-The simulation is a static HTML file. You can either open `index.html` directly in a browser or serve the repo locally:
+The companion runs live at **https://galatheus-labs.github.io/coase-info-theory/**. To run it locally, open `index.html` directly in a browser or serve the repo:
 
 ```bash
 python3 -m http.server 8000
