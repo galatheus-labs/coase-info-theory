@@ -9,3 +9,6 @@ __pycache__/
 *.log
 *.out
 *.synctex.gz
+
+.superpowers/
+docs/superpowers/

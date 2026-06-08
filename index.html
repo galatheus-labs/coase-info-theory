@@ -123,8 +123,9 @@ button { cursor:pointer; border:0; }
 .movie-canvas-wrap { background:#020617; min-width:0; overflow:hidden; }
 .movie-canvas { width:100%; max-width:100%; min-width:0; height:auto; aspect-ratio:2.28 / 1; }
 .usecase-movie { margin-top:16px; }
-.movie-stages { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:rgba(255,255,255,0.07); border-top:1px solid var(--border); }
-.movie-stage { padding:10px 11px; min-height:56px; background:rgba(15,23,42,0.88); color:#94a3b8; font-size:11px; line-height:1.3; transition:background 180ms ease, color 180ms ease; }
+.movie-stages { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:1px; background:rgba(255,255,255,0.07); border-top:1px solid var(--border); }
+.movie-stage { padding:10px 11px; min-height:56px; background:rgba(15,23,42,0.88); color:#94a3b8; font-size:11px; line-height:1.3; cursor:pointer; transition:background 180ms ease, color 180ms ease; }
+.movie-stage:hover, .movie-stage:focus-visible { background:rgba(139,92,246,0.16); color:#e5e7eb; outline:none; }
 .movie-stage strong { display:block; color:#cbd5e1; font-size:12px; margin-bottom:3px; }
 .movie-stage.active { background:rgba(139,92,246,0.19); color:#e5e7eb; }
 .movie-stage.active strong { color:white; }
@@ -188,6 +189,7 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
         in cost. The examples below turn that tradeoff into a visual simulation.
       </p>
       <div class="pill-row">
+        <div class="pill">Monolith vs microservices</div>
         <div class="pill">Database dependency</div>
         <div class="pill">Support triage</div>
         <div class="pill">Coding agents</div>
@@ -204,6 +206,8 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
       </p>
       <div class="note">
         Same engine, different settings: surprise, action loss, latency, governance, interpretation cost, and planning drag.
+        The phase map below colors which boundary wins as interdependence and protocol quality vary; the dashed
+        <span class="code">R* = &kappa;</span> diagonal is the capacity threshold where finer decomposition stops paying.
       </div>
     </div>
   </div>
@@ -211,25 +215,21 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
   <div class="movie-panel usecase-movie">
     <div class="movie-head">
       <div>
-        <div class="kicker">Database boundary</div>
-        <h2 id="useCaseMovieTitle">Market coordination is expensive.</h2>
-        <p id="useCaseMovieCaption">Separate suppliers can make the product, but search, contracting, interpretation, and delay keep the market price high.</p>
-      </div>
-      <div class="movie-side">
-        <div class="movie-actions">
-          <button id="useCaseMoviePlayBtn" class="button" type="button">Play example</button>
-          <button id="useCaseMovieSoundBtn" class="button secondary" type="button" aria-pressed="false">Mute</button>
-        </div>
+        <div class="kicker">Coase–Information Theory</div>
+        <h2 id="useCaseMovieTitle">It's agents all the way down</h2>
+        <p id="useCaseMovieCaption">The same boundary choice — coalesce or split — repeats at every scale: a firm is an agent in a market, and is itself made of agents.</p>
       </div>
     </div>
     <div class="movie-canvas-wrap">
-      <canvas id="coaseMovieCanvas" class="movie-canvas" width="1280" height="560" aria-label="Animated Coase-to-agent database-boundary use case"></canvas>
+      <canvas id="coaseMovieCanvas" class="movie-canvas" width="1280" height="560" aria-label="Recursive boundary animation: agents, services, firms, and markets. Click to pause or resume."></canvas>
     </div>
     <div class="movie-stages" id="useCaseMovieStages">
-      <div class="movie-stage active" data-usecase-stage="0"><strong>Market cost</strong>Search, contracts, translation, and delay keep price high.</div>
-      <div class="movie-stage" data-usecase-stage="1"><strong>Firm lowers price</strong>A shared boundary turns lower coordination cost into a cheaper offer.</div>
-      <div class="movie-stage" data-usecase-stage="2"><strong>Database moves out</strong>The external capability becomes cheaper than building it inside.</div>
-      <div class="movie-stage" data-usecase-stage="3"><strong>Boundary moves</strong>SLA surprise makes internal, external, and hybrid boundaries live choices.</div>
+      <div class="movie-stage active" data-usecase-stage="0" data-seek="0" role="button" tabindex="0"><strong>Hook</strong>A firm is an agent in a market — made of agents.</div>
+      <div class="movie-stage" data-usecase-stage="1" data-seek="6" role="button" tabindex="0"><strong>Inside the firm</strong>Monolith vs microservices — one agent or many.</div>
+      <div class="movie-stage" data-usecase-stage="2" data-seek="17" role="button" tabindex="0"><strong>Bridge</strong>An agent is a service with a control loop.</div>
+      <div class="movie-stage" data-usecase-stage="3" data-seek="29" role="button" tabindex="0"><strong>In the market</strong>In-house capability or a vendor dependency.</div>
+      <div class="movie-stage" data-usecase-stage="4" data-seek="40" role="button" tabindex="0"><strong>Payoff</strong>Change the interface, move the boundary.</div>
+      <div class="movie-stage" data-usecase-stage="5" data-seek="54" role="button" tabindex="0"><strong>Every scale</strong>The same decision — agents, services, firms, markets.</div>
     </div>
   </div>
 </section>
@@ -302,6 +302,8 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
         <li><strong>Setup / Runtime / Rigid</strong> show whether blueprint depth moved cost up front, left surprise for runtime, or created brittle plans.</li>
         <li><strong>Blueprint depth</strong> reduces runtime surprise when the world is stable, but adds up-front delay and rigidity when the world shifts.</li>
         <li><strong>Use-case levers</strong> translate database, support, coding, security, and procurement language into the same abstract model variables.</li>
+        <li><strong>Phase map</strong> colors each interdependence &times; protocol-quality cell by the winning boundary; the dashed <span class="code">R* = &kappa;</span> diagonal is the capacity threshold from the paper, where decision-relevant cross-boundary information equals interface capacity.</li>
+        <li><strong>Granularity</strong>: below the threshold, boundaries are information-clean and lower interface cost favors more, smaller units (<span class="code">m* = &radic;(A/B)</span>); above it, interdependence outruns capacity and coalescence wins.</li>
       </ul>
       <div class="note">
         This is a comparative design language. It identifies which cost terms should move under a boundary change;
@@ -316,7 +318,27 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
   </div>
 </section>
 
-    <div class="footer">Monte Carlo companion for a Coase–Information Theory paper. This is a stylized simulation, not a causal estimate.</div>
+<section class="section">
+  <div class="card">
+    <div class="score">
+      <div><div class="kicker">Phase map</div><strong>Which boundary wins, by interdependence and protocol quality</strong></div>
+      <div class="badge" id="phaseStatus">idle</div>
+    </div>
+    <p class="small" style="margin-top:8px;">
+      Each cell re-runs the current scenario at that combination of protocol quality (&kappa;) and task interdependence (R*),
+      colored by the winning boundary form. The dashed diagonal is the capacity threshold <span class="code">R* = &kappa;</span>
+      from the paper: below and right of it, boundaries are information-clean and finer decomposition
+      (<span class="code">m* = &radic;(A/B)</span>) pays; above and left, interdependence outruns interface capacity and
+      coalescence wins. The crosshair marks your current levers. Re-run after changing levers to refresh the map.
+    </p>
+    <div class="canvas-shell section" style="margin-top:14px;">
+      <canvas id="phaseCanvas" width="920" height="620" aria-label="Boundary phase map over protocol quality and task interdependence"></canvas>
+    </div>
+    <div class="legend section" id="legend" style="margin-top:12px;"></div>
+  </div>
+</section>
+
+    <div class="footer">Monte Carlo companion for the Coase–Information Theory paper: boundary capacity threshold (R* = κ) and the granularity law m* = √(A/B). Stylized simulation, not a causal estimate.</div>
   </div>
 
 <script>
@@ -367,13 +389,9 @@ function makeBar(label, value, max, cls, suffix='') {
 }
 
 const EXEC_MOVIE_SECONDS = 10;
-const USECASE_MOVIE_SECONDS = 14;
+const USECASE_MOVIE_SECONDS = 60;
 const EXEC_STAGE_CUTS = [0, 0.25, 0.5, 0.75, 1.01];
-const USECASE_STAGE_CUTS = [0, 0.26, 0.5, 0.74, 1.01];
-let movieSoundEnabled = true;
-
-const execMovieState = { start: 0, elapsed: 0, playing: false };
-const useCaseMovieState = { start: 0, elapsed: 0, playing: false };
+const USECASE_STAGE_CUTS = [0, 6 / 60, 17 / 60, 29 / 60, 40 / 60, 54 / 60, 1.01];
 
 const EXEC_MOVIE_STAGES = [
   {
@@ -394,28 +412,9 @@ const EXEC_MOVIE_STAGES = [
   }
 ];
 
-const EXEC_MOVIE_NARRATION = 'What is a firm or agent? It is a boundary around a control loop. Capabilities can stay outside while the interface is green. When surprise, delay, or error turns the line red, the boundary should move. The dependency becomes in-house, or a hybrid sub-agent, because the bounded entity itself has changed.';
 
-const USECASE_MOVIE_STAGES = [
-  {
-    title: 'Market coordination is expensive.',
-    caption: 'Separate suppliers can make the product, but search, contracting, interpretation, and delay keep the market price high.'
-  },
-  {
-    title: 'A firm forms and lowers the market price.',
-    caption: 'The company pulls production, support, and planning inside one boundary. Shared state lowers internal cost, and the product gets cheaper.'
-  },
-  {
-    title: 'A database becomes cheaper outside the boundary.',
-    caption: 'A managed database gets good enough and cheap enough that building one internally no longer pays. The boundary moves outward.'
-  },
-  {
-    title: 'The bounded agent changes shape.',
-    caption: 'When connectivity degrades and SLA surprise rises, the firm-agent expands around internal fallback or a hybrid database boundary.'
-  }
-];
-
-const USECASE_MOVIE_NARRATION = 'Here is the same logic as a database boundary. At first, market coordination is costly, so the firm pulls work inside. Later, a managed database is cheaper outside. When that interface degrades, the bounded firm-agent changes shape: it brings fallback state inside, creates a hybrid boundary, or re-internalizes the capability.';
+// Beat scenes are rendered directly in drawCoaseMovie; the caption strip below
+// the canvas carries the four beat titles (see #useCaseMovieStages).
 
 function smoothstep(edge0, edge1, x) {
   const t = clamp((x - edge0) / Math.max(edge1 - edge0, 0.0001), 0, 1);
@@ -728,10 +727,7 @@ function drawExecutiveMovie(canvas, seconds) {
   drawMovieLabel(ctx, decisionText, 996, 447, internalize > 0.55 ? '#fdba74' : '#bfdbfe', 18, 850);
 }
 
-function updateUseCaseMovieReadout(stageIndex, seconds) {
-  const stage = USECASE_MOVIE_STAGES[stageIndex];
-  setText('useCaseMovieTitle', stage.title);
-  setText('useCaseMovieCaption', stage.caption);
+function updateUseCaseMovieReadout(stageIndex) {
   document.querySelectorAll('[data-usecase-stage]').forEach((node, idx) => {
     node.classList.toggle('active', idx === stageIndex);
   });
@@ -742,201 +738,503 @@ function drawCoaseMovie(canvas, seconds) {
   const ctx = canvas.getContext('2d');
   const w = canvas.width;
   const h = canvas.height;
-  const elapsed = clamp(seconds, 0, USECASE_MOVIE_SECONDS);
-  const progress = elapsed / USECASE_MOVIE_SECONDS;
-  const stageIndex = movieStageFor(progress, USECASE_STAGE_CUTS, USECASE_MOVIE_STAGES.length);
-  updateUseCaseMovieReadout(stageIndex, elapsed);
+  const T = USECASE_MOVIE_SECONDS; // 60
+  const t = clamp(seconds, 0, T);
+  const progress = t / T;
+  const stageIndex = movieStageFor(progress, USECASE_STAGE_CUTS, 6);
+  updateUseCaseMovieReadout(stageIndex);
 
-  const firm = smoothstep(0.22, 0.4, progress);
-  const product = smoothstep(0.34, 0.5, progress);
-  const vendor = smoothstep(0.47, 0.64, progress);
-  const degraded = smoothstep(0.74, 0.92, progress);
-  const boundaryShift = smoothstep(0.84, 0.99, progress);
-  const pulse = Math.sin(seconds * 4.2) * 0.5 + 0.5;
-
-  const marketCost = 88 - firm * 28 - product * 10 + degraded * 12 - boundaryShift * 16;
-  const internalCost = 78 - firm * 30 - product * 8 + vendor * 10 + degraded * 8 - boundaryShift * 12;
-  const externalDbCost = 112 - vendor * 75 + degraded * 6 - boundaryShift * 4;
-  const productPrice = 132 - firm * 24 - product * 30 - vendor * 8 + degraded * 10 - boundaryShift * 6;
-  const dbSla = 99 - degraded * 21 + boundaryShift * 12;
+  // Beat alphas (0.8s crossfades). The nested "thesis" composition is shared by
+  // the hook (0-6s) and the loop wrap (54-60s); making it full at both t=0 and
+  // t=60 keeps the 60s loop pixel-identical at the seam.
+  const aNest = Math.max(1 - smoothstep(5.4, 6.2, t), smoothstep(53.4, 54.2, t));
+  const aB2 = clamp(smoothstep(5.4, 6.2, t) - smoothstep(16.4, 17.2, t), 0, 1);
+  const aB3 = clamp(smoothstep(16.4, 17.2, t) - smoothstep(28.4, 29.2, t), 0, 1);
+  const aB4 = clamp(smoothstep(28.4, 29.2, t) - smoothstep(39.4, 40.2, t), 0, 1);
+  const aB5 = clamp(smoothstep(39.4, 40.2, t) - smoothstep(53.4, 54.2, t), 0, 1);
 
   ctx.clearRect(0, 0, w, h);
   const bg = ctx.createLinearGradient(0, 0, w, h);
   bg.addColorStop(0, '#020617');
-  bg.addColorStop(0.52, '#07111f');
+  bg.addColorStop(0.55, '#07111f');
   bg.addColorStop(1, '#0b1220');
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
-
-  ctx.strokeStyle = 'rgba(148,163,184,0.08)';
+  ctx.strokeStyle = 'rgba(148,163,184,0.06)';
   ctx.lineWidth = 1;
-  for (let x = 44; x < w; x += 64) {
-    ctx.beginPath();
-    ctx.moveTo(x, 32);
-    ctx.lineTo(x, h - 42);
-    ctx.stroke();
-  }
-  for (let y = 44; y < h; y += 64) {
-    ctx.beginPath();
-    ctx.moveTo(34, y);
-    ctx.lineTo(w - 34, y);
-    ctx.stroke();
-  }
+  for (let x = 48; x < w; x += 64) { ctx.beginPath(); ctx.moveTo(x, 28); ctx.lineTo(x, h - 28); ctx.stroke(); }
+  for (let y = 40; y < h; y += 64) { ctx.beginPath(); ctx.moveTo(32, y); ctx.lineTo(w - 32, y); ctx.stroke(); }
 
-  drawMovieLabel(ctx, 'marketplace', 130, 52, '#93c5fd', 14, 800);
-  drawMovieLabel(ctx, 'firm boundary', 560, 52, firm > 0.1 ? '#ddd6fe' : 'rgba(221,214,254,0.35)', 14, 800);
-  drawMovieLabel(ctx, 'customer market', 1080, 52, '#bbf7d0', 14, 800);
-
-  drawMovieNode(ctx, 56, 116, 152, 62, 'Supplier A', 'part', '#60a5fa', 1);
-  drawMovieNode(ctx, 92, 246, 152, 62, 'Supplier B', 'assembly', '#60a5fa', 1);
-  drawMovieNode(ctx, 48, 376, 152, 62, 'Support shop', 'service', '#60a5fa', 1);
-
-  const contractAlpha = 1 - firm * 0.62;
-  drawMovieArrow(ctx, 208, 147, 420, 220, 'rgba(96,165,250,0.72)', contractAlpha, true, 2);
-  drawMovieArrow(ctx, 244, 277, 420, 270, 'rgba(96,165,250,0.72)', contractAlpha, true, 2);
-  drawMovieArrow(ctx, 200, 407, 420, 320, 'rgba(96,165,250,0.72)', contractAlpha, true, 2);
-  drawMovieLabel(ctx, 'contracts + search + delay', 265, 218, colorAlpha('#60a5fa', contractAlpha), 13, 650);
-
-  ctx.save();
-  ctx.globalAlpha = 0.12 + firm * 0.88;
-  drawMovieRoundRect(ctx, 360, 94, 410, 310, 32);
-  ctx.fillStyle = colorAlpha('#8b5cf6', 0.13 + firm * 0.09);
-  ctx.strokeStyle = colorAlpha('#a78bfa', 0.45 + firm * 0.38);
-  ctx.lineWidth = 3;
-  ctx.fill();
-  ctx.stroke();
-  ctx.restore();
-
-  drawMovieNode(ctx, 420, 150, 138, 58, 'Production', 'inside', '#8b5cf6', 0.45 + firm * 0.55);
-  drawMovieNode(ctx, 585, 150, 126, 58, 'Planning', 'shared', '#8b5cf6', 0.45 + firm * 0.55);
-  drawMovieNode(ctx, 420, 270, 138, 58, 'Support', 'inside', '#8b5cf6', 0.45 + firm * 0.55);
-  drawMovieNode(ctx, 585, 270, 126, 58, 'Build DB', 'costly', '#8b5cf6', Math.max(0.35, 1 - vendor * 0.72));
-
-  drawMovieArrow(ctx, 558, 179, 585, 179, 'rgba(221,214,254,0.82)', firm, false, 2.5);
-  drawMovieArrow(ctx, 489, 208, 489, 270, 'rgba(221,214,254,0.82)', firm, false, 2.5);
-  drawMovieArrow(ctx, 648, 208, 648, 270, 'rgba(221,214,254,0.82)', firm, false, 2.5);
-
-  const productAlpha = 0.32 + product * 0.68;
-  drawMovieNode(ctx, 850, 246, 164, 72, 'Product', `$${Math.round(productPrice)}`, '#22c55e', productAlpha);
-  drawMovieNode(ctx, 1078, 246, 146, 72, 'Customer', 'market price', '#22c55e', productAlpha);
-  drawMovieArrow(ctx, 770, 254, 850, 276, 'rgba(34,197,94,0.78)', productAlpha, false, 3);
-  drawMovieArrow(ctx, 1014, 282, 1078, 282, 'rgba(34,197,94,0.78)', productAlpha, false, 3);
-  if (product > 0.2 && vendor < 0.14 && degraded < 0.28) drawMovieLabel(ctx, 'lower internal cost → cheaper product', 932, 218, '#bbf7d0', 13, 750);
-
-  const dbX = 968;
-  const dbY = 106 + degraded * Math.sin(seconds * 12) * 3;
-  drawMovieNode(ctx, dbX, dbY, 190, 72, 'Managed DB', `$${Math.round(externalDbCost)} / SLA ${Math.round(dbSla)}%`, degraded > 0.45 ? '#f97316' : '#3b82f6', vendor);
-  drawMovieArrow(ctx, 710, 298, dbX, dbY + 42, degraded > 0.45 ? 'rgba(249,115,22,0.78)' : 'rgba(59,130,246,0.78)', vendor, degraded > 0.35, 3);
-  if (vendor > 0.1) drawMovieLabel(ctx, 'external capability gets cheaper', 910, 92, '#bfdbfe', 13, 750);
-
-  if (degraded > 0.05) {
-    const warn = 0.25 + degraded * 0.75;
+  // ---- local helpers ----
+  const label = (text, x, y, color, size, weight, alpha, align) => {
+    if (alpha <= 0.01) return;
     ctx.save();
-    ctx.globalAlpha = warn;
-    ctx.strokeStyle = '#fb7185';
-    ctx.lineWidth = 3;
-    ctx.setLineDash([8, 7]);
-    ctx.beginPath();
-    ctx.arc(dbX + 95, dbY + 36, 62 + pulse * 8, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    drawMovieLabel(ctx, 'interface surprise', dbX + 95, dbY + 118, '#fecdd3', 13, 800);
+    ctx.globalAlpha = Math.min(alpha, 1);
+    drawMovieLabel(ctx, text, x, y, color, size, weight, align);
     ctx.restore();
-    drawMovieNode(ctx, 586, 270, 136, 58, 'In-house DB', 'fallback', '#fb7185', degraded * 0.82);
-  }
-
-  if (boundaryShift > 0.02) {
+  };
+  const circleNode = (x, y, r, color, alpha, title, sub, titleSize) => {
+    if (alpha <= 0.01 || r <= 0) return;
     ctx.save();
-    ctx.globalAlpha = boundaryShift;
-    drawMovieRoundRect(ctx, 344, 82, 482, 338, 38);
-    ctx.fillStyle = colorAlpha('#f97316', 0.08);
-    ctx.strokeStyle = colorAlpha('#f97316', 0.9);
+    ctx.globalAlpha = Math.min(alpha, 1);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = colorAlpha(color, 0.16);
+    ctx.strokeStyle = colorAlpha(color, 0.92);
     ctx.lineWidth = 3;
     ctx.fill();
     ctx.stroke();
-    drawMovieLabel(ctx, 'firm-agent boundary expands', 585, 394, '#fed7aa', 14, 850);
+    if (title) drawMovieLabel(ctx, title, x, y + (sub ? -6 : 0), '#ffffff', titleSize || Math.max(12, r * 0.34), 800);
+    if (sub) drawMovieLabel(ctx, sub, x, y + 15, '#cbd5e1', 12, 650);
     ctx.restore();
-    drawMovieArrow(ctx, 705, 292, dbX, dbY + 36, 'rgba(249,115,22,0.82)', boundaryShift, true, 3);
-    drawMovieLabel(ctx, 'internal fallback or hybrid dependency', 780, 376, colorAlpha('#fed7aa', boundaryShift), 14, 850);
+  };
+  const boundary = (x, y, bw, bh, r, color, alpha, dashed) => {
+    if (alpha <= 0.01) return;
+    ctx.save();
+    ctx.globalAlpha = Math.min(alpha, 1);
+    if (dashed) ctx.setLineDash([10, 8]);
+    drawMovieRoundRect(ctx, x, y, bw, bh, r);
+    ctx.fillStyle = colorAlpha(color, 0.08);
+    ctx.strokeStyle = colorAlpha(color, dashed ? 0.55 : 0.85);
+    ctx.lineWidth = 3;
+    ctx.fill();
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  };
+  const arrow = (x1, y1, x2, y2, color, alpha, width) => {
+    if (alpha <= 0.01) return;
+    ctx.save();
+    ctx.globalAlpha = Math.min(alpha, 1);
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = width || 3;
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2 - Math.cos(ang) * 10, y2 - Math.sin(ang) * 10);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - Math.cos(ang - 0.42) * 13, y2 - Math.sin(ang - 0.42) * 13);
+    ctx.lineTo(x2 - Math.cos(ang + 0.42) * 13, y2 - Math.sin(ang + 0.42) * 13);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  };
+  const loopGlyph = (x, y, r, alpha, frozen) => {
+    if (alpha <= 0.01) return;
+    ctx.save();
+    ctx.globalAlpha = Math.min(alpha, 1);
+    ctx.strokeStyle = frozen ? 'rgba(148,163,184,0.85)' : '#f97316';
+    ctx.lineWidth = 2;
+    if (frozen) ctx.setLineDash([5, 4]);
+    for (let k = 0; k < 3; k += 1) {
+      const a0 = -Math.PI / 2 + k * (Math.PI * 2 / 3) + 0.2;
+      const a1 = a0 + (Math.PI * 2 / 3) - 0.4;
+      ctx.beginPath();
+      ctx.arc(x, y, r, a0, a1);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    ctx.restore();
+  };
+  const arcLoop = (x, y, r, sweep, alpha, color, frozen) => {
+    if (alpha <= 0.01 || sweep <= 0.01) return;
+    ctx.save();
+    ctx.globalAlpha = Math.min(alpha, 1);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    if (frozen) ctx.setLineDash([8, 7]);
+    ctx.beginPath();
+    ctx.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + sweep);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    if (!frozen && sweep > 0.25) {
+      const a = -Math.PI / 2 + sweep;
+      const ex = x + Math.cos(a) * r;
+      const ey = y + Math.sin(a) * r;
+      const ta = a + Math.PI / 2;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - Math.cos(ta - 0.45) * 12, ey - Math.sin(ta - 0.45) * 12);
+      ctx.lineTo(ex - Math.cos(ta + 0.45) * 12, ey - Math.sin(ta + 0.45) * 12);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+  };
+  const meter = (x, y, mw, lab, value, color) => {
+    drawMovieLabel(ctx, lab, x, y - 13, '#cbd5e1', 12, 650, 'left');
+    drawMovieLabel(ctx, Math.round(value) + '%', x + mw, y - 13, '#ffffff', 13, 800, 'right');
+    drawMovieRoundRect(ctx, x, y, mw, 12, 6);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    drawMovieRoundRect(ctx, x, y, mw * clamp(value / 100, 0, 1), 12, 6);
+    ctx.fillStyle = color;
+    ctx.fill();
+  };
+
+  // ===================== BEAT 2: inside the firm =====================
+  if (aB2 > 0.01) {
+    boundary(360, 172, 560, 306, 30, '#a78bfa', aB2, false);
+    label('one firm', 640, 200, '#ddd6fe', 14, 750, aB2);
+    const lp = clamp((t - 6.5) / 8, 0, 1);
+    const split = smoothstep(0.34, 0.72, lp);
+    circleNode(640, 322, 84 - split * 12, '#2dd4bf', aB2 * (1 - split), 'monolith', null, 18);
+    const micros = [[562, 282], [718, 282], [562, 382], [718, 382]];
+    if (split > 0.02) {
+      ctx.save();
+      ctx.globalAlpha = aB2 * split * 0.5;
+      ctx.strokeStyle = colorAlpha('#2dd4bf', 0.7);
+      ctx.lineWidth = 2;
+      for (let i = 0; i < micros.length; i += 1) {
+        for (let j = i + 1; j < micros.length; j += 1) {
+          ctx.beginPath();
+          ctx.moveTo(micros[i][0], micros[i][1]);
+          ctx.lineTo(micros[j][0], micros[j][1]);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+      micros.forEach(m => circleNode(m[0], m[1], 38, '#2dd4bf', aB2 * split, null, null));
+      const ph = (t * 0.5) % 1;
+      const px = micros[0][0] + (micros[1][0] - micros[0][0]) * ph;
+      const py = micros[0][1] + (micros[1][1] - micros[0][1]) * ph;
+      ctx.save();
+      ctx.globalAlpha = aB2 * split;
+      ctx.fillStyle = '#5eead4';
+      ctx.beginPath();
+      ctx.arc(px, py, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      label('1 → 6 interfaces', 640, 468, '#5eead4', 13, 650, aB2 * smoothstep(0.55, 0.85, lp) * 0.85);
+    }
+    label(split < 0.5 ? 'monolith' : 'microservices', 640, 500, '#5eead4', 14, 750, aB2);
   }
 
-  drawMovieRoundRect(ctx, 54, 466, 1172, 62, 20);
-  ctx.fillStyle = 'rgba(15,23,42,0.84)';
-  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
-  ctx.lineWidth = 1;
-  ctx.fill();
-  ctx.stroke();
-  drawMovieMetric(ctx, 84, 502, 218, 'Market transaction cost', marketCost, '#60a5fa', 120);
-  drawMovieMetric(ctx, 350, 502, 218, 'Internal operating cost', internalCost, '#8b5cf6', 120);
-  drawMovieMetric(ctx, 616, 502, 218, 'Product price', productPrice, '#22c55e', 150, '$');
-  drawMovieMetric(ctx, 882, 502, 218, 'Database SLA', dbSla, degraded > 0.45 ? '#fb7185' : '#3b82f6', 100, '%');
-  if (boundaryShift > 0.12) drawMovieMetric(ctx, 1116, 502, 70, 'Boundary', boundaryShift * 100, '#f97316', 100, '%');
-}
-
-function cancelMovieVoiceover() {
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-}
-
-function speakMovieNarration(text) {
-  if (!movieSoundEnabled || !('speechSynthesis' in window)) return;
-  cancelMovieVoiceover();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 1.03;
-  utterance.pitch = 1;
-  utterance.volume = 0.95;
-  const voices = window.speechSynthesis.getVoices();
-  const preferred = voices.find(voice => voice.lang && voice.lang.startsWith('en') && /Samantha|Alex|Google|Microsoft/i.test(voice.name))
-    || voices.find(voice => voice.lang && voice.lang.startsWith('en'));
-  if (preferred) utterance.voice = preferred;
-  window.speechSynthesis.speak(utterance);
-}
-
-function updateMovieSoundButtons() {
-  document.querySelectorAll('[id$="MovieSoundBtn"]').forEach(button => {
-    if (button.disabled) return;
-    button.textContent = movieSoundEnabled ? 'Mute' : 'Sound on';
-    button.classList.toggle('sound-off', !movieSoundEnabled);
-    button.setAttribute('aria-pressed', movieSoundEnabled ? 'false' : 'true');
-  });
-}
-
-function toggleMovieSound() {
-  movieSoundEnabled = !movieSoundEnabled;
-  if (!movieSoundEnabled) cancelMovieVoiceover();
-  updateMovieSoundButtons();
-}
-
-function updateMoviePlayButtons() {
-  const useCaseButton = document.getElementById('useCaseMoviePlayBtn');
-  if (useCaseButton) useCaseButton.textContent = useCaseMovieState.playing ? 'Restart' : (useCaseMovieState.elapsed > 0 ? 'Replay example' : 'Play example');
-}
-
-function playUseCaseMovie() {
-  useCaseMovieState.start = performance.now() / 1000;
-  useCaseMovieState.elapsed = 0;
-  useCaseMovieState.playing = true;
-  updateMoviePlayButtons();
-  speakMovieNarration(USECASE_MOVIE_NARRATION);
-}
-
-function initMovieControls() {
-  const useCasePlayButton = document.getElementById('useCaseMoviePlayBtn');
-
-  if (!('speechSynthesis' in window)) {
-    movieSoundEnabled = false;
-    document.querySelectorAll('[id$="MovieSoundBtn"]').forEach(button => {
-      button.textContent = 'Sound unavailable';
-      button.disabled = true;
-    });
-  } else {
-    document.querySelectorAll('[id$="MovieSoundBtn"]').forEach(button => {
-      button.addEventListener('click', toggleMovieSound);
-    });
+  // ===================== BEAT 3: BRIDGE (service <-> agent) =====================
+  if (aB3 > 0.01) {
+    const demoA = aB3 * (1 - smoothstep(24.4, 25.4, t));
+    const gridA = aB3 * smoothstep(24.8, 25.8, t);
+    if (demoA > 0.01) {
+      const cx = 640;
+      const cy = 300;
+      const grow = smoothstep(0, 1, clamp((t - 18.5) / 3.3, 0, 1));
+      const freeze = clamp((t - 22.4) / 2.2, 0, 1);
+      circleNode(cx, cy, 90, '#2dd4bf', demoA, null, null);
+      const ioA = demoA * (1 - grow * 0.7);
+      arrow(cx - 205, cy, cx - 100, cy, '#60a5fa', ioA);
+      arrow(cx + 100, cy, cx + 205, cy, '#2dd4bf', ioA);
+      label('input → output · no loop, no goal', cx, 158, '#94a3b8', 14, 600, demoA * (1 - grow));
+      const loopColor = freeze > 0.35 ? '#94a3b8' : '#f97316';
+      arcLoop(cx, cy, 116, grow * Math.PI * 2, demoA, loopColor, freeze > 0.5);
+      const chipA = demoA * smoothstep(0.25, 0.95, grow) * (1 - freeze * 0.6);
+      label('observe', cx, cy - 138, '#fdba74', 12, 700, chipA);
+      label('decide', cx + 160, cy + 4, '#fdba74', 12, 700, chipA);
+      label('act', cx - 152, cy + 104, '#fdba74', 12, 700, chipA);
+      const agentWord = grow * (1 - freeze);
+      label('service', cx, cy, '#5eead4', 22, 800, demoA * (1 - agentWord));
+      label('agent', cx, cy, '#ffffff', 22, 800, demoA * agentWord);
+      label('agent = service + control loop', cx, 472, '#ddd6fe', 18, 700, demoA * smoothstep(0.6, 1, grow) * (1 - freeze));
+      label('service = agent with the loop frozen', cx, 472, '#ddd6fe', 18, 700, demoA * smoothstep(0.45, 0.85, freeze));
+    }
+    if (gridA > 0.01) {
+      const gw = 420;
+      const gh = 250;
+      const gx = 640 - gw / 2;
+      const gy = 182;
+      const pulse = 1 + 0.05 * Math.sin(clamp((t - 28.0) / 0.8, 0, 1) * Math.PI);
+      ctx.save();
+      ctx.globalAlpha = gridA;
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(gx, gy - 6);
+      ctx.lineTo(gx, gy + gh);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(gx, gy + gh);
+      ctx.lineTo(gx + gw + 6, gy + gh);
+      ctx.stroke();
+      ctx.restore();
+      const colX = [gx + gw * 0.28, gx + gw * 0.72];
+      const rowY = [gy + gh * 0.28, gy + gh * 0.74];
+      label('SERVICE', colX[0], gy + gh + 28, '#e2e8f0', 15, 800, gridA);
+      label('AGENT', colX[1], gy + gh + 28, '#fdba74', 15, 800, gridA);
+      label('ONE', gx - 36, rowY[0], '#e2e8f0', 13, 800, gridA);
+      label('MANY', gx - 36, rowY[1], '#e2e8f0', 13, 800, gridA);
+      const boldRing = (x, y, r, alpha) => {
+        ctx.save();
+        ctx.globalAlpha = Math.min(alpha, 1);
+        ctx.strokeStyle = '#f97316';
+        ctx.lineWidth = 3.5;
+        for (let k = 0; k < 3; k += 1) {
+          const a0 = -Math.PI / 2 + k * (Math.PI * 2 / 3) + 0.18;
+          const a1 = a0 + (Math.PI * 2 / 3) - 0.36;
+          ctx.beginPath();
+          ctx.arc(x, y, r, a0, a1);
+          ctx.stroke();
+        }
+        ctx.restore();
+      };
+      circleNode(colX[0], rowY[0], 30 * pulse, '#2dd4bf', gridA, null, null);
+      circleNode(colX[1], rowY[0], 30 * pulse, '#2dd4bf', gridA, null, null);
+      boldRing(colX[1], rowY[0], 44 * pulse, gridA);
+      const clus = (cx2, cy2, ring) => {
+        const off = [[-15, -9], [15, -3], [0, 15]];
+        off.forEach(o => {
+          circleNode(cx2 + o[0], cy2 + o[1], 11, '#2dd4bf', gridA, null, null);
+          if (ring) boldRing(cx2 + o[0], cy2 + o[1], 18, gridA);
+        });
+      };
+      clus(colX[0], rowY[1], false);
+      clus(colX[1], rowY[1], true);
+      label('agent column = service column + control loop', 640, gy + gh + 52, '#94a3b8', 12, 600, gridA);
+    }
   }
 
-  if (useCasePlayButton) useCasePlayButton.addEventListener('click', playUseCaseMovie);
-  updateMoviePlayButtons();
-  updateMovieSoundButtons();
+  // ===================== BEAT 4: in the market (loaded gun) =====================
+  if (aB4 > 0.01) {
+    boundary(150, 150, 520, 210, 28, '#a78bfa', aB4, false);
+    label('firm', 178, 178, '#ddd6fe', 13, 750, aB4, 'left');
+    circleNode(290, 250, 46, '#2dd4bf', aB4, null, null);
+    loopGlyph(290, 250, 57, aB4 * 0.9, false);
+    circleNode(455, 286, 46, '#2dd4bf', aB4, null, null);
+    loopGlyph(455, 286, 57, aB4 * 0.9, false);
+    label('in-house', 372, 372, '#5eead4', 14, 750, aB4);
+    ctx.save();
+    ctx.globalAlpha = aB4;
+    ctx.strokeStyle = colorAlpha('#60a5fa', 0.7);
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash([10, 8]);
+    ctx.beginPath();
+    ctx.moveTo(680, 250);
+    ctx.lineTo(905, 250);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+    label('interface', 792, 232, '#bfdbfe', 12, 650, aB4);
+    circleNode(995, 250, 70, '#60a5fa', aB4, 'vendor', null, 16);
+    loopGlyph(995, 250, 83, aB4 * 0.9, false);
+    const wl = smoothstep(0, 1, clamp((t - 29.5) / 4.5, 0, 1));
+    if (wl > 0.02 && wl < 0.99) {
+      const dx = 455 + (995 - 455) * wl;
+      const dy = 286 + (250 - 286) * wl;
+      ctx.save();
+      ctx.globalAlpha = aB4;
+      ctx.fillStyle = '#5eead4';
+      ctx.beginPath();
+      ctx.arc(dx, dy, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.save();
+    ctx.globalAlpha = aB4;
+    meter(360, 432, 300, 'interface health', 78, '#22c55e');
+    drawMovieLabel(ctx, 'cross-boundary info  R', 720, 419, '#cbd5e1', 12, 650, 'left');
+    drawMovieRoundRect(ctx, 720, 432, 200, 12, 6);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    drawMovieRoundRect(ctx, 720, 432, 200 * 0.34, 12, 6);
+    ctx.fillStyle = '#60a5fa';
+    ctx.fill();
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(720 + 200 * 0.8, 428);
+    ctx.lineTo(720 + 200 * 0.8, 448);
+    ctx.stroke();
+    drawMovieLabel(ctx, 'κ', 720 + 200 * 0.8, 462, '#fda4af', 12, 800, 'center');
+    ctx.restore();
+  }
+
+  // ===================== BEAT 5: payoff (the interface moves the boundary) =====================
+  if (aB5 > 0.01) {
+    const cause1 = smoothstep(40.2, 45.3, t);
+    const effect1 = smoothstep(40.6, 45.7, t);
+    const cause2 = smoothstep(46.8, 51.3, t);
+    const effect2 = smoothstep(47.2, 51.7, t);
+    const health = 78 - 56 * cause1 + 72 * cause2;
+    const healCol = health > 60 ? '#22c55e' : (health > 38 ? '#f59e0b' : '#fb7185');
+    // --- stage: firm + interface + vendor (upper third) ---
+    boundary(150, 128, 540, 168, 26, '#a78bfa', aB5, false);
+    label('firm', 178, 152, '#ddd6fe', 13, 750, aB5, 'left');
+    circleNode(268, 212, 40, '#2dd4bf', aB5, null, null);
+    loopGlyph(268, 212, 50, aB5 * 0.9, false);
+    circleNode(398, 244, 40, '#2dd4bf', aB5, null, null);
+    loopGlyph(398, 244, 50, aB5 * 0.9, false);
+    if (effect2 > 0.05) {
+      circleNode(330, 198, 26, '#2dd4bf', aB5 * effect2, null, null);
+      loopGlyph(330, 198, 34, aB5 * effect2 * 0.9, false);
+    }
+    label('in-house', 340, 286, '#5eead4', 13, 750, aB5);
+    const ifCol = health > 60 ? '#2dd4bf' : (health > 38 ? '#f59e0b' : '#fb7185');
+    ctx.save();
+    ctx.globalAlpha = aB5;
+    ctx.strokeStyle = ifCol;
+    ctx.lineWidth = 3.5;
+    if (health < 60) ctx.setLineDash([8, 7]);
+    ctx.beginPath();
+    ctx.moveTo(692, 212);
+    ctx.lineTo(872, 212);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+    if (cause2 > 0.05) loopGlyph(782, 212, 19, aB5 * smoothstep(0.05, 0.5, cause2), false);
+    const vIn = effect1 * (1 - effect2);
+    const vx = 1010 - (1010 - 560) * vIn;
+    const vy = 212 - (212 - 244) * vIn;
+    circleNode(vx, vy, 60 - vIn * 20, vIn > 0.5 ? '#2dd4bf' : '#60a5fa', aB5, vIn > 0.5 ? null : 'vendor', null, 15);
+    loopGlyph(vx, vy, (60 - vIn * 20) + 11, aB5 * 0.9, false);
+    if (effect2 > 0.05) {
+      circleNode(940, 212, 30, '#60a5fa', aB5 * effect2, null, null);
+      loopGlyph(940, 212, 40, aB5 * effect2 * 0.9, false);
+    }
+    const caption = health < 45 ? 'interface degrades  →  pull it in-house'
+      : (cause2 > 0.3 ? 'agents make it cheap & reliable  →  split further' : '');
+    label(caption, 640, 324, healCol, 15, 700, aB5);
+    // --- coupled gauges: interface health (the cause) and R vs capacity ---
+    ctx.save();
+    ctx.globalAlpha = aB5;
+    meter(300, 354, 330, 'interface health', health, healCol);
+    const Rval = 0.34 + 0.44 * cause1 - 0.32 * cause2;
+    drawMovieLabel(ctx, 'cross-boundary info  R', 700, 341, '#cbd5e1', 12, 650, 'left');
+    drawMovieRoundRect(ctx, 700, 354, 290, 12, 6);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    drawMovieRoundRect(ctx, 700, 354, 290 * clamp(Rval, 0, 1), 12, 6);
+    ctx.fillStyle = Rval > 0.78 ? '#fb7185' : '#60a5fa';
+    ctx.fill();
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(700 + 290 * 0.8, 349);
+    ctx.lineTo(700 + 290 * 0.8, 371);
+    ctx.stroke();
+    drawMovieLabel(ctx, 'κ', 700 + 290 * 0.8, 384, '#fda4af', 13, 800, 'center');
+    ctx.restore();
+    // --- promoted law: m* = √(A / B), with B as the moving term ---
+    ctx.save();
+    ctx.globalAlpha = aB5;
+    const eqY = 404;
+    const bScale = 1 - 0.20 * effect2;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    ctx.font = '800 34px Inter, system-ui, sans-serif';
+    const s1 = 'm* = √( A / ';
+    const s3 = ' )';
+    const w1 = ctx.measureText(s1).width;
+    const w3 = ctx.measureText(s3).width;
+    ctx.font = '800 ' + Math.round(34 * bScale) + 'px Inter, system-ui, sans-serif';
+    const w2 = ctx.measureText('B').width;
+    let cxp = 640 - (w1 + w2 + w3) / 2;
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = '800 34px Inter, system-ui, sans-serif';
+    ctx.fillText(s1, cxp, eqY);
+    cxp += w1;
+    const bx = cxp;
+    ctx.fillStyle = '#f97316';
+    ctx.font = '800 ' + Math.round(34 * bScale) + 'px Inter, system-ui, sans-serif';
+    ctx.fillText('B', bx, eqY);
+    cxp += w2;
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = '800 34px Inter, system-ui, sans-serif';
+    ctx.fillText(s3, cxp, eqY);
+    if (effect2 > 0.05) {
+      ctx.globalAlpha = aB5 * smoothstep(0.1, 0.5, cause2);
+      ctx.fillStyle = '#fdba74';
+      ctx.font = '800 20px Inter, system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('↓', bx + w2 / 2, eqY - 28);
+    }
+    ctx.restore();
+    // --- the m* axis, with a real R*=κ capacity wall ---
+    const x1 = 300;
+    const x2 = 980;
+    const ty = 458;
+    ctx.save();
+    ctx.globalAlpha = aB5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x1, ty);
+    ctx.lineTo(x2, ty);
+    ctx.stroke();
+    ctx.lineCap = 'butt';
+    ctx.restore();
+    label('coalesce / in-house', x1, ty - 24, '#a78bfa', 13, 750, aB5, 'left');
+    label('split / vendor', x2, ty - 24, '#2dd4bf', 13, 750, aB5, 'right');
+    const wallX = x1 + (x2 - x1) * 0.82;
+    ctx.save();
+    ctx.globalAlpha = aB5;
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(wallX, ty - 32);
+    ctx.lineTo(wallX, ty + 32);
+    ctx.stroke();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(251,113,133,0.5)';
+    for (let i = 0; i < 5; i += 1) {
+      const yy = ty - 28 + i * 15;
+      ctx.beginPath();
+      ctx.moveTo(wallX, yy);
+      ctx.lineTo(wallX + 11, yy - 8);
+      ctx.stroke();
+    }
+    ctx.restore();
+    label('R* = κ', wallX + 15, ty - 30, '#fda4af', 13, 800, aB5, 'left');
+    let mPos = 0.42 - 0.30 * effect1 + 0.64 * effect2;
+    mPos = Math.min(mPos, 0.80);
+    const mx = x1 + (x2 - x1) * mPos;
+    if (effect2 > 0.8) {
+      ctx.save();
+      ctx.globalAlpha = aB5 * 0.5 * smoothstep(0.8, 1, effect2);
+      ctx.strokeStyle = '#fb7185';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(mx, ty, 19, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+    circleNode(mx, ty, 12, '#ffffff', aB5, null, null);
+  }
+
+  // ===================== NEST: thesis hook (0-6) + loop wrap (54-60) =====================
+  if (aNest > 0.01) {
+    const breath = Math.sin(t * Math.PI) * 3;
+    const g = t < 54 ? 1 : smoothstep(54, 57.5, t);
+    const sp = (1 - g) * 38;
+    boundary(80, 150, 1120, 322, 28, '#60a5fa', aNest, true);
+    label('market', 104, 178, '#bfdbfe', 14, 750, aNest, 'left');
+    circleNode(430, 312, 122, '#a78bfa', aNest, null, null);
+    label('firm', 430, 214, '#ddd6fe', 13, 750, aNest);
+    circleNode(388 - sp, 300 - sp * 0.6 + breath, 26, '#2dd4bf', aNest, null, null);
+    circleNode(470 + sp, 282 - sp * 0.7 - breath, 26, '#2dd4bf', aNest, null, null);
+    circleNode(452 + sp * 0.4, 352 + sp * 0.8 + breath, 26, '#2dd4bf', aNest, null, null);
+    circleNode(860, 300, 94, '#a78bfa', aNest, null, null);
+    circleNode(860, 300, 34, '#f97316', aNest, null, null);
+    label('firm', 860, 416, '#ddd6fe', 13, 750, aNest);
+  }
+
+  // ---- single active headline + subline (dips to 0 at each cut; no ghosting) ----
+  const HEADS = [
+    ["It's agents all the way down", 'a firm is an agent in a market — and is made of agents'],
+    ['Inside the firm: one agent, or many', 'a continuous dial, not a religious war'],
+    ['An agent is a service with a control loop', 'service or agent · one or many — the same boundary'],
+    ['In the market: in-house, or vendor', 'the same choice — one level up'],
+    ['Change the interface, move the boundary', 'cheaper, reliable interfaces let the line split further'],
+    ['The same decision, at every scale', 'agents · services · firms · markets — one boundary question']
+  ];
+  const segCuts = [0, 6, 17, 29, 40, 54, 60];
+  const segStart = segCuts[stageIndex];
+  const segEnd = segCuts[stageIndex + 1];
+  const headAlpha = Math.min(smoothstep(segStart, segStart + 0.6, t), 1 - smoothstep(segEnd - 0.6, segEnd, t));
+  label(HEADS[stageIndex][0], w / 2, 66, '#f8fafc', 38, 850, headAlpha);
+  label(HEADS[stageIndex][1], w / 2, 108, '#94a3b8', 17, 600, headAlpha * 0.92);
 }
 
 const modelClamp = (value, min=0, max=100) => Math.round(clamp(value, min, max));
@@ -958,10 +1256,39 @@ const MODEL_LABELS = {
 
 const SCENARIOS = [
   {
+    id: 'monolith-microservices',
+    name: 'Monolith vs microservices',
+    caption: 'One deployable or many? Split when interfaces are clean and modules are loosely coupled; coalesce when they are not.',
+    description: 'The hero example as a control panel. This is the granularity sweet spot m* = √(A/B): raise interface quality (lower B) and the efficient number of services rises; raise domain coupling (raise A) and it falls back toward a monolith.',
+    useCase: 'Current problem: every platform team relitigates monolith vs microservices. The answer is a boundary-cost tradeoff, not a doctrine — clean contracts and weak coupling favor splitting; tangled domains and thin tooling favor one unit.',
+    proxy: 'Trace proxies: deploy frequency, cross-service call depth, incident blast radius, build/coordination time, contract churn, rollback rate, on-call handoffs.',
+    levers: [
+      { id: 'interfaceQuality', label: 'Interface / contract quality', low: 'leaky ad-hoc calls', high: 'versioned schemas / APIs', value: 70 },
+      { id: 'domainCoupling', label: 'Domain coupling', low: 'independent domains', high: 'entangled shared state', value: 48 },
+      { id: 'platformTooling', label: 'Platform & observability', low: 'thin ops, blind calls', high: 'tracing, CI/CD, mesh', value: 64 },
+      { id: 'deployAutonomy', label: 'Deploy autonomy', low: 'one lockstep release', high: 'independent deploys', value: 60 },
+      { id: 'agentAutomation', label: 'Agent automation', low: 'manual glue / runbooks', high: 'agents route & operate', value: 50 },
+      { id: 'changeVolatility', label: 'Change volatility', low: 'stable domains', high: 'rapidly shifting', value: 46 },
+      { id: 'serviceCount', label: 'Decomposition depth', low: 'one unit', high: 'many small services', value: 55 },
+      { id: 'blueprintDepth', label: 'Architecture planning', low: 'reactive extraction', high: 'planned seams', value: 52 }
+    ],
+    map: v => ({
+      protocol: modelClamp(v.interfaceQuality * 0.5 + v.platformTooling * 0.34 + v.deployAutonomy * 0.12),
+      interdependence: modelClamp(v.domainCoupling),
+      observability: modelClamp(8 + v.platformTooling * 0.6 + v.interfaceQuality * 0.22),
+      agentCoverage: modelClamp(v.agentAutomation),
+      governance: modelClamp(26 + v.platformTooling * 0.22 + v.deployAutonomy * 0.16 + v.blueprintDepth * (1 - v.changeVolatility / 100) * 0.14),
+      marketFriction: modelClamp(40 - v.interfaceQuality * 0.2 + v.domainCoupling * 0.2),
+      volatility: modelClamp(v.changeVolatility),
+      planning: modelClamp(v.blueprintDepth),
+      agentCount: modelClamp(6 + v.serviceCount * 0.16, 4, 30)
+    })
+  },
+  {
     id: 'managed-db',
     name: 'Managed database dependency',
     caption: 'A cheap external database works until latency, outages, or lock-in make the interface expensive.',
-    description: 'Use this for the lead Coase example: build inside when market coordination is costly, outsource when the provider is better, and move the boundary again when the interface starts creating surprise.',
+    description: 'The market-boundary instance of the same decision: build inside when market coordination is costly, outsource when the provider is better, and move the boundary again when the interface starts creating surprise.',
     useCase: 'Current problem: managed data platforms, vector stores, and SaaS APIs are faster to adopt than rebuild, but reliability and state access decide whether they stay outside.',
     proxy: 'Trace proxies: p95 latency, error budget burn, failover events, vendor escalations, data freshness, rollback rate, internal platform toil.',
     levers: [
@@ -1103,7 +1430,7 @@ const SCENARIOS = [
 ];
 
 const appState = {
-  scenarioId: 'managed-db',
+  scenarioId: 'monolith-microservices',
   semanticValues: {}
 };
 
@@ -1655,7 +1982,7 @@ function drawBoundaryField(cfg, rows, t) {
 }
 
 let lastPhase = [];
-const gridSize = 25;
+const gridSize = 22;
 
 function drawPhaseDiagram(cfg) {
   const canvas = document.getElementById('phaseCanvas');
@@ -1701,6 +2028,22 @@ function drawPhaseDiagram(cfg) {
     ctx.lineTo(padL + plotW, gy);
     ctx.stroke();
   }
+  // capacity threshold R* = kappa: interdependence equals protocol quality
+  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([9, 6]);
+  ctx.beginPath();
+  ctx.moveTo(padL, padT + plotH);
+  ctx.lineTo(padL + plotW, padT);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f1f5f9';
+  ctx.font = '700 13px Inter, system-ui, sans-serif';
+  ctx.fillText('R* = κ', padL + plotW * 0.5 + 8, padT + plotH * 0.5 - 8);
+  ctx.fillStyle = 'rgba(226,232,240,0.62)';
+  ctx.font = '600 12px Inter, system-ui, sans-serif';
+  ctx.fillText('coalesce', padL + plotW * 0.1, padT + plotH * 0.16);
+  ctx.fillText('split · m*=√(A/B)', padL + plotW * 0.56, padT + plotH * 0.9);
   const cx = padL + (cfg.protocol / 100) * plotW;
   const cy = padT + (1 - cfg.interdependence / 100) * plotH;
   ctx.strokeStyle = '#ffffff';
@@ -1766,10 +2109,17 @@ function render() {
   renderResults(rows);
 }
 
-document.getElementById('runBtn').addEventListener('click', render);
+// Slider drags call render() (fast). The phase map is expensive (grid of
+// re-simulations), so it refreshes only on explicit run / new seed / scenario.
+function renderWithPhase() {
+  render();
+  if (currentCfg) drawPhaseDiagram(currentCfg);
+}
+
+document.getElementById('runBtn').addEventListener('click', renderWithPhase);
 document.getElementById('newSeedBtn').addEventListener('click', () => {
   document.getElementById('seed').value = Math.floor(100000 + Math.random() * 899999);
-  render();
+  renderWithPhase();
 });
 
 function renderScenarioList() {
@@ -1842,7 +2192,7 @@ function setScenario(id) {
   ensureSemanticValues();
   renderScenarioList();
   renderSemanticControls();
-  render();
+  renderWithPhase();
   if (typeof history !== 'undefined') history.replaceState(null, '', `#${id}`);
   return true;
 }
@@ -1851,6 +2201,7 @@ function setScenario(id) {
   document.getElementById(id).addEventListener(id === 'trials' ? 'change' : 'input', render);
 });
 
+renderLegend();
 renderScenarioList();
 const initialScenario = typeof location !== 'undefined' ? location.hash.replace('#', '') : '';
 setScenario(SCENARIOS.some(scenario => scenario.id === initialScenario) ? initialScenario : appState.scenarioId);
@@ -1860,24 +2211,55 @@ function animateBoundaryField(now) {
   requestAnimationFrame(animateBoundaryField);
 }
 
-function updateMoviePlayback(state, duration, seconds) {
-  if (!state.playing) return;
-  state.elapsed = seconds - state.start;
-  if (state.elapsed >= duration) {
-    state.elapsed = duration;
-    state.playing = false;
-    updateMoviePlayButtons();
-  }
+// Hero loop: silent autoplay on a virtual playhead so it can be paused and
+// seeked. drawCoaseMovie stays a pure function of time.
+const movieClock = { time: 0, last: 0, playing: true };
+
+function drawMoviePauseOverlay(canvas) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.save();
+  ctx.globalAlpha = 0.5;
+  ctx.fillStyle = '#0b1220';
+  drawMovieRoundRect(ctx, w / 2 - 48, h / 2 - 36, 96, 72, 16);
+  ctx.fill();
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = '#cbd5e1';
+  drawMovieRoundRect(ctx, w / 2 - 15, h / 2 - 18, 9, 36, 3);
+  ctx.fill();
+  drawMovieRoundRect(ctx, w / 2 + 6, h / 2 - 18, 9, 36, 3);
+  ctx.fill();
+  ctx.restore();
+  drawMovieLabel(ctx, 'paused — click to resume', w / 2, h / 2 + 54, '#94a3b8', 13, 650);
 }
 
 function animateCoaseMovie(now) {
-  const seconds = now / 1000;
-  updateMoviePlayback(useCaseMovieState, USECASE_MOVIE_SECONDS, seconds);
-  drawCoaseMovie(document.getElementById('coaseMovieCanvas'), useCaseMovieState.elapsed);
+  const canvas = document.getElementById('coaseMovieCanvas');
+  const dt = Math.min((now - (movieClock.last || now)) / 1000, 0.1);
+  movieClock.last = now;
+  if (movieClock.playing) movieClock.time = (movieClock.time + dt) % USECASE_MOVIE_SECONDS;
+  drawCoaseMovie(canvas, movieClock.time);
+  if (!movieClock.playing) drawMoviePauseOverlay(canvas);
   requestAnimationFrame(animateCoaseMovie);
 }
 
-initMovieControls();
+// Interactivity: click the canvas to pause/resume; click a chapter to seek.
+(function initMovieInteractivity() {
+  const canvas = document.getElementById('coaseMovieCanvas');
+  if (canvas) {
+    canvas.style.cursor = 'pointer';
+    canvas.addEventListener('click', () => { movieClock.playing = !movieClock.playing; });
+  }
+  document.querySelectorAll('[data-seek]').forEach(cell => {
+    const seek = () => { movieClock.time = parseFloat(cell.getAttribute('data-seek')) || 0; movieClock.playing = true; };
+    cell.addEventListener('click', seek);
+    cell.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); seek(); }
+    });
+  });
+})();
+
 requestAnimationFrame(animateBoundaryField);
 requestAnimationFrame(animateCoaseMovie);
 </script>
