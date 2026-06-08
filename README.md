@@ -1,6 +1,6 @@
 # Coase–Information Theory Demo Repo
 
-**▶ Live interactive companion → https://galatheus-labs.github.io/coase-info-theory/**  ·  [Paper (PDF)](paper/coase-information-theory.pdf)  ·  [Paper (TeX)](paper/coase-information-theory.tex)
+**▶ Live interactive companion → https://galatheus-labs.github.io/coase-info-theory/**  ·  [Paper (PDF)](paper/coase-information-theory.pdf)  ·  [Paper (TeX)](paper/coase-information-theory.tex)  ·  [Galatheus](https://galatheus.com)
 
 This repo packages a small set of static web apps plus formal paper material for the **Coase–Information Theory** project.
 
