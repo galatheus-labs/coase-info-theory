@@ -207,7 +207,8 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
       <div class="note">
         Same engine, different settings: surprise, action loss, latency, governance, interpretation cost, and planning drag.
         The phase map below colors which boundary wins as interdependence and protocol quality vary; the dashed
-        <span class="code">R* = &kappa;</span> diagonal is the capacity threshold where finer decomposition stops paying.
+        <span class="code">R* = &kappa;</span> diagonal is the capacity threshold where finer decomposition stops paying —
+        a soft wall: past it, the split penalty decays roughly 4&times; per added bit of protocol capacity.
       </div>
     </div>
   </div>
@@ -304,6 +305,7 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
         <li><strong>Use-case levers</strong> translate database, support, coding, security, and procurement language into the same abstract model variables.</li>
         <li><strong>Phase map</strong> colors each interdependence &times; protocol-quality cell by the winning boundary; the dashed <span class="code">R* = &kappa;</span> diagonal is the capacity threshold from the paper, where decision-relevant cross-boundary information equals interface capacity.</li>
         <li><strong>Granularity</strong>: below the threshold, boundaries are information-clean and lower interface cost favors more, smaller units (<span class="code">m* = &radic;(A/B)</span>); above it, interdependence outruns capacity and coalescence wins.</li>
+        <li><strong>Capacity deficit</strong>: the threshold is soft. The paper's exponential interface-deficit law (rev 1.2) prices the gap exactly in the Gaussian-quadratic team: the split penalty equals the partner's information value discounted by <span class="code">2<sup>&minus;2&kappa;</sup></span> — each added bit of interface capacity cuts it ~4&times;.</li>
       </ul>
       <div class="note">
         This is a comparative design language. It identifies which cost terms should move under a boundary change;
@@ -329,7 +331,9 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
       colored by the winning boundary form. The dashed diagonal is the capacity threshold <span class="code">R* = &kappa;</span>
       from the paper: below and right of it, boundaries are information-clean and finer decomposition
       (<span class="code">m* = &radic;(A/B)</span>) pays; above and left, interdependence outruns interface capacity and
-      coalescence wins. The crosshair marks your current levers. Re-run after changing levers to refresh the map.
+      coalescence wins. The diagonal is a band, not a cliff: per the paper's interface-deficit law, the penalty for
+      sitting above it decays exponentially in protocol capacity (~4&times; per bit), so near-threshold cells are
+      decided by the other cost terms. The crosshair marks your current levers. Re-run after changing levers to refresh the map.
     </p>
     <div class="canvas-shell section" style="margin-top:14px;">
       <canvas id="phaseCanvas" width="920" height="620" aria-label="Boundary phase map over protocol quality and task interdependence"></canvas>
@@ -338,7 +342,7 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
   </div>
 </section>
 
-    <div class="footer">Monte Carlo companion for the Coase–Information Theory paper (rev 1.1, 2026-06-09): boundary capacity threshold (R* = κ) and the granularity law m* = √(A/B). Stylized simulation, not a causal estimate.</div>
+    <div class="footer">Monte Carlo companion for the Coase–Information Theory paper (rev 1.2, 2026-06-09): boundary capacity threshold (R* = κ) and the granularity law m* = √(A/B). Stylized simulation, not a causal estimate.</div>
   </div>
 
 <script>

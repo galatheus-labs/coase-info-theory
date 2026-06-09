@@ -48,7 +48,7 @@ to the Boundary of the Agent}\\
   \href{https://galatheus.com}{Galatheus}\\
   \texttt{brian@galatheus.com}}
 \date{June 2026\\[2pt]
-{\normalsize Working paper --- revision 1.1, 2026-06-09}}
+{\normalsize Working paper --- revision 1.2, 2026-06-09}}
 
 \begin{document}
 \maketitle
@@ -66,10 +66,14 @@ protocols, or market interfaces preserve enough information while lowering
 internal coordination burden. The paper contributes a formal language for this
 agent-boundary problem, a decomposition of coordination cost into measurable
 information-processing terms, and a definition of organizational agility based
-on decision-value per unit time. Two formal results sharpen the coalesce/split
-decision: a capacity threshold for when a boundary preserves decision-relevant
-information, and a square-root law for the efficient number of units that
-software agents shift toward finer decomposition by lowering interface cost.
+on decision-value per unit time. Three formal results sharpen the
+coalesce/split decision: a capacity threshold for when a boundary preserves
+decision-relevant information; an exact exponential interface-deficit law in
+the canonical Gaussian-quadratic team, under which the split penalty equals
+the decision value of the partner's information discounted fourfold per bit of
+interface capacity; and a square-root law for the efficient number of units
+that software agents shift toward finer decomposition by lowering interface
+cost.
 Mutual information is retained as an idealized
 proxy for information fidelity, but loss reduction is the primary quality
 quantity. The main claim is that software agents are boundary-shifting
@@ -131,9 +135,13 @@ contribution is sharper: those models largely fix the communication technology
 and derive the efficient structure. This paper generalizes the boundary
 problem from firms to recursively composed agents and models the technology
 shift itself: software agents alter the relative cost of coalescence,
-splitting, and protocol-mediated coordination. Two results make the coalesce/split
-tradeoff precise: a capacity threshold (Theorem~\ref{thm:capacity}) for when a
-boundary preserves decision-relevant information, and an optimal-decomposition
+splitting, and protocol-mediated coordination. Three results make the
+coalesce/split
+tradeoff precise: a capacity threshold (Proposition~\ref{prop:capacity}) for
+when a
+boundary preserves decision-relevant information, an exact exponential
+interface-deficit law in the canonical Gaussian-quadratic team
+(Theorem~\ref{thm:deficit}), and an optimal-decomposition
 law (Theorem~\ref{thm:granularity}) placing the efficient number of units at
 \(m^\star=\sqrt{A/B}\), the square root of internal coupling over interface
 cost, which software agents shift toward finer decomposition by lowering
@@ -488,11 +496,12 @@ classic market contracting.
 The coalesce/split decision is usually argued as a binary choice between a
 monolith and a fully decomposed system. The information-processing view makes
 it quantitative: there is an interior optimum, and software agents move it. This
-section states two results. The first is a capacity threshold that decides
-whether a given boundary can be drawn without losing decision-relevant
-information. The second is an optimal-decomposition law that locates the
-efficient number of units. The threshold is the information-theoretic backbone;
-the decomposition law is the statement a practitioner can act on.
+section states three results: a capacity dichotomy that decides whether a
+given boundary can be drawn without losing decision-relevant information, an
+exact exponential deficit law that prices the boundary when capacity falls
+short, and an optimal-decomposition law that locates the efficient number of
+units. The first two are the information-theoretic backbone; the decomposition
+law is the statement a practitioner can act on.
 
 \subsection{When a boundary is information-clean}
 
@@ -526,12 +535,23 @@ risk at rate \(r\) by
 \mathcal L_{\mathrm{split}}(r)
 :=\inf_{M\in\mathcal P(r)}\inf_{\pi}\E[\ell(T,\pi(Y^A,M))].
 \]
+\begin{definition}[Decision-relevant interface rate]
+\label{def:rstar}
 The \emph{decision-relevant interface rate} is the operational threshold
 \[
 R^\star
 :=\inf\{r\geq 0:\mathcal L_{\mathrm{split}}(r)=
-\mathcal L_{\mathrm{coal}}\}.
+\mathcal L_{\mathrm{coal}}\},
 \]
+and, for tolerance \(\varepsilon>0\), the \emph{\(\varepsilon\)-sufficient rate}
+is
+\[
+R^\star_\varepsilon
+:=\inf\{r\geq 0:\mathcal L_{\mathrm{split}}(r)\le
+\mathcal L_{\mathrm{coal}}+\varepsilon\}.
+\]
+\end{definition}
+
 Thus \(R^\star\) is the minimum cross-boundary rate needed to preserve the
 coalesced architecture's decision value for the loss under study; \(\kappa\) is
 protocol capacity measured in the same units. The conditional mutual information
@@ -540,10 +560,13 @@ I(T;Y^B\mid Y^A)
 \]
 is still a useful interdependence diagnostic and a lower bound when the protocol
 must preserve the full Blackwell experiment about \(T\), but it is not, by
-itself, a universal achievability rate for every decision problem.
+itself, a universal achievability rate for every decision problem
+(Corollary~\ref{cor:mibridge} makes the link exact in the Gaussian-quadratic
+team). The threshold behaves as a dichotomy by construction; stating it as such
+fixes language for what follows.
 
-\begin{theorem}[Boundary capacity threshold]
-\label{thm:capacity}
+\begin{proposition}[Capacity dichotomy]
+\label{prop:capacity}
 Assume finite or discretized observations, bounded loss, and that the infima
 above are attained; otherwise read the statement with arbitrarily small
 rate/loss slack.
@@ -560,7 +583,7 @@ rate/loss slack.
   \]
   is positive and is non-decreasing as available capacity \(\kappa\) falls.
 \end{enumerate}
-\end{theorem}
+\end{proposition}
 
 \noindent\textit{Proof.} The feasible protocol classes are nested:
 \(\mathcal P(r_1)\subseteq \mathcal P(r_2)\) whenever \(r_1\le r_2\). Hence
@@ -575,7 +598,8 @@ The gap \(\Delta(\kappa)\) inherits monotonicity from
 \(\mathcal L_{\mathrm{split}}(\kappa)\): reducing capacity shrinks the feasible
 protocol set and cannot lower the best achievable split risk. \hfill\(\square\)
 
-Theorem~\ref{thm:capacity} says a boundary is \emph{information-clean} exactly
+Proposition~\ref{prop:capacity} says a boundary is \emph{information-clean}
+exactly
 when its decision-relevant cross-traffic fits through the protocol. Because the
 architect chooses the cut, the natural design move is to minimize cross-boundary
 decision rate,
@@ -590,6 +614,74 @@ coupling'' made literal: coupling is the
 decision-relevant rate that crosses the boundary, and Conway's law becomes the
 statement that organizations ship their information cuts.
 
+In smooth environments the dichotomy is the wrong resolution: exact equality
+can require unbounded rate, while the penalty for finite rate decays fast. The
+canonical team-theoretic setting makes this exact.
+
+\begin{theorem}[Exponential interface-deficit law]
+\label{thm:deficit}
+Let \((X,Y^A,Y^B)\) be jointly Gaussian, let loss be quadratic,
+\(L(x,a)=(x-a)^2\) (so the sufficient statistic is \(T=X\)), and let the
+deciding side hold \(Y^A\) while side \(B\) communicates one-way at rate
+\(\kappa\) bits per decision cycle in the block-coded regime. Then the split
+penalty is exactly
+\[
+\Delta(\kappa)
+=\mathcal L_{\mathrm{split}}(\kappa)-\mathcal L_{\mathrm{coal}}
+=\underbrace{\big[\mathrm{Var}(X\mid Y^A)-\mathrm{Var}(X\mid Y^A,Y^B)\big]}_{\Delta(0)}
+\cdot 2^{-2\kappa}:
+\]
+the penalty for splitting equals the decision value of the partner's
+information, discounted fourfold per bit of interface capacity. Consequently
+\(R^\star=\infty\) whenever \(\Delta(0)>0\), while for every tolerance
+\(\varepsilon\in(0,\Delta(0)]\),
+\[
+R^\star_\varepsilon=\tfrac12\log_2\frac{\Delta(0)}{\varepsilon}.
+\]
+\end{theorem}
+
+\noindent\textit{Proof.} By joint Gaussianity the coalesced Bayes action is
+\(T'=\E[X\mid Y^A,Y^B]=a^\top Y^A+b^\top Y^B\); set \(V:=b^\top Y^B\), which
+the encoder can compute alone. Since \(X-T'\) has zero mean conditional on
+\((Y^A,Y^B)\), and any decoder output \(\hat a\) is a function of \((Y^A,M)\)
+with \(M\) a (possibly randomized) function of \(Y^B\), the cross term
+vanishes and, for every protocol,
+\(\E(X-\hat a)^2=\E(X-T')^2+\E(T'-\hat a)^2
+=\mathcal L_{\mathrm{coal}}+\E(T'-\hat a)^2\). With \(a^\top Y^A\) known to
+the decoder, estimating \(T'\) is estimating \(V\): the problem reduces to
+remote estimation of the scalar Gaussian \(V\) under mean-squared error with
+decoder side information \(Y^A\) at rate \(\kappa\). For jointly Gaussian
+sources under quadratic distortion, Wyner--Ziv coding suffers no rate loss
+relative to conditional rate--distortion \cite{wynerziv1976,wyner1978}: the
+optimal distortion is \(D(\kappa)=\mathrm{Var}(V\mid Y^A)\,2^{-2\kappa}\),
+with matching converse. Finally, the orthogonal decomposition
+\(X-\E[X\mid Y^A]=(X-T')+(V-\E[V\mid Y^A])\) gives
+\(\mathrm{Var}(X\mid Y^A)=\mathcal L_{\mathrm{coal}}
++\mathrm{Var}(V\mid Y^A)\), so \(\mathrm{Var}(V\mid Y^A)=\Delta(0)\).
+Substituting gives the law, and solving \(\Delta(\kappa)\le\varepsilon\) gives
+\(R^\star_\varepsilon\). \hfill\(\square\)
+
+\begin{corollary}[Exact information bridge]
+\label{cor:mibridge}
+For scalar \(X\) in the setting of Theorem~\ref{thm:deficit},
+\(I(X;Y^B\mid Y^A)=\tfrac12\log_2\big(\mathrm{Var}(X\mid Y^A)/
+\mathrm{Var}(X\mid Y^A,Y^B)\big)\), hence
+\(\Delta(0)=\mathrm{Var}(X\mid Y^A)\big(1-2^{-2I(X;Y^B\mid Y^A)}\big)\): the
+conditional mutual information used above as a diagnostic becomes an exact
+measure of the zero-capacity penalty.
+\end{corollary}
+
+Three readings matter for design. First, the deficit law prices a leaky
+boundary: the cost of a thin protocol is not failure but an exponentially
+discounted share of the partner's information value. Second, capacity
+requirements grow only logarithmically as tolerance tightens
+(\(R^\star_\varepsilon=\tfrac12\log_2(\Delta(0)/\varepsilon)\)), so protocol
+capacity is cheap relative to decision fidelity. Third, the law gives the
+empirical program of Section~\ref{sec:measurement} a functional form: in the
+smooth regime, the logarithm of the excess loss should fall linearly in
+interface capacity with slope \(-2\) per bit, i.e.\ each added bit of
+effective schema capacity cuts the excess loss roughly fourfold.
+
 \subsection{How many units: an optimal-decomposition law}
 
 A clean cut still has a cost, and so does coalescence. Coordination is an
@@ -599,7 +691,7 @@ coherent representation costs on the order of \(aN^2\). Splitting into
 \(m=|\calB|\) units of size \(N/m\) reduces within-unit coordination to
 \(a(N/m)^2\) per unit, hence \(aN^2/m\) in total, while each boundary adds a
 roughly fixed interface cost \(B\) when cuts are information-clean in the sense
-of Theorem~\ref{thm:capacity}. Writing \(A:=aN^2\) for the coalesced
+of Proposition~\ref{prop:capacity}. Writing \(A:=aN^2\) for the coalesced
 coordination cost, total coordination cost as a function of granularity is
 \[
 \Theta(m)=\frac{A}{m}+B\,m,\qquad m\ge 1.
@@ -653,7 +745,8 @@ the law predicts the new efficient granularity.
 The additive interface model holds only while cuts are information-clean. When
 interdependence is high enough that no partition achieves
 \(R^\star(\calB)\le\kappa\), each boundary carries an irreducible decision-loss
-term \(\Delta(\kappa)>0\) from Theorem~\ref{thm:capacity}. The constant-\(B\)
+term \(\Delta(\kappa)>0\) from Proposition~\ref{prop:capacity}, priced in the
+Gaussian-quadratic case by Theorem~\ref{thm:deficit}. The constant-\(B\)
 model is then misspecified: effective interface cost must include the
 capacity-deficit loss, and if those deficits persist or grow as additional cuts
 are drawn, the efficient architecture moves back toward coalescence. Beyond
@@ -663,7 +756,8 @@ must choose cuts with lower \(R^\star(\calB)\).
 \end{corollary}
 
 Together the results bound the design space from both sides.
-Theorem~\ref{thm:capacity} decides whether a given boundary is admissible;
+Proposition~\ref{prop:capacity} decides whether a given boundary is
+admissible, and Theorem~\ref{thm:deficit} prices the deficit when it is not;
 Theorem~\ref{thm:granularity} decides how many admissible boundaries to draw;
 Corollary~\ref{cor:agents} shows agents slide the optimum toward finer
 decomposition; and Corollary~\ref{cor:floor} shows interdependence sets a hard
@@ -677,7 +771,8 @@ architecture toward coalescence.
 The all-pairs form \(aN^2\) is the simplest super-linear coordination cost; any
 strictly convex internal cost yields a unique interior optimum and changes only
 the exponent in the root. Constant per-boundary cost \(B\) is exactly the
-information-clean assumption of Theorem~\ref{thm:capacity}; its failure is the
+information-clean assumption of Proposition~\ref{prop:capacity}; its failure
+is the
 content of Corollary~\ref{cor:floor}. The linear interface term \(B\,m\)
 additionally assumes the quotient graph is sparse --- tree- or bus-like, each
 unit maintaining \(O(1)\) interfaces --- which is what modular architectures
@@ -968,7 +1063,10 @@ simulation's core comparative statics.
 \centering
 \caption{Boundary regimes as a function of interdependence and protocol
 quality. The diagonal \(R^\star=\kappa\)---operational decision rate equal to
-interface capacity---is the capacity boundary of Theorem~\ref{thm:capacity}.
+interface capacity---is the capacity boundary of
+Proposition~\ref{prop:capacity}; in smooth environments read \(R^\star\) as
+the \(\varepsilon\)-sufficient rate \(R^\star_\varepsilon\) of
+Theorem~\ref{thm:deficit}.
 Below and to its right, boundaries are
 information-clean and the granularity law \(m^\star=\sqrt{A/B}\) applies; above
 and to its left, interdependence exceeds capacity and
@@ -1010,6 +1108,7 @@ more surprise for runtime. This illustrates the paper's broader claim: plans,
 like organizational boundaries, are information investments.
 
 \section{Measurement and Empirical Agenda}
+\label{sec:measurement}
 
 A first empirical study should use incident response or support routing traces.
 The minimal research design is:
@@ -1079,7 +1178,8 @@ first empirical spine for the theory.
 
 \subsection{A minimal test of the capacity threshold}
 
-The cheapest credible test of Theorem~\ref{thm:capacity} proxy-estimates the
+The cheapest credible test of Proposition~\ref{prop:capacity} proxy-estimates
+the
 decision-relevant interface rate \(R^\star\) and the interface capacity
 \(\kappa\) from handoff traces and checks whether decision loss rises where the
 operational rate exceeds capacity. Incident and support-ticket data are
@@ -1102,13 +1202,19 @@ Three quantities are estimated from the trace:
   for severity and case complexity.
 \end{itemize}
 
-Theorem~\ref{thm:capacity} predicts an \emph{elbow}: where the operational
+Proposition~\ref{prop:capacity} predicts an \emph{elbow}: where the operational
 deficit \(R^\star-\kappa\) is non-positive, handoffs are information-clean and
 split performance can match coalesced performance; where the deficit is
 positive, decision loss should rise with it. Plotting resolution time or reopen
 rate against a proxy for \((R^\star-\kappa)\) should be flatter to the left of
 zero and increasing to the right. Observing this elbow is evidence that the
 capacity boundary is real rather than merely drawn.
+Theorem~\ref{thm:deficit} sharpens the prediction from a shape to a functional
+form: in the smooth regime the logarithm of the excess loss should fall
+approximately linearly in effective interface capacity, each added bit of
+schema capacity cutting the excess roughly fourfold. A log-linear fit of
+excess resolution time or reopen rate against the capacity proxy is therefore
+a stronger test than the elbow alone.
 
 A complementary check tests the cost-vector prediction summarized in
 Table~\ref{tab:costs}. For boundary-change cases, an agent-mediated routing or
@@ -1210,6 +1316,12 @@ Wyner, A. D., and Ziv, J. (1976).
 at the decoder.
 \newblock \emph{IEEE Transactions on Information Theory}, 22(1), 1--10.
 \newblock \href{https://doi.org/10.1109/TIT.1976.1055508}{doi:10.1109/TIT.1976.1055508}.
+
+\bibitem{wyner1978}
+Wyner, A. D. (1978).
+\newblock The rate-distortion function for source coding with side information
+at the decoder---II: General sources.
+\newblock \emph{Information and Control}, 38(1), 60--80.
 
 \bibitem{hayek1945}
 Hayek, F. A. (1945).
