@@ -47,7 +47,8 @@ to the Boundary of the Agent}\\
 \author{Brian Guarraci\\
   \href{https://galatheus.com}{Galatheus}\\
   \texttt{brian@galatheus.com}}
-\date{June 2026}
+\date{June 2026\\[2pt]
+{\normalsize Working paper --- revision 1.1, 2026-06-09}}
 
 \begin{document}
 \maketitle
@@ -122,12 +123,15 @@ coordination and governance cost.
 
 The contribution is not the broad claim that firms process information. That
 intuition has deep roots in Hayek, Simon, Galbraith, and distributed decision
-theory \cite{hayek1945,simon1947,galbraith1973,marschakradner1972}. The
-contribution is sharper: prior work explains the firm as a response to market
-transaction costs or bounded information-processing capacity. This paper
-generalizes the boundary problem from firms to recursively composed agents and
-shows how software agents alter the relative cost of coalescence, splitting,
-and protocol-mediated coordination. Two results make the coalesce/split
+theory \cite{hayek1945,simon1947,galbraith1973,marschakradner1972}, and a
+formal economics of organizational information processing has derived
+efficient structures from communication and processing costs
+\cite{radner1993,boltondewatripont1994,garicano2000,alonso2008}. The
+contribution is sharper: those models largely fix the communication technology
+and derive the efficient structure. This paper generalizes the boundary
+problem from firms to recursively composed agents and models the technology
+shift itself: software agents alter the relative cost of coalescence,
+splitting, and protocol-mediated coordination. Two results make the coalesce/split
 tradeoff precise: a capacity threshold (Theorem~\ref{thm:capacity}) for when a
 boundary preserves decision-relevant information, and an optimal-decomposition
 law (Theorem~\ref{thm:granularity}) placing the efficient number of units at
@@ -160,7 +164,21 @@ Galbraith's information-processing view of organizations links uncertainty,
 task interdependence, and structural design \cite{galbraith1973}. Coordination
 theory and classic organization theory similarly treat coordination as the
 management of dependencies among activities \cite{thompson1967,
-malonecrowston1994}.
+malonecrowston1994}. This tradition has a precise formal counterpart. Radner
+models hierarchies as parallel information processors trading processing delay
+against managerial cost \cite{radner1993}, and Van Zandt extends the analysis
+to real-time processing by boundedly rational agents \cite{vanzandt1999}.
+Bolton and Dewatripont derive efficient communication networks when absorbing
+messages is costly \cite{boltondewatripont1994}; Garicano derives knowledge
+hierarchies that economize on acquiring and transmitting knowledge
+\cite{garicano2000}; and Alonso, Dessein, and Matouschek characterize when
+coordination requires centralization under strategic communication
+\cite{alonso2008}. Arrow's information-cost account of organization
+\cite{arrow1974}, Simon's near-decomposability \cite{simon1962}, and Brooks's
+all-pairs communication burden \cite{brooks1975} anticipate the cost structure
+used in Section~\ref{sec:granularity}. These models largely take the
+communication technology as given; the present paper is about what happens
+when that technology becomes programmable.
 
 Third, information theory provides a vocabulary for representation,
 compression, fidelity, and distortion \cite{shannon1948}. That vocabulary is
@@ -498,7 +516,11 @@ be the coalesced Bayes risk. Let \(\mathcal P(r)\) be the class of admissible
 one-way protocols whose message from side \(B\) to the deciding side has rate at
 most \(r\) bits per decision cycle. The rate can be read as an exact one-shot
 message-length constraint or, in block-coded settings, as the asymptotic
-description rate with decoder side information \(Y^A\). Define the best split
+description rate with decoder side information \(Y^A\) --- the Wyner--Ziv
+regime of source coding with side information at the decoder
+\cite{wynerziv1976}, here with distortion measured by decision loss rather
+than reconstruction error, so standard rate--distortion machinery applies to
+\(\mathcal L_{\mathrm{split}}(r)\). Define the best split
 risk at rate \(r\) by
 \[
 \mathcal L_{\mathrm{split}}(r)
@@ -563,14 +585,16 @@ decision rate,
 placing boundaries along cuts of minimal decision-relevant interdependence.
 Conditional mutual information remains a useful lower-bound diagnostic, but the
 threshold quantity is the operational rate required to preserve decision value.
-This is ``high cohesion, low coupling'' made literal: coupling is the
+This is near-decomposability \cite{simon1962} and ``high cohesion, low
+coupling'' made literal: coupling is the
 decision-relevant rate that crosses the boundary, and Conway's law becomes the
 statement that organizations ship their information cuts.
 
 \subsection{How many units: an optimal-decomposition law}
 
 A clean cut still has a cost, and so does coalescence. Coordination is an
-all-pairs problem: holding the \(N=|V_0|\) primitive components in one mutually
+all-pairs problem \cite{brooks1975}: holding the \(N=|V_0|\) primitive
+components in one mutually
 coherent representation costs on the order of \(aN^2\). Splitting into
 \(m=|\calB|\) units of size \(N/m\) reduces within-unit coordination to
 \(a(N/m)^2\) per unit, hence \(aN^2/m\) in total, while each boundary adds a
@@ -654,7 +678,17 @@ The all-pairs form \(aN^2\) is the simplest super-linear coordination cost; any
 strictly convex internal cost yields a unique interior optimum and changes only
 the exponent in the root. Constant per-boundary cost \(B\) is exactly the
 information-clean assumption of Theorem~\ref{thm:capacity}; its failure is the
-content of Corollary~\ref{cor:floor}. The results are stated for the stationary,
+content of Corollary~\ref{cor:floor}. The linear interface term \(B\,m\)
+additionally assumes the quotient graph is sparse --- tree- or bus-like, each
+unit maintaining \(O(1)\) interfaces --- which is what modular architectures
+are designed to achieve \cite{parnas1972,baldwinclark2000}. If instead every
+unit must interface with every other, interface cost scales as \(B\,m^2\) and
+the optimum becomes a cube root, \(m^\star=(A/2B)^{1/3}\): denser interface
+graphs lower the efficient unit count and flatten the gain from cheaper
+interfaces. The formula also presumes an interior optimum
+\(1\le m^\star\le N\), and since a monolith carries no interface, \(B\,m\) may
+be read as \(B\,(m-1)\), which shifts \(\Theta\) by a constant and leaves
+\(m^\star\) unchanged. The results are stated for the stationary,
 single-decision case; sequential settings compose with the latency discount of
 Proposition~\ref{prop:latency} through the delay-cost term.
 \end{remark}
@@ -1170,6 +1204,13 @@ Blackwell, D. (1953).
 \newblock \emph{Annals of Mathematical Statistics}, 24(2), 265--272.
 \newblock \href{https://doi.org/10.1214/aoms/1177729032}{doi:10.1214/aoms/1177729032}.
 
+\bibitem{wynerziv1976}
+Wyner, A. D., and Ziv, J. (1976).
+\newblock The rate-distortion function for source coding with side information
+at the decoder.
+\newblock \emph{IEEE Transactions on Information Theory}, 22(1), 1--10.
+\newblock \href{https://doi.org/10.1109/TIT.1976.1055508}{doi:10.1109/TIT.1976.1055508}.
+
 \bibitem{hayek1945}
 Hayek, F. A. (1945).
 \newblock The use of knowledge in society.
@@ -1182,6 +1223,12 @@ Simon, H. A. (1947).
 \newblock \emph{Administrative Behavior: A Study of Decision-Making Processes
 in Administrative Organization}.
 \newblock Macmillan.
+
+\bibitem{simon1962}
+Simon, H. A. (1962).
+\newblock The architecture of complexity.
+\newblock \emph{Proceedings of the American Philosophical Society}, 106(6),
+467--482.
 
 \bibitem{marchsimon1958}
 March, J. G., and Simon, H. A. (1958).
@@ -1197,6 +1244,16 @@ Cyert, R. M., and March, J. G. (1963).
 Marschak, J., and Radner, R. (1972).
 \newblock \emph{Economic Theory of Teams}.
 \newblock Cowles Foundation Monograph 22. Yale University Press.
+
+\bibitem{arrow1974}
+Arrow, K. J. (1974).
+\newblock \emph{The Limits of Organization}.
+\newblock W. W. Norton.
+
+\bibitem{brooks1975}
+Brooks, F. P., Jr. (1975).
+\newblock \emph{The Mythical Man-Month: Essays on Software Engineering}.
+\newblock Addison-Wesley.
 
 \bibitem{thompson1967}
 Thompson, J. D. (1967).
@@ -1220,6 +1277,34 @@ Malone, T. W., and Crowston, K. (1994).
 \newblock The interdisciplinary study of coordination.
 \newblock \emph{ACM Computing Surveys}, 26(1), 87--119.
 \newblock \href{https://doi.org/10.1145/174666.174668}{doi:10.1145/174666.174668}.
+
+\bibitem{radner1993}
+Radner, R. (1993).
+\newblock The organization of decentralized information processing.
+\newblock \emph{Econometrica}, 61(5), 1109--1146.
+
+\bibitem{boltondewatripont1994}
+Bolton, P., and Dewatripont, M. (1994).
+\newblock The firm as a communication network.
+\newblock \emph{Quarterly Journal of Economics}, 109(4), 809--839.
+\newblock \href{https://doi.org/10.2307/2118349}{doi:10.2307/2118349}.
+
+\bibitem{vanzandt1999}
+Van Zandt, T. (1999).
+\newblock Real-time decentralized information processing as a model of
+organizations with boundedly rational agents.
+\newblock \emph{Review of Economic Studies}, 66(3), 633--658.
+
+\bibitem{garicano2000}
+Garicano, L. (2000).
+\newblock Hierarchies and the organization of knowledge in production.
+\newblock \emph{Journal of Political Economy}, 108(5), 874--904.
+
+\bibitem{alonso2008}
+Alonso, R., Dessein, W., and Matouschek, N. (2008).
+\newblock When does coordination require centralization?
+\newblock \emph{American Economic Review}, 98(1), 145--179.
+\newblock \href{https://doi.org/10.1257/aer.98.1.145}{doi:10.1257/aer.98.1.145}.
 
 \bibitem{conway1968}
 Conway, M. E. (1968).
