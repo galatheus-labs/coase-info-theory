@@ -1,3 +1,5 @@
+> Historical document. The canonical paper and `docs/revision-1.3-notes.md` supersede mathematical, measurement, and demo claims in this file.
+
 # Coase–Information Theory: formal note and demo plan
 
 ## Core thesis

@@ -1,3 +1,5 @@
+> Historical document. The canonical paper and `docs/revision-1.3-notes.md` supersede mathematical, measurement, and demo claims in this file.
+
 # arXiv Submission Plan
 
 Prepared: 2026-06-07

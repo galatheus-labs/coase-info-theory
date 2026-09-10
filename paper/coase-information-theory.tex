@@ -47,39 +47,38 @@ to the Boundary of the Agent}\\
 \author{Brian Guarraci\\
   \href{https://galatheus.com}{Galatheus}\\
   \texttt{brian@galatheus.com}}
-\date{June 2026\\[2pt]
-{\normalsize Working paper --- revision 1.2, 2026-06-09}}
+\date{September 2026\\[2pt]
+{\normalsize Working paper --- draft revision 1.3, 2026-09-09}}
 
 \begin{document}
 \maketitle
 
+
 \begin{abstract}
 Coase explained the firm as an alternative to market coordination when using
-the price mechanism is costly. This paper generalizes the problem from the
-boundary of the firm to the boundary of the agent. In AI-mediated
-organizations, the relevant units of coordination are not only firms and
-markets, but recursively composed humans, teams, vendors, workflows, software
-services, and autonomous agents. Boundaries form when shared representations
-and control loops reduce surprise, delay, error, or misalignment more than they
-add coordination and governance cost. Boundaries split when modularity,
-protocols, or market interfaces preserve enough information while lowering
-internal coordination burden. The paper contributes a formal language for this
-agent-boundary problem, a decomposition of coordination cost into measurable
-information-processing terms, and a definition of organizational agility based
-on decision-value per unit time. Three formal results sharpen the
-coalesce/split decision: a capacity threshold for when a boundary preserves
-decision-relevant information; an exact exponential interface-deficit law in
-the canonical Gaussian-quadratic team, under which the split penalty equals
-the decision value of the partner's information discounted fourfold per bit of
-interface capacity; and a square-root law for the efficient number of units
-that software agents shift toward finer decomposition by lowering interface
-cost.
-Mutual information is retained as an idealized
-proxy for information fidelity, but loss reduction is the primary quality
-quantity. The main claim is that software agents are boundary-shifting
-infrastructure: by making sensing, routing, interpretation, escalation, and
-execution programmable, they change the relative cost of hierarchy, market, and
-hybrid organization.
+the price mechanism is costly. This paper extends that design problem from
+the boundary of the firm to the boundary of the agent: a bounded
+sensing--representation--decision--action loop that may comprise humans,
+teams, services, vendors, or software agents. It develops a normative framework
+for choosing such boundaries under a specified objective, decomposes
+coordination costs into operational terms, and defines organizational agility
+as decision value per unit time. Established information-theoretic tools yield
+an analytical benchmark: for a memoryless scalar Gaussian estimation task
+with quadratic loss and asymptotic one-way coding, the excess loss of splitting
+is the zero-communication decision deficit multiplied by $2^{-2\kappa}$.
+Combining that benchmark with coordination savings gives a finite economic
+switching threshold, even when preserving all decision value requires
+unbounded communication. Under balanced units, quadratic internal cost, and
+sparse constant-cost interfaces, a separate continuous relaxation gives the
+familiar square-root granularity rule. Agents can favor either finer
+decomposition or greater integration, depending on their relative effects on
+internal costs, interface costs, and decision loss. The contribution is the
+integration of these results into a recursive boundary-design framework, not
+a new general coding theorem or universal scaling law. A stylized companion
+and a controlled-replay research design distinguish analytical benchmarks from
+operational proxies and empirical evidence. Software agents are
+boundary-shifting infrastructure because programmable observation,
+communication, and action change where shared context is worth its cost.
 \end{abstract}
 
 \noindent\textbf{Keywords:} multi-agent systems; organizational design;
@@ -125,27 +124,36 @@ control loops reduce surprise, delay, error, or misalignment more than they add
 coordination and governance cost.
 \end{quote}
 
+
 The contribution is not the broad claim that firms process information. That
 intuition has deep roots in Hayek, Simon, Galbraith, and distributed decision
-theory \cite{hayek1945,simon1947,galbraith1973,marschakradner1972}, and a
-formal economics of organizational information processing has derived
-efficient structures from communication and processing costs
-\cite{radner1993,boltondewatripont1994,garicano2000,alonso2008}. The
-contribution is sharper: those models largely fix the communication technology
-and derive the efficient structure. This paper generalizes the boundary
-problem from firms to recursively composed agents and models the technology
-shift itself: software agents alter the relative cost of coalescence,
-splitting, and protocol-mediated coordination. Three results make the
-coalesce/split
-tradeoff precise: a capacity threshold (Proposition~\ref{prop:capacity}) for
-when a
-boundary preserves decision-relevant information, an exact exponential
-interface-deficit law in the canonical Gaussian-quadratic team
-(Theorem~\ref{thm:deficit}), and an optimal-decomposition
-law (Theorem~\ref{thm:granularity}) placing the efficient number of units at
-\(m^\star=\sqrt{A/B}\), the square root of internal coupling over interface
-cost, which software agents shift toward finer decomposition by lowering
-interface cost.
+theory \cite{hayek1945,simon1947,galbraith1973,marschakradner1972}.
+Formal organizational economics has derived structures from communication,
+processing, and incentive costs
+\cite{radner1993,boltondewatripont1994,garicano2000,alonso2008}.
+This paper integrates those perspectives into a recursive design language for
+human--software organizations. Programmable interfaces can change both the
+cost of pooling information and the cost of communicating across a boundary;
+neither direction is assumed to dominate.
+
+Three analytical steps organize the argument. An operational capacity
+threshold defines preservation of a specified decision value
+(Proposition~\ref{prop:capacity}). A Gaussian--quadratic example applies
+classical source coding with decoder side information to price excess decision
+loss (Theorem~\ref{thm:deficit}). Combining that loss with coordination
+savings gives the economic switching threshold
+(Corollary~\ref{cor:economic}): information loss can be worth accepting.
+A separate balanced-unit cost model gives a square-root granularity rule
+(Theorem~\ref{thm:granularity}), with explicitly conditional comparative
+statics. The contribution is their integration and organizational
+interpretation, not novelty of the underlying coding or optimization machinery.
+
+The framework is normative: it compares architectures under a specified
+objective, feasible policy set, and governance constraints. It does not derive
+bargaining equilibria, endogenous property rights, or the distribution of
+surplus. Misalignment and monitoring are costs to be specified, not a
+substitute for an incentive-compatibility model. Observed organizational
+boundaries need not coincide with the optima described here.
 
 This paper does not claim that firms disappear, that decentralization is always
 superior, or that software agents universally improve coordination. The claim
@@ -184,9 +192,11 @@ coordination requires centralization under strategic communication
 \cite{alonso2008}. Arrow's information-cost account of organization
 \cite{arrow1974}, Simon's near-decomposability \cite{simon1962}, and Brooks's
 all-pairs communication burden \cite{brooks1975} anticipate the cost structure
-used in Section~\ref{sec:granularity}. These models largely take the
-communication technology as given; the present paper is about what happens
-when that technology becomes programmable.
+used in Section~\ref{sec:granularity}. These models provide the foundation for treating communication and
+processing technologies as organizational design parameters. The present
+paper emphasizes programmable interfaces and recursively composed
+human--software decision units, without claiming that technological
+comparative statics are absent from the earlier literature.
 
 Third, information theory provides a vocabulary for representation,
 compression, fidelity, and distortion \cite{shannon1948}. That vocabulary is
@@ -206,8 +216,8 @@ systems \cite{conway1968,parnas1972,hendersonclark1990,baldwinclark2000}, as
 well as to recent work on tool-using and interactive AI agents
 \cite{amershi2019,yao2023,schick2023,wu2023autogen,yang2024sweagent,park2023}.
 
-The novelty of Coase--Information Theory is to combine these threads into a
-single recursive boundary problem. The unit of analysis is not only the legal
+The proposed synthesis combines these threads into a
+single recursive boundary-design problem. The unit of analysis is not only the legal
 firm. It is any bounded sensing-representation-decision-action loop.
 
 \section{Agent-Boundary Model}
@@ -278,7 +288,10 @@ loss from the chosen action; coordination, delay, monitoring, interpretation,
 and governance burdens enter through separate cost terms so that they are not
 counted twice.
 
-The general organizational design problem is
+All cumulative quantities below refer to a common finite evaluation
+horizon and case distribution; infinite-horizon applications require an
+explicit discount or average-cost convention. The general organizational
+design problem is
 \[
 \max_{\calB,G,\Pi,F}
 \E\left[\sum_t U(X_t,a_t)\right]
@@ -348,10 +361,12 @@ C_{\mathrm{misalign}},\;
 C_{\mathrm{monitor}}).
 \end{aligned}
 \]
-Here \(\E\sum_t S_t\) is cumulative expected surprise, where
-\(S_t=\sum_{B}S_t^{B}\) aggregates the per-agent surprise defined in
-Section~\ref{sec:coalescence}, and \(\E\sum_t L(X_t,a_t)\) is cumulative action
-loss.
+
+Here $\E\sum_t S_t$ is a predictive score evaluated on a fixed set of targets,
+with the same scoring opportunities and weights for every architecture
+(Section~\ref{sec:coalescence}). It is not a sum over a changing number of
+agents. The term $\E\sum_t L(X_t,a_t)$ is cumulative action loss.
+
 The scalar objective used by a particular organization is a weighted or
 constrained evaluation of this vector. One simple scalarization is
 \[
@@ -368,7 +383,10 @@ J(\calB,G,F,\Pi)
 +\lambda_{\mathrm{monitor}}C_{\mathrm{monitor}}.
 \end{aligned}
 \]
-Then an objective-efficient architecture satisfies
+Weights are nonnegative and costs use a common declared accounting
+convention. By default $\beta_S=0$: predictive surprise is a diagnostic unless
+an independent economic burden, not already in loss or other costs, justifies
+pricing it. Then an objective-efficient architecture satisfies
 \[
 (\calB^*,G^*,F^*,\Pi^*)\in \arg\min_{\calB,G,F,\Pi}J(\calB,G,F,\Pi).
 \]
@@ -385,16 +403,20 @@ external interfaces. Each boundary induces a performance vector consisting of
 expected surprise, action loss, communication cost, computation cost,
 interpretation cost, delay cost, error cost, misalignment cost, and monitoring
 cost. A
-boundary is \emph{Pareto-efficient} when no feasible boundary movement weakly
+boundary is \emph{Pareto-efficient} when no feasible architecture weakly
 improves every component of this vector and strictly improves at least one. A
 boundary is \emph{objective-efficient} for a given organization when no
-feasible boundary movement lowers the organization's total expected objective
+feasible architecture lowers the organization's total expected objective
 after applying its weights, constraints, or governance requirements over these
 quantities.
 \end{definition}
 
 Pareto efficiency describes the frontier of feasible boundary architectures.
-Objective efficiency selects a point on that frontier. Different organizations
+With strictly positive weights on all components, global objective
+minimizers are Pareto-efficient on the same feasible set. With zero weights,
+a minimizer can be dominated on ignored components; use Pareto-efficient
+tie-breaking when that distinction matters. Efficiency against only local
+merge/split moves is local optimality, not global Pareto efficiency. Different organizations
 may choose different efficient boundaries because they assign different
 weights to speed, accuracy, compliance, safety, morale, resilience, and
 strategic learning. In an incident context, a regulated financial platform may
@@ -415,21 +437,40 @@ delay costs.
 Let \(Z_t^B\) denote the internal representation held by a bounded agent \(B\),
 and let \(a_t^B\) denote the action induced by that boundary's representation
 and policy.
-One idealized measure of surprise is
+
+A local diagnostic of surprise is
 \[
-S_t^B=-\log P_B(X_t\mid Z_t^B),
+S_t^B=-\log P_B(X_t\mid Z_t^B).
 \]
-the degree to which the true state is unexpected under the agent's
-representation. The organization-level surprise used earlier is the aggregate
-\(S_t=\sum_{B}S_t^{B}\). For continuous state spaces, \(P_B(X_t\mid Z_t^B)\)
-should be read as a conditional density, so \(S_t^B\) is a log score rather than
-the negative log of a probability mass. In decision settings, the same role can be
-played by prediction error or action loss \(L(X_t,a_t^B)\). A boundary-design
-problem can be stated as
+For continuous targets this denotes a density-based log score relative to a
+fixed reference measure. Local scores help diagnose prediction failures, but
+summing them over $B\in\calB$ is not an architecture-neutral objective:
+merging two identical predictors would remove a term without improving any
+prediction. Changing a continuous state's units would also add a constant per
+agent, making the comparison depend on the number of blocks.
+
+Instead fix a set $\mathcal D$ of decision or prediction targets, fixed
+weights $w_j\geq0$, and fixed evaluation times, independently of the
+architecture. Let $X_t^{(j)}$ be target $j$, and let
+$\widehat P_{j,t}^{\calB}$ be the predictive distribution delivered at that
+fixed evaluation interface by architecture $\calB$. Define
 \[
-\min_{\calB,G,F,\Pi}
-\E\left[\sum_t S_t+L(X_t,a_t)\right]+C(\calB,G,F,\Pi).
+S_t(\calB)=\sum_{j\in\mathcal D}w_j
+\left[-\log\frac{d\widehat P_{j,t}^{\calB}}{d\nu_j}
+                  (X_t^{(j)})\right],
 \]
+using common reference measures $\nu_j$, a common log base, and finite
+expected scores. For discrete targets $\nu_j$ is counting measure. A common
+change of units now shifts scores equally across architectures rather than
+per block. Duplicate attention or prediction-maintenance work, when genuinely
+costly, belongs in measured computation or monitoring costs. A boundary-design
+problem can therefore be written
+\[
+\min_{\calB,G,F,\Pi}\;
+\E\sum_t L(X_t,a_t)+\beta_S\E\sum_t S_t(\calB)
++C(\calB,G,F,\Pi),
+\]
+with $\beta_S=0$ unless separately justified.
 
 Surprise and action loss play different roles. In some applications, surprise
 is an intermediate diagnostic quantity: unexpected states predict future
@@ -446,9 +487,9 @@ absorbed into \(L\) and omitted as separate terms.
 Two agents should coalesce when the merged boundary lowers expected surprise or
 action loss more than it raises internal coordination and governance cost:
 \[
-\E[S_{\mathrm{merged}}+L_{\mathrm{merged}}]+C_{\mathrm{merged}}
+\E[L_{\mathrm{merged}}]+\beta_S\E[S_{\mathrm{merged}}]+C_{\mathrm{merged}}
 <
-\E[S_{\mathrm{separate}}+L_{\mathrm{separate}}]+C_{\mathrm{separate}}.
+\E[L_{\mathrm{separate}}]+\beta_S\E[S_{\mathrm{separate}}]+C_{\mathrm{separate}}.
 \]
 They should split when the inequality reverses.
 
@@ -466,6 +507,7 @@ When comparing coordination forms, it is useful to write them separately:
 \[
 C_k=C_{\mathrm{search},k}
 +C_{\mathrm{contract},k}
++C_{\mathrm{comp},k}
 +C_{\mathrm{comm},k}
 +C_{\mathrm{interp},k}
 +C_{\mathrm{monitor},k}
@@ -490,303 +532,290 @@ claim is that software agents and machine-readable protocols can alter enough
 cost terms to create a new efficient region between classic hierarchy and
 classic market contracting.
 
-\section{The Granularity Sweet Spot}
+
+\section{Information Preservation and Economic Boundaries}
 \label{sec:granularity}
 
-The coalesce/split decision is usually argued as a binary choice between a
-monolith and a fully decomposed system. The information-processing view makes
-it quantitative: there is an interior optimum, and software agents move it. This
-section states three results: a capacity dichotomy that decides whether a
-given boundary can be drawn without losing decision-relevant information, an
-exact exponential deficit law that prices the boundary when capacity falls
-short, and an optimal-decomposition law that locates the efficient number of
-units. The first two are the information-theoretic backbone; the decomposition
-law is the statement a practitioner can act on.
+Information preservation and economic efficiency are different questions.
+An interface can be lossy yet worth using, or lossless yet prohibitively
+expensive. This section first defines preservation, then prices a deficit in
+an analytically tractable case, and finally compares that deficit with the
+coordination savings from drawing a boundary.
 
-\subsection{When a boundary is information-clean}
+\subsection{An operational preservation threshold}
 
-Suppose the optimal joint action depends on the world only through a sufficient
-statistic \(T=T(X_t)\): two states that share the same \(T\) call for the same
-action. Let \(\ell(T,a)=\E[L(X_t,a)\mid T]\) denote the induced decision loss.
-Consider a single cut that separates the primitive actors into two sides with
-pooled local observations \(Y^A\) and \(Y^B\). In the coalesced architecture,
-one agent holds \((Y^A,Y^B)\) and chooses the Bayes action from both
-observations. In the split architecture, the deciding side holds \(Y^A\) and may
-receive a message \(M\) of at most \(\kappa\) bits per decision cycle across the
-protocol, where \(\kappa\) is the interface capacity: protocol quality or
-interface fidelity.
-
-Let
+Fix a joint distribution of a scalar or vector state $X$ and pooled local
+observations $(Y^A,Y^B)$, a loss $L$, and an admissible policy class. All
+architectures are evaluated on that same problem. In the coalesced benchmark,
+the deciding side holds both observations. In the split architecture it holds
+$Y^A$ and a one-way message from an encoder that observes $Y^B$. Define
 \[
 \mathcal L_{\mathrm{coal}}
-:=\inf_{\pi}\E[\ell(T,\pi(Y^A,Y^B))]
-\]
-be the coalesced Bayes risk. Let \(\mathcal P(r)\) be the class of admissible
-one-way protocols whose message from side \(B\) to the deciding side has rate at
-most \(r\) bits per decision cycle. The rate can be read as an exact one-shot
-message-length constraint or, in block-coded settings, as the asymptotic
-description rate with decoder side information \(Y^A\) --- the Wyner--Ziv
-regime of source coding with side information at the decoder
-\cite{wynerziv1976}, here with distortion measured by decision loss rather
-than reconstruction error, so standard rate--distortion machinery applies to
-\(\mathcal L_{\mathrm{split}}(r)\). Define the best split
-risk at rate \(r\) by
-\[
+=\inf_\pi\E[L(X,\pi(Y^A,Y^B))],\qquad
 \mathcal L_{\mathrm{split}}(r)
-:=\inf_{M\in\mathcal P(r)}\inf_{\pi}\E[\ell(T,\pi(Y^A,M))].
+=\inf_{M\in\mathcal P(r),\,\pi}\E[L(X,\pi(Y^A,M))].
 \]
+Here $\mathcal P(r)$ is a nested family of protocols of rate at most $r$.
+For a one-shot model this can mean a fixed-length message budget. For a
+memoryless block model it means an asymptotic description rate per sample,
+with average loss per sample. These are distinct operational problems: fix
+one convention before comparing $r$ with interface capacity $\kappa$.
+The deciding side's observation is decoder side information. General remote
+decision problems need their own distortion/rate formulation; they are not
+all ordinary source-reconstruction problems \cite{wynerziv1976}.
+
+The coalesced policy class is assumed to include emulation of every split
+protocol, including its randomization. Thus
+$\mathcal L_{\mathrm{split}}(r)\geq\mathcal L_{\mathrm{coal}}$.
+
 \begin{definition}[Decision-relevant interface rate]
 \label{def:rstar}
-The \emph{decision-relevant interface rate} is the operational threshold
+The preservation threshold and its tolerance version are
 \[
-R^\star
-:=\inf\{r\geq 0:\mathcal L_{\mathrm{split}}(r)=
-\mathcal L_{\mathrm{coal}}\},
+R^\star=\inf\{r\geq0:\mathcal L_{\mathrm{split}}(r)
+=\mathcal L_{\mathrm{coal}}\},\qquad
+R^\star_\varepsilon=\inf\{r\geq0:\mathcal L_{\mathrm{split}}(r)
+\leq\mathcal L_{\mathrm{coal}}+\varepsilon\},
 \]
-and, for tolerance \(\varepsilon>0\), the \emph{\(\varepsilon\)-sufficient rate}
-is
-\[
-R^\star_\varepsilon
-:=\inf\{r\geq 0:\mathcal L_{\mathrm{split}}(r)\le
-\mathcal L_{\mathrm{coal}}+\varepsilon\}.
-\]
+with the infimum of an empty set equal to $+\infty$.
 \end{definition}
-
-Thus \(R^\star\) is the minimum cross-boundary rate needed to preserve the
-coalesced architecture's decision value for the loss under study; \(\kappa\) is
-protocol capacity measured in the same units. The conditional mutual information
-\[
-I(T;Y^B\mid Y^A)
-\]
-is still a useful interdependence diagnostic and a lower bound when the protocol
-must preserve the full Blackwell experiment about \(T\), but it is not, by
-itself, a universal achievability rate for every decision problem
-(Corollary~\ref{cor:mibridge} makes the link exact in the Gaussian-quadratic
-team). The threshold behaves as a dichotomy by construction; stating it as such
-fixes language for what follows.
 
 \begin{proposition}[Capacity dichotomy]
 \label{prop:capacity}
-Assume finite or discretized observations, bounded loss, and that the infima
-above are attained; otherwise read the statement with arbitrarily small
-rate/loss slack.
-\begin{enumerate}
-  \item \emph{Achievability.} If \(\kappa \ge R^\star\), there exists a protocol
-  under which the split architecture attains the coalesced architecture's
-  expected decision loss, up to the stated slack.
-  \item \emph{Converse.} If \(\kappa < R^\star\), then for every protocol the
-  split architecture incurs strictly higher expected decision loss than the
-  coalesced architecture. The loss gap
-  \[
-  \Delta(\kappa)
-  :=\mathcal L_{\mathrm{split}}(\kappa)-\mathcal L_{\mathrm{coal}}
-  \]
-  is positive and is non-decreasing as available capacity \(\kappa\) falls.
-\end{enumerate}
+Assume nested protocol classes and attainment of both the required loss
+infima and the lower endpoint defining $R^\star$ when finite. If
+$\kappa\geq R^\star$, some feasible protocol attains coalesced risk.
+If $\kappa<R^\star$, the optimal excess loss
+\[
+\Delta(\kappa)=\mathcal L_{\mathrm{split}}(\kappa)
+-\mathcal L_{\mathrm{coal}}
+\]
+is positive and non-increasing with $\kappa$.
 \end{proposition}
+\noindent\textit{Proof.} Nested feasible sets make optimal split risk
+non-increasing. Endpoint attainment gives the first claim. A zero gap below
+$R^\star$ would put that rate in the defining set, a contradiction.
+\hfill$\square$
 
-\noindent\textit{Proof.} The feasible protocol classes are nested:
-\(\mathcal P(r_1)\subseteq \mathcal P(r_2)\) whenever \(r_1\le r_2\). Hence
-\(\mathcal L_{\mathrm{split}}(r)\) is non-increasing in \(r\). If
-\(\kappa\ge R^\star\), the definition of \(R^\star\), together with attainment
-or arbitrarily small slack, gives a protocol of rate at most \(\kappa\) whose
-risk equals \(\mathcal L_{\mathrm{coal}}\). Conversely, if
-\(\kappa<R^\star\) and a rate-\(\kappa\) protocol attained coalesced risk, then
-\(\kappa\) would belong to the set defining \(R^\star\), a contradiction.
-Therefore \(\mathcal L_{\mathrm{split}}(\kappa)>\mathcal L_{\mathrm{coal}}\).
-The gap \(\Delta(\kappa)\) inherits monotonicity from
-\(\mathcal L_{\mathrm{split}}(\kappa)\): reducing capacity shrinks the feasible
-protocol set and cannot lower the best achievable split risk. \hfill\(\square\)
+Without attainment, use explicit rate/loss slack and distinguish an infimum
+from an achieved protocol. The proposition follows from the operational
+definition; it fixes terminology, not a novel coding theorem. It does not
+imply a kink, a discontinuity, or a measurable elbow in the loss curve.
+An $\varepsilon$-threshold may simply be a smooth tolerance crossing.
 
-Proposition~\ref{prop:capacity} says a boundary is \emph{information-clean}
-exactly
-when its decision-relevant cross-traffic fits through the protocol. Because the
-architect chooses the cut, the natural design move is to minimize cross-boundary
-decision rate,
-\[
-\min_{\calB}\; R^\star(\calB),
-\]
-placing boundaries along cuts of minimal decision-relevant interdependence.
-Conditional mutual information remains a useful lower-bound diagnostic, but the
-threshold quantity is the operational rate required to preserve decision value.
-This is near-decomposability \cite{simon1962} and ``high cohesion, low
-coupling'' made literal: coupling is the
-decision-relevant rate that crosses the boundary, and Conway's law becomes the
-statement that organizations ship their information cuts.
+A cut is \emph{information-clean} relative to a specified decision problem
+when it preserves coalesced risk. Conditional mutual information can help
+characterize dependence, but is not a universal achievable communication rate
+for an arbitrary decision loss. Neither low mutual information nor low
+$R^\star$ alone identifies an economically optimal partition.
 
-In smooth environments the dichotomy is the wrong resolution: exact equality
-can require unbounded rate, while the penalty for finite rate decays fast. The
-canonical team-theoretic setting makes this exact.
+\subsection{A Gaussian--quadratic benchmark}
 
-\begin{theorem}[Exponential interface-deficit law]
+\begin{theorem}[Exponential interface-deficit benchmark]
 \label{thm:deficit}
-Let \((X,Y^A,Y^B)\) be jointly Gaussian, let loss be quadratic,
-\(L(x,a)=(x-a)^2\) (so the sufficient statistic is \(T=X\)), and let the
-deciding side hold \(Y^A\) while side \(B\) communicates one-way at rate
-\(\kappa\) bits per decision cycle in the block-coded regime. Then the split
-penalty is exactly
+Let independent decision samples be drawn from a fixed jointly Gaussian
+$(X,Y^A,Y^B)$, with scalar $X$, finite covariance, and quadratic loss
+$L(x,a)=(x-a)^2$. The encoder observes $(Y^B)^n$ and sends at most
+$n\kappa+o(n)$ bits; the decoder observes $(Y^A)^n$. With unrestricted
+measurable encoding/decoding and asymptotic average loss as $n\to\infty$,
 \[
-\Delta(\kappa)
-=\mathcal L_{\mathrm{split}}(\kappa)-\mathcal L_{\mathrm{coal}}
-=\underbrace{\big[\mathrm{Var}(X\mid Y^A)-\mathrm{Var}(X\mid Y^A,Y^B)\big]}_{\Delta(0)}
-\cdot 2^{-2\kappa}:
+\Delta(\kappa)=
+\underbrace{\big[\operatorname{Var}(X\mid Y^A)
+-\operatorname{Var}(X\mid Y^A,Y^B)\big]}_{\Delta(0)}
+2^{-2\kappa}.
 \]
-the penalty for splitting equals the decision value of the partner's
-information, discounted fourfold per bit of interface capacity. Consequently
-\(R^\star=\infty\) whenever \(\Delta(0)>0\), while for every tolerance
-\(\varepsilon\in(0,\Delta(0)]\),
+If $\Delta(0)>0$, then $R^\star=\infty$ and, for
+$0<\varepsilon\leq\Delta(0)$,
 \[
 R^\star_\varepsilon=\tfrac12\log_2\frac{\Delta(0)}{\varepsilon}.
 \]
+If $\Delta(0)=0$, no communication is needed.
 \end{theorem}
+\noindent\textit{Proof.} Center variables without loss of generality.
+The coalesced conditional mean is
+$T'=\E[X\mid Y^A,Y^B]=a^\top Y^A+b^\top Y^B$.
+Let $V=b^\top Y^B$, computable by the encoder. Orthogonality of the
+conditional-mean residual gives, per sample and hence averaged over a block,
+\[
+\E(X-\hat a)^2=\mathcal L_{\mathrm{coal}}
++\E(T'-\hat a)^2.
+\]
+Because the decoder knows $a^\top Y^A$, the excess term is the distortion
+in estimating scalar $V$ with decoder side information $Y^A$.
+Gaussian Wyner--Ziv coding has no rate loss relative to conditional
+rate--distortion under quadratic loss \cite{wynerziv1976,wyner1978}, giving
+$D(\kappa)=\operatorname{Var}(V\mid Y^A)2^{-2\kappa}$.
+For the converse, giving $Y^A$ to the encoder cannot increase the minimum
+distortion; conditional Gaussian rate--distortion already gives this same
+lower bound, including encoders that retain all of $Y^B$.
+Finally, the orthogonal decomposition
+\[
+X-\E[X\mid Y^A]=(X-T')+(V-\E[V\mid Y^A])
+\]
+shows $\operatorname{Var}(V\mid Y^A)=\Delta(0)$. Substitution and inversion
+give the claims.\hfill$\square$
 
-\noindent\textit{Proof.} By joint Gaussianity the coalesced Bayes action is
-\(T'=\E[X\mid Y^A,Y^B]=a^\top Y^A+b^\top Y^B\); set \(V:=b^\top Y^B\), which
-the encoder can compute alone. Since \(X-T'\) has zero mean conditional on
-\((Y^A,Y^B)\), and any decoder output \(\hat a\) is a function of \((Y^A,M)\)
-with \(M\) a (possibly randomized) function of \(Y^B\), the cross term
-vanishes and, for every protocol,
-\(\E(X-\hat a)^2=\E(X-T')^2+\E(T'-\hat a)^2
-=\mathcal L_{\mathrm{coal}}+\E(T'-\hat a)^2\). With \(a^\top Y^A\) known to
-the decoder, estimating \(T'\) is estimating \(V\): the problem reduces to
-remote estimation of the scalar Gaussian \(V\) under mean-squared error with
-decoder side information \(Y^A\) at rate \(\kappa\). For jointly Gaussian
-sources under quadratic distortion, Wyner--Ziv coding suffers no rate loss
-relative to conditional rate--distortion \cite{wynerziv1976,wyner1978}: the
-optimal distortion is \(D(\kappa)=\mathrm{Var}(V\mid Y^A)\,2^{-2\kappa}\),
-with matching converse. Finally, the orthogonal decomposition
-\(X-\E[X\mid Y^A]=(X-T')+(V-\E[V\mid Y^A])\) gives
-\(\mathrm{Var}(X\mid Y^A)=\mathcal L_{\mathrm{coal}}
-+\mathrm{Var}(V\mid Y^A)\), so \(\mathrm{Var}(V\mid Y^A)=\Delta(0)\).
-Substituting gives the law, and solving \(\Delta(\kappa)\le\varepsilon\) gives
-\(R^\star_\varepsilon\). \hfill\(\square\)
-
-\begin{corollary}[Exact information bridge]
+\begin{corollary}[Exact information bridge in the benchmark]
 \label{cor:mibridge}
-For scalar \(X\) in the setting of Theorem~\ref{thm:deficit},
-\(I(X;Y^B\mid Y^A)=\tfrac12\log_2\big(\mathrm{Var}(X\mid Y^A)/
-\mathrm{Var}(X\mid Y^A,Y^B)\big)\), hence
-\(\Delta(0)=\mathrm{Var}(X\mid Y^A)\big(1-2^{-2I(X;Y^B\mid Y^A)}\big)\): the
-conditional mutual information used above as a diagnostic becomes an exact
-measure of the zero-capacity penalty.
+For positive coalesced residual variance in Theorem~\ref{thm:deficit},
+\[
+I(X;Y^B\mid Y^A)=\tfrac12\log_2
+\frac{\operatorname{Var}(X\mid Y^A)}
+     {\operatorname{Var}(X\mid Y^A,Y^B)},\qquad
+\Delta(0)=\operatorname{Var}(X\mid Y^A)
+\big(1-2^{-2I(X;Y^B\mid Y^A)}\big).
+\]
 \end{corollary}
 
-Three readings matter for design. First, the deficit law prices a leaky
-boundary: the cost of a thin protocol is not failure but an exponentially
-discounted share of the partner's information value. Second, capacity
-requirements grow only logarithmically as tolerance tightens
-(\(R^\star_\varepsilon=\tfrac12\log_2(\Delta(0)/\varepsilon)\)), so protocol
-capacity is cheap relative to decision fidelity. Third, the law gives the
-empirical program of Section~\ref{sec:measurement} a functional form: in the
-smooth regime, the logarithm of the excess loss should fall linearly in
-interface capacity with slope \(-2\) per bit, i.e.\ each added bit of
-effective schema capacity cuts the excess loss roughly fourfold.
+This is an application of classical Gaussian source coding, not a new
+source-coding theorem. The fourfold reduction per bit is exact only in this
+benchmark. One-shot handoffs, discrete actions, non-Gaussian tasks, finite
+blocks, restricted policies, and suboptimal codecs can have different curves.
+Block-coding latency is also an economic cost, even though it is absent from
+the rate--distortion expression. Capacity requirements grow logarithmically
+with tolerance in this model, but acquiring capacity need not be cheap.
 
-\subsection{How many units: an optimal-decomposition law}
+\subsection{The economic switching threshold}
 
-A clean cut still has a cost, and so does coalescence. Coordination is an
-all-pairs problem \cite{brooks1975}: holding the \(N=|V_0|\) primitive
-components in one mutually
-coherent representation costs on the order of \(aN^2\). Splitting into
-\(m=|\calB|\) units of size \(N/m\) reduces within-unit coordination to
-\(a(N/m)^2\) per unit, hence \(aN^2/m\) in total, while each boundary adds a
-roughly fixed interface cost \(B\) when cuts are information-clean in the sense
-of Proposition~\ref{prop:capacity}. Writing \(A:=aN^2\) for the coalesced
-coordination cost, total coordination cost as a function of granularity is
+For one fixed cut, let all non-decision costs use the same objective units as
+expected loss. Let $C_{\mathrm{coal}}$ and $C_{\mathrm{split}}$ include
+communication, computation, interpretation, delay, governance, and any
+amortized transition costs. Set
 \[
-\Theta(m)=\frac{A}{m}+B\,m,\qquad m\ge 1.
+H=C_{\mathrm{coal}}-C_{\mathrm{split}}.
+\]
+For this comparison surprise is diagnostic ($\beta_S=0$), or any separately
+justified predictive burden is already included in the stated costs. Then
+\[
+J_{\mathrm{split}}-J_{\mathrm{coal}}=\Delta(\kappa)-H.
 \]
 
-\begin{theorem}[Optimal decomposition]
+\begin{corollary}[Economic switching threshold]
+\label{cor:economic}
+Under Theorem~\ref{thm:deficit}, suppose $\Delta(0)>0$ and coordination
+savings $H>0$ are held fixed as $\kappa$ varies. Splitting is weakly
+preferable exactly when
+\[
+\kappa\geq\kappa_{\mathrm{economic}}
+:=\max\left\{0,\tfrac12\log_2\frac{\Delta(0)}{H}\right\}.
+\]
+At a positive threshold the architectures tie; above it splitting is strictly
+preferable. If $H>\Delta(0)$, splitting is strictly preferable even at zero
+capacity; if $H=\Delta(0)$, zero capacity is a tie.
+\end{corollary}
+\noindent\textit{Proof.} Substitute the deficit benchmark into
+$J_{\mathrm{split}}-J_{\mathrm{coal}}\leq0$ and solve
+$\Delta(0)2^{-2\kappa}\leq H$ for $\kappa\geq0$.\hfill$\square$
+
+If $H<0$, splitting cannot win under this fixed-cut comparison. If $H=0$
+and $\Delta(0)>0$, no finite rate attains a tie in the Gaussian benchmark.
+When $\Delta(0)=0$, compare the costs alone. More generally, capacity costs
+or coding delay make $H=H(\kappa)$; then optimize or solve
+$\Delta(\kappa)\leq H(\kappa)$ rather than apply the closed form blindly.
+
+For example, with $\Delta(0)=4$ loss units and $H=1$ cost unit per decision,
+the threshold is one bit. At that rate the remaining decision deficit is one
+unit: the interface is lossy, but its savings exactly compensate. At two bits,
+the deficit is $1/4$ and splitting improves the objective by $3/4$ unit.
+
+\begin{quote}
+An information-clean boundary loses no decision value. An economically
+efficient boundary loses no more decision value than its coordination
+savings justify.
+\end{quote}
+
+\subsection{Granularity in a balanced-unit cost model}
+
+A separate model makes the number of units explicit. Let $N$ primitive
+components be divided into $m$ equal-sized units. Assume within-unit
+coordination cost $a n^2$ for size $n$, $a>0$, and a sparse, tree-like
+quotient graph with $m-1$ interfaces costing $B>0$ each. The continuous
+balanced-size relaxation is
+\[
+\Theta(m)=\frac{A}{m}+B(m-1),\qquad
+A=aN^2,\quad 1\leq m\leq N.
+\]
+Quadratic internal cost is a modeling assumption motivated by possible
+all-pairs interactions, not a claim that all coordination is all-pairs
+\cite{brooks1975,simon1962}. Balanced sizes, sparse interfaces, and constant
+per-interface costs are separate assumptions. Information-clean cuts do not
+by themselves imply any of them. Decision loss must be constant or separately
+modeled for minimizing $\Theta$ to minimize the full objective.
+
+\begin{theorem}[Optimal decomposition in the continuous relaxation]
 \label{thm:granularity}
-If interface costs are additive across information-clean boundaries
-(\(\kappa\ge R^\star\) at each cut), then \(\Theta\) is strictly convex on
-\(m>0\) and is minimized at
+For the stated cost model,
 \[
-m^\star=\sqrt{\frac{A}{B}},\qquad \Theta(m^\star)=2\sqrt{AB}.
+m^\star_{\mathrm{cont}}=
+\min\{N,\max\{1,\sqrt{A/B}\}\}.
 \]
-Equivalently, starting from a monolith one should introduce a new boundary if
-and only if the internal coordination it removes exceeds the interface
-coordination it adds, and stop when the two are equal.
+At an interior optimum, $\Theta(m^\star)=2\sqrt{AB}-B$.
+For integer $m$ in the same surrogate cost, evaluate the feasible floor and
+ceiling of the clipped continuous optimum and choose the lower-cost one.
 \end{theorem}
+\noindent\textit{Proof.}
+$\Theta'(m)=-A/m^2+B$ and $\Theta''(m)=2A/m^3>0$.
+Clipping the stationary point gives the constrained solution; convexity leaves
+only its adjacent feasible integers to compare.\hfill$\square$
 
-\noindent\textit{Proof.} \(\Theta'(m)=-A/m^2+B\) and \(\Theta''(m)=2A/m^3>0\)
-for \(m>0\), so \(\Theta\) is strictly convex; setting \(\Theta'(m)=0\) gives
-\(m^\star=\sqrt{A/B}\), and substitution gives \(\Theta(m^\star)=2\sqrt{AB}\).
-The marginal characterization is the first-order condition: \(\Theta'(m)<0\)
-(splitting still pays) for \(m<m^\star\) and \(\Theta'(m)>0\) (splitting
-overshoots) for \(m>m^\star\). \hfill\(\square\)
+For integer steps in this surrogate, introducing one more unit reduces cost
+exactly when
+\[
+\Theta(m+1)-\Theta(m)=B-\frac{A}{m(m+1)}<0.
+\]
+When indivisible primitives prevent equal sizes, the exact internal cost for
+balanced integer groups is $a\sum_j n_j^2$, with group sizes differing by at
+most one. Optimize that discrete expression rather than claiming the
+continuous surrogate is exact. The square-root form is the familiar
+opposing-cost structure, not a universal organizational scaling law.
 
-The law names both failure modes. An organization with \(m\ll m^\star\) is an
-over-coupled monolith paying avoidable internal coordination; one with
-\(m\gg m^\star\) is over-fragmented, a distributed monolith paying avoidable
-interface cost. The efficient granularity is the square root of how internally
-coupled the system is relative to how expensive its interfaces are. This is the
-same opposing-cost structure as the economic-order-quantity rule, which is why
-the optimum is a square root.
-
-\begin{corollary}[Agents shift the optimum]
+\begin{corollary}[Relative cost changes shift granularity]
 \label{cor:agents}
-Software agents and machine-readable protocols that lower the per-boundary cost
-to \(B'<B\) raise the efficient number of units to
-\(m^{\star\prime}=\sqrt{A/B'}=m^\star\sqrt{B/B'}\). Since
-\(m^\star\propto B^{-1/2}\), halving interface cost increases the efficient unit
-count by about \(41\%\).
+Within the interior regime of the same cost model,
+\[
+\frac{m^{\star\prime}}{m^\star}
+=\sqrt{\frac{A'/A}{B'/B}},\qquad
+\Delta\log m^\star=\tfrac12(\Delta\log A-\Delta\log B).
+\]
+Holding $A$ fixed, halving $B$ increases the continuous optimal count by
+$\sqrt2$, approximately $41\%$. If both costs change, finer decomposition is
+favored when interface costs fall proportionally more than internal costs;
+the reverse can favor integration. Clipping and integer constraints can leave
+the implemented count unchanged.
 \end{corollary}
 
-This is the quantitative content of the paper's thesis. Software agents are
-boundary-shifting infrastructure not because they automate tasks but because
-they lower \(B\) and thereby slide \(m^\star\) toward finer, more autonomous
-decomposition. The effect is measurable: estimate \(B\) before and after, and
-the law predicts the new efficient granularity.
+Internal coordination burden $A$ is distinct from cross-boundary decision
+dependence. Raising $A$ alone favors splitting in this model; raising the
+loss caused by a cut can favor coalescence. A single ``coupling'' slider
+cannot be interpreted as both without an explicit mapping.
 
-\begin{corollary}[Interdependence floor]
+\begin{remark}[Lossy interfaces and interacting deficits]
 \label{cor:floor}
-The additive interface model holds only while cuts are information-clean. When
-interdependence is high enough that no partition achieves
-\(R^\star(\calB)\le\kappa\), each boundary carries an irreducible decision-loss
-term \(\Delta(\kappa)>0\) from Proposition~\ref{prop:capacity}, priced in the
-Gaussian-quadratic case by Theorem~\ref{thm:deficit}. The constant-\(B\)
-model is then misspecified: effective interface cost must include the
-capacity-deficit loss, and if those deficits persist or grow as additional cuts
-are drawn, the efficient architecture moves back toward coalescence. Beyond
-this floor, lowering the mechanical interface cost \(B\) alone does not restore
-decomposability; the protocol must also raise \(\kappa\) or the architecture
-must choose cuts with lower \(R^\star(\calB)\).
-\end{corollary}
-
-Together the results bound the design space from both sides.
-Proposition~\ref{prop:capacity} decides whether a given boundary is
-admissible, and Theorem~\ref{thm:deficit} prices the deficit when it is not;
-Theorem~\ref{thm:granularity} decides how many admissible boundaries to draw;
-Corollary~\ref{cor:agents} shows agents slide the optimum toward finer
-decomposition; and Corollary~\ref{cor:floor} shows interdependence sets a hard
-limit no protocol below capacity can cross. In the regime map of
-Figure~\ref{fig:regimes}, the diagonal \(R^\star=\kappa\) marks the operational
-capacity boundary: on its high-fidelity side \(m^\star=\sqrt{A/B}\) governs
-granularity; on its high-interdependence side capacity-deficit loss pushes the
-architecture toward coalescence.
-
-\begin{remark}[Assumptions]
-The all-pairs form \(aN^2\) is the simplest super-linear coordination cost; any
-strictly convex internal cost yields a unique interior optimum and changes only
-the exponent in the root. Constant per-boundary cost \(B\) is exactly the
-information-clean assumption of Proposition~\ref{prop:capacity}; its failure
-is the
-content of Corollary~\ref{cor:floor}. The linear interface term \(B\,m\)
-additionally assumes the quotient graph is sparse --- tree- or bus-like, each
-unit maintaining \(O(1)\) interfaces --- which is what modular architectures
-are designed to achieve \cite{parnas1972,baldwinclark2000}. If instead every
-unit must interface with every other, interface cost scales as \(B\,m^2\) and
-the optimum becomes a cube root, \(m^\star=(A/2B)^{1/3}\): denser interface
-graphs lower the efficient unit count and flatten the gain from cheaper
-interfaces. The formula also presumes an interior optimum
-\(1\le m^\star\le N\), and since a monolith carries no interface, \(B\,m\) may
-be read as \(B\,(m-1)\), which shifts \(\Theta\) by a constant and leaves
-\(m^\star\) unchanged. The results are stated for the stationary,
-single-decision case; sequential settings compose with the latency discount of
-Proposition~\ref{prop:latency} through the delay-cost term.
+With lossy cuts use a total excess decision-loss term
+$D(\calB,\boldsymbol\kappa)$:
+\[
+J(\calB,\boldsymbol\kappa)=\mathcal L_{\mathrm{coal}}
++C(\calB,\boldsymbol\kappa)+D(\calB,\boldsymbol\kappa).
+\]
+Single-cut deficits generally cannot be added without assumptions excluding
+shared, redundant, or interacting information. In a specified nested family
+with surrogate $D_m$, adding a unit is worthwhile only if
+$\Theta(m+1)-\Theta(m)+D_{m+1}-D_m<0$. Increasing these marginal deficits
+opposes further splitting; a positive deficit by itself does not prohibit it.
+A tolerance constraint $D_m\leq\varepsilon$ is a separate governance choice,
+not an economic necessity.
 \end{remark}
+
+For a general within-unit cost $f$, use
+$m f(N/m)+B(m-1)$. Strict convexity of $f$ does not guarantee an interior
+optimum or a power-law solution. For the particular family $f(n)=a n^p$,
+$p>1$, the interior solution is
+$m^\star=[a(p-1)N^p/B]^{1/p}$. A dense-interface approximation
+$A/m+Bm^2$ instead yields $(A/(2B))^{1/3}$. These examples make the
+assumptions and topology dependence explicit
+\cite{parnas1972,baldwinclark2000}. Sequential organization design additionally
+requires transition, learning, and delay costs; the static results alone do
+not solve that problem.
 
 \section{Organizational Agility}
 
@@ -794,8 +823,8 @@ Speed alone is not agility. An organization can act quickly and incorrectly.
 Correctness alone is not agility either. An organization can make the right
 decision too late.
 
-Let \(\tau_t\) be the end-to-end latency from signal availability to coordinated
-action. Let \(a_t^0\) be a baseline action, default policy, or status-quo
+Let \(\tau_t>0\) be the end-to-end latency from signal availability to
+coordinated action, measured in a fixed time unit. Let \(a_t^0\) be a baseline action, default policy, or status-quo
 response. Define decision value as loss reduction relative to that baseline:
 \[
 Q_t=\E\left[L(X_t,a_t^0)-L(X_t,a_t)\right].
@@ -811,8 +840,13 @@ A cost-adjusted version is
 \[
 \calG_t^{(c)}=\frac{Q_t}{\tau_t(1+\widetilde C_t)},
 \]
-where \(\widetilde C_t\geq 0\) is a normalized resource-cost index for
-producing the action.
+where \(\widetilde C_t=C_t/C_0\geq 0\) uses a declared, fixed resource-cost
+scale \(C_0>0\). Comparisons use the same baseline policy, loss, time unit,
+and cost scale. This ratio is a diagnostic, not generally an objective
+equivalent to minimizing \(J\). For non-overlapping sequential episodes, a
+value-rate aggregate is \(\sum_t Q_t/\sum_t\tau_t\), not an unweighted
+average of episode ratios. Concurrent workflows require an explicit
+throughput and resource-accounting convention.
 
 This definition makes the quality term explicit. An action can encode a great
 deal of information about the state and still be a poor action. Loss reduction,
@@ -948,290 +982,272 @@ effectively. If the workflow is semi-structured, observable, and governed,
 software agents can absorb routing and interpretation burden without requiring
 full organizational merger.
 
-\section{Propositions}
+\section{Design Implications and Conditional Hypotheses}
 
-\begin{proposition}[Protocol-mediated coordination]
-For a fixed organizational graph and decision-policy class, replacing protocol
-\(P\) with protocol \(P'\) weakly increases achievable net objective value if
-\(P'\) is at least as informative about every decision-relevant statistic of
-\(X_t\), reduces or preserves interpretation cost, and does not increase delay,
-rigidity, or monitoring cost by more than the value created.
+
+\begin{proposition}[Protocol emulation]
+At fixed architecture, suppose every policy feasible under protocol $P$ can
+be emulated under $P'$ with the same conditional action distribution and no
+greater total non-decision cost. Then the minimum net objective under $P'$
+is no worse than under $P$.
 \end{proposition}
+\noindent\textit{Proof.} Emulate an optimal old policy (or an arbitrarily
+close approximation); optimization over the new feasible set cannot do worse.
+\hfill$\square$
 
-\noindent\textit{Intuition.} A machine-readable schema, API, or structured
-ticket that preserves relevant state is a less garbled signal. Better
-downstream decisions become feasible, but the result is not free if the
-protocol itself adds rigidity or review burden. In Blackwell's sense, \(P'\)
-is more useful when downstream agents can reconstruct any decision-relevant
-statistic available under \(P\), and possibly more. A structured incident
-ticket is useful for exactly this reason: it carries severity, owner, affected
-service, and current hypothesis across a boundary without requiring full
-coalescence.
+A Blackwell improvement in information can supply the decision component of
+this condition when the policy class is closed under the required garbling
+\cite{blackwell1953}. It does not establish the cost component: a richer
+schema can add interpretation, computation, review, or delay. Informativeness
+alone is therefore insufficient for a net-objective claim.
+
 
 \begin{proposition}[Latency under volatility]
 \label{prop:latency}
-Suppose the relevance of information decays with environmental hazard rate
-\(\lambda\). If a decision is taken after latency \(\tau\), the value of
-otherwise correct information is approximately discounted by
-\(e^{-\lambda \tau}\). Therefore, the marginal value of latency reduction rises
-with volatility.
+Suppose a relevant state survives a delay $\tau$ with probability
+$e^{-\lambda\tau}$, useful decision value is zero after a state change, and
+$Q_0>0$ is held fixed. Then $Q(\tau)=Q_0e^{-\lambda\tau}$.
+Greater hazard $\lambda$ increases the proportional sensitivity to delay:
+$-\partial\log Q/\partial\tau=\lambda$. The absolute marginal benefit of
+reducing delay is $Q_0\lambda e^{-\lambda\tau}$ and increases with $\lambda$
+only while $\lambda\tau<1$.
 \end{proposition}
-
-\noindent\textit{Sketch.} If the probability that the relevant state remains
-stable after delay \(\tau\) is \(e^{-\lambda \tau}\), then effective
-information available for action is proportional to \(I_0 e^{-\lambda \tau}\)
-or, more generally, decision value \(Q_0 e^{-\lambda \tau}\). Higher
-\(\lambda\) makes delay more costly.
-
-\begin{proposition}[Interdependence and modularity]
-When task interdependence is high, coalescence into a shared representation
-becomes more valuable. When task modularity and protocol quality are high,
-splitting or protocol-mediated coordination becomes more valuable.
-\end{proposition}
-
-\noindent\textit{Intuition.} Interdependent tasks create cross-boundary
-surprise because local actions affect each other. Shared representation can
-reduce that surprise. Modular tasks with good protocols lose less information
-at the interface, so separate agents can preserve autonomy without large
-interpretation losses. Theorem~\ref{thm:granularity} and
-Corollaries~\ref{cor:agents}--\ref{cor:floor} make this quantitative: the
-efficient granularity is \(m^\star=\sqrt{A/B}\), better protocols lower \(B\)
-and raise \(m^\star\), and interdependence beyond interface capacity forces
-\(m^\star\) back toward coalescence.
-
-\begin{proposition}[Agentic routing]
-For structured or semi-structured workflows, agent nodes improve the net
-boundary objective when reductions in routing, communication, interpretation,
-and execution latency exceed induced monitoring, governance, misalignment, and
-error costs. They increase cost-adjusted organizational agility when those
-reductions also raise decision value \(Q_t\), lower latency \(\tau_t\), or
-lower normalized resource cost \(\widetilde C_t\) enough to improve
-\(\calG_t^{(c)}=Q_t/(\tau_t(1+\widetilde C_t))\).
-\end{proposition}
-
-\noindent A sufficient condition for the net-objective improvement is
+\noindent\textit{Proof.} Condition on state survival and differentiate:
 \[
-R_{\mathrm{delay}}
-+R_{\mathrm{comm}}
-+R_{\mathrm{interp}}
-+R_{\mathrm{exec}}
->
-I_{\mathrm{monitor}}
-+I_{\mathrm{governance}}
-+I_{\mathrm{misalign}}
-+I_{\mathrm{error}},
+\frac{\partial}{\partial\lambda}
+\left(-\frac{\partial Q}{\partial\tau}\right)
+=Q_0e^{-\lambda\tau}(1-\lambda\tau).
 \]
-where \(R_x\) denotes cost reductions and \(I_x\) denotes induced costs.
-Here \(I_{\mathrm{monitor}}\) denotes measurable oversight work, while
-\(I_{\mathrm{governance}}\) denotes broader policy, permissioning,
-auditability, and escalation overhead. The execution and governance terms
-extend the Table~\ref{tab:costs} taxonomy: \(R_{\mathrm{exec}}\) is reduced
-execution effort within \(C_{\mathrm{comp}}\), and \(I_{\mathrm{governance}}\)
-is the broader, partly non-measurable counterpart of the measurable monitoring
-cost \(C_{\mathrm{monitor}}\). The inequality is a net-objective
-condition; for agility it must operate through the numerator \(Q_t\), latency
-\(\tau_t\), or normalized cost index \(\widetilde C_t\).
+Once information is already very stale, a small latency improvement has little
+absolute value. The exponential form assumes a constant survival hazard; it
+is not a general theorem about all dynamic decision problems.\hfill$\square$
 
-\begin{proposition}[Governance limit]
-Agentic decentralization has diminishing or negative returns when governance
-quality is low because autonomy can increase misalignment and monitoring costs
-faster than it reduces delay.
-\end{proposition}
 
-\noindent\textit{Intuition.} A fast local optimizer is valuable only when its
-actions compose into the global objective.
+\paragraph{Interdependence and modularity: a conditional hypothesis.}
+Greater cross-boundary decision dependence can raise excess loss and favor
+coalescence, whereas lower interface costs can favor separation. This is not a
+universal monotone relation with an undifferentiated ``coupling'' variable.
+Internal coordination burden $A$ and cross-boundary decision deficit $D$ play
+different roles: increasing $A$ alone favors splitting in the balanced-unit
+model, while increasing the marginal deficit of additional cuts opposes it.
+The economic comparison is Corollary~\ref{cor:economic}, not information
+cleanliness alone.
+
+\begin{remark}[Agentic routing: net-objective accounting]
+Let $\Delta L$ and $\Delta C_j$ denote agent-assisted minus baseline expected
+loss and each disjoint cost component, respectively, in the same evaluation
+horizon. With fixed objective weights and $\beta_S=0$, the exact net-objective
+condition is
+\[
+\Delta J=\Delta L+\sum_j\lambda_j\Delta C_j<0.
+\]
+Any independently priced predictive burden adds $\beta_S\Delta S$.
+Execution effort belongs in computation cost; measurable reviews and approvals
+belong in monitoring cost. Broader governance burdens must not be counted again
+under overlapping labels. Routing or execution savings alone are insufficient
+if direct decision loss or other costs increase by more.
+
+An improvement in this objective does not automatically improve the agility
+ratio. That comparison separately requires
+$Q'/[\tau'(1+\widetilde C')]>Q/[\tau(1+\widetilde C)]$, with a common
+baseline, time unit, and cost scale. Neither information fidelity nor faster
+execution alone is sufficient.
+\end{remark}
+
+\paragraph{Governance limit: a conditional hypothesis.}
+Agentic decentralization can have diminishing or negative returns when
+monitoring, unsafe actions, or local--global misalignment grow faster than
+coordination savings. A fast local optimizer is useful only insofar as its
+actions improve the declared global objective. The framework identifies terms
+to measure; their signs and magnitudes require evidence.
+
 
 \section{Executable Illustration}
 
-The companion web-based simulation is an executable diagram, not a
-calibrated causal estimate. The framework is intended first as a comparative
-design language: it identifies which cost terms should move under a boundary
-change, not a universal predictive model of all organizations. The simulation
-samples a latent world state, gives primitive agents noisy local observations,
-and evaluates alternative boundary forms: coalesced, split, market/vendor, and
-agent-mediated hybrid. The objective includes surprise, action loss, latency,
-coordination cost, up-front blueprint delay, runtime surprise, and rigidity
-risk. A live, interactive companion runs the implementation in the browser, and
-the public repository hosts its source.\footnote{Live page:
+The companion is an executable illustration, not an empirical validation or a
+calibrated causal estimate. Its original Monte Carlo scenario model uses
+chosen noise and cost coefficients to compare coalesced, split, market, and
+hybrid architectures. Those scenarios do not implement optimal Wyner--Ziv
+codes, infer operational bit rates from schema sliders, or optimize arbitrary
+partitions. Their phase map is a sensitivity visualization for that heuristic
+model, not an estimated information-theoretic boundary.
+
+A separate analytical workbench evaluates
+$\Delta(\kappa)=\Delta(0)2^{-2\kappa}$, the economic switching condition,
+and the balanced-unit cost curve over integer unit counts. It makes the
+assumptions visible and separates a numerical evaluation of a formula from
+experimental evidence. Decision-value agility in the scenario model uses the
+zero-action baseline under squared loss and retains negative values; mutual
+information and sign accuracy are diagnostics, not the quality numerator.
+The original scenario architecture still has a fixed three-group split; the
+integer granularity sweep belongs to the separate workbench.
+\footnote{Companion:
 \href{https://galatheus-labs.github.io/coase-info-theory/}{galatheus-labs.github.io/coase-info-theory}.
-Source: \href{https://github.com/galatheus-labs/coase-info-theory}{github.com/galatheus-labs/coase-info-theory}.}
+Analytical workbench: \texttt{analytical-workbench.html} in the
+\href{https://github.com/galatheus-labs/coase-info-theory}{public repository}.
+Draft-branch changes are not live until merged and deployed.}
 
-Figure~\ref{fig:regimes} reports the qualitative regime map generated by the
-simulation's core comparative statics.
+Figure~\ref{fig:regimes} depicts the economic comparison directly, in common
+objective units. It is an analytical decision diagram, not a simulation result.
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
-\caption{Boundary regimes as a function of interdependence and protocol
-quality. The diagonal \(R^\star=\kappa\)---operational decision rate equal to
-interface capacity---is the capacity boundary of
-Proposition~\ref{prop:capacity}; in smooth environments read \(R^\star\) as
-the \(\varepsilon\)-sufficient rate \(R^\star_\varepsilon\) of
-Theorem~\ref{thm:deficit}.
-Below and to its right, boundaries are
-information-clean and the granularity law \(m^\star=\sqrt{A/B}\) applies; above
-and to its left, interdependence exceeds capacity and
-Corollary~\ref{cor:floor} pushes the architecture toward coalescence.}
-\label{fig:regimes}
 \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
-  \draw[->,thick] (0,0) -- (10.4,0)
-    node[below right,align=center] {protocol quality /\\ interface fidelity};
-  \draw[->,thick] (0,0) -- (0,6.4)
-    node[above,align=center] {task\\ interdependence};
-  \draw[gray!55] (5,0) -- (5,6);
-  \draw[gray!55] (0,3) -- (10,3);
-  \node[below] at (2.5,-0.18) {low};
-  \node[below] at (7.5,-0.18) {high};
-  \node[left] at (-0.18,1.5) {low};
-  \node[left] at (-0.18,4.5) {high};
-  \node[draw,thick,rounded corners,fill=white,align=center,text width=4.1cm,
-    minimum height=2.35cm] at (2.5,4.5)
-    {\textbf{Coalescence / hierarchy}\\shared representation beats weak
-    interfaces};
-  \node[draw,thick,dashed,rounded corners,fill=white,align=center,text width=4.1cm,
-    minimum height=2.35cm] at (7.5,4.5)
-    {\textbf{Modules / hybrid}\\protocols absorb interface surprise with shared
-    escalation};
-  \node[draw,thick,densely dotted,rounded corners,fill=white,align=center,text width=4.1cm,
-    minimum height=2.35cm] at (2.5,1.5)
-    {\textbf{Fragmented autonomy / failure risk}\\weak protocols create routing and
-    interpretation errors};
-  \node[draw,thick,dash pattern=on 7pt off 2pt on 1pt off 2pt,rounded corners,fill=white,align=center,text width=4.1cm,
-    minimum height=2.35cm] at (7.5,1.5)
-    {\textbf{Split / market}\\modularity and interfaces make separation cheap};
+  \fill[gray!10] (0,0) -- (7,0) -- (7,5) -- cycle;
+  \draw[->,thick] (0,0) -- (7.4,0)
+    node[below,align=center,pos=0.5,yshift=-0.35cm]
+    {coordination savings $H=C_{\mathrm{coal}}-C_{\mathrm{split}}$};
+  \draw[->,thick] (0,0) -- (0,5.4)
+    node[above,align=center] {excess decision loss $\Delta$};
+  \draw[thick,dashed] (0,0) -- (7,5);
+  \node[fill=white,inner sep=3pt,rotate=35.5] at (3.6,2.57)
+    {$\Delta=H$: equal total objective};
+  \node[align=center] at (2.0,4.2)
+    {\textbf{Coalesce}\\decision deficit exceeds savings};
+  \node[align=center] at (5.0,1.1)
+    {\textbf{Split}\\savings exceed decision deficit};
 \end{tikzpicture}
+\caption{Economic, not lossless, switching. Both axes use the same objective
+units per decision; the drawing uses different display scales on the two
+axes. For $H>0$, splitting is weakly preferable below $\Delta=H$, even with
+positive excess loss. In the Gaussian benchmark at fixed $H$, increasing
+capacity lowers $\Delta$ and can cross this line at the finite threshold in
+Corollary~\ref{cor:economic}.}
+\label{fig:regimes}
 \end{figure}
 
-The simulation also exposes a planning tradeoff. Blueprint-heavy design reduces
-runtime surprise in stable environments, but adds up-front delay and can become
-rigid when volatility is high. Reactive design avoids planning delay but leaves
-more surprise for runtime. This illustrates the paper's broader claim: plans,
-like organizational boundaries, are information investments.
+The heuristic simulation also exposes a planning tradeoff: up-front
+representation investment can lower runtime error while adding delay or
+rigidity. The chosen coefficients illustrate that possibility; they do not
+establish its empirical magnitude or direction in a particular organization.
+
 
 \section{Measurement and Empirical Agenda}
 \label{sec:measurement}
 
-A first empirical study should use incident response or support routing traces.
-The minimal research design is:
-\begin{enumerate}
-  \item collect workflow traces,
-  \item map events to cases,
-  \item compute latency, handoffs, surprise, and action-quality proxies,
-  \item compare human-heavy, protocolized, and agent-assisted workflows,
-  \item estimate whether agentic coordination improves agility after
-  controlling for case complexity.
-\end{enumerate}
+The empirical goal is to determine whether a boundary or protocol change
+improves a specified decision objective, and whether the measured improvement
+comes from better information, lower resource cost, lower delay, or a
+combination. No empirical validation is claimed in this draft.
 
-A natural starting design is a matched before/after study around the
-introduction of an agentic routing or summarization system. Cases should be
-matched by workflow type, severity, service, time of day, customer segment, and
-complexity. A stronger design exploits staggered adoption across teams or
-workflows, comparing changes in resolution time, handoffs, rework, reopen
-rate, escalation rate, and expert-rated quality between adopting and
-non-adopting groups. The goal is not to directly estimate mutual information,
-but to test whether agent-mediated coordination improves decision value per
-unit time after controlling for case mix.
-The primary dependent variables are resolution time, handoff count, rework,
-reopen rate, escalation rate, SLA success, and expert-rated decision quality.
+\subsection{A controlled replay as the first test}
 
-In most organizational traces, neither \(X_t\) nor \(I(X_t;a_t)\) is directly
-observable. The empirical version should use loss-reduction and quality
-proxies, as shown in Table~\ref{tab:proxies}.
+A tractable first study uses incident or support cases with a defensible
+reference outcome and the evidence available at the original decision time.
+Freeze the underlying cases, loss rubric, downstream policy or model version,
+permissions, tool access, and evaluation horizon. Compare four information
+conditions on the same cases: local evidence only; a fixed structured handoff;
+an agent-mediated handoff under a declared communication budget; and a
+full-evidence reference. The full-evidence reference is a practical comparator,
+not automatically the Bayes-optimal coalesced risk.
 
-\begin{table}[H]
+Vary the permitted handoff representation or budget independently of case
+complexity. Pre-specify randomization, paired evaluation, stochastic repeats,
+and blinded outcome scoring where feasible. Agent mediation should not gain
+extra tools or action authority unless those are separate experimental factors.
+Prevent hindsight leakage: later postmortems can label an outcome but should
+not become evidence available to a policy at the earlier decision point.
+
+Report direct decision loss, end-to-end latency, compute and token expenditure,
+human interpretation effort, review effort, and safety outcomes separately
+before combining them with declared objective weights. Include reference-policy
+loss on every case, uncertainty intervals on paired differences, and
+sensitivity to the loss rubric and cost weights. An observed reference gap can
+be negative if the full-evidence policy is not optimal; do not clip such gaps or
+silently take their logarithms. Choose sample size from a pilot variance,
+clustering structure, and a pre-specified effect of interest, not a calendar
+quarter alone. Cluster resampling by incident or another defensible independent
+unit when multiple observations share a case.
+
+This tests a comparative boundary-design hypothesis, not the Gaussian coding
+law by default. A separate synthetic Gaussian experiment can verify the
+analytic expressions or compare finite-budget codecs with the asymptotic
+benchmark. It must not label a suboptimal codec's finite-sample curve an exact
+realization of that bound.
+
+\subsection{Operational proxies and their limits}
+
+\begin{table}[htbp]
 \centering
-\caption{Operational proxies for formal quantities}
+\caption{Measurements, proxies, and interpretation limits}
 \label{tab:proxies}
 \begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
 \toprule
-Formal quantity & Operational proxy \\
+Quantity & Operational treatment \\
 \midrule
-\(Q_t\) or decision value & Severity reduction, SLA success, expert quality score, avoided rework. \\
-\(S_t\) or prediction surprise & Unexpected escalation, reopen, SLA miss, anomaly, decision reversal. \\
-\(\tau_t\) & Time to triage, time to decision, time to mitigation, time to resolution. \\
-\(\widetilde C_t\) or cost index & Handoffs, people involved, messages, meetings, queue time, tool calls. \\
-\(C_{\mathrm{interp}}\) & Clarification requests, schema translation, handoff notes, vendor/customer language translation. \\
-\(C_{\mathrm{error}}\) & Reopen rate, rollback rate, bad routing, decision reversal. \\
-\(C_{\mathrm{monitor}}\) & Approvals, audits, review steps, escalation requirements. \\
+Decision value $Q$ & Paired loss reduction against a fixed baseline; expert
+scores, avoided rework, or SLA outcomes need a declared loss mapping. \\
+Predictive surprise $S$ & Proper log scores on fixed targets where predictive
+distributions and labels exist; escalation and reopen events are diagnostics,
+not themselves Shannon surprise. \\
+Latency $\tau$ & Signal-to-triage, signal-to-decision, and signal-to-action
+intervals reported separately in a fixed unit. \\
+Interpretation cost & Clarification requests and active translation time;
+request count is affected by task difficulty and protocol inadequacy. \\
+Interface richness & Field availability, missingness, representation type,
+and actual message budget; completeness fractions are not bit capacities. \\
+Monitoring cost & Review minutes, approvals, audits, and escalations, with
+non-overlapping accounting. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-A practical agility proxy is
+Clarification round-trips and schema completeness can diagnose interface
+insufficiency, but they do not estimate $R^\star$ and $\kappa$ in common
+units without a separate validated measurement model. Do not subtract them to
+construct $R^\star-\kappa$. Clarification is partly an outcome of the
+interface; treating it as an exogenous communication requirement can make the
+proposed test circular.
+
+Operational bits require a declared alphabet, code, and per-decision or
+per-block rate convention. A token count is an engineering budget, not a
+semantic information rate by definition. Field counts and completeness
+fractions cannot test a fourfold-per-bit slope. Even a defensible bit measure
+does not make reopen probability or resolution time a Gaussian quadratic
+loss. Theorem~\ref{thm:deficit} supplies a benchmark; transfer of its functional
+form to workflow outcomes is an additional hypothesis.
+
+Likewise, Proposition~\ref{prop:capacity} does not predict an empirical elbow.
+$R^\star_\varepsilon$ is an operational tolerance crossing that can occur on
+a smooth curve. Compare flexible alternatives before claiming a threshold or
+log-linear relationship, and estimate an excess-loss curve only against a
+well-defined reference. The economic comparison is whether the loss increase
+is outweighed by measured coordination savings in common units.
+
+For continuity with the trace playbook, a descriptive proxy can be written
 \[
-\widehat{\calG}
-=\frac{Q}{1+T_{\mathrm{resolution}}}\cdot\frac{1}{1+\alpha H},
+\widehat{\calG}=
+\frac{Q}{t_0(1+T_{\mathrm{resolution}}/t_0)(1+\alpha H_{\mathrm{handoff}})},
+\qquad t_0>0,\quad\alpha\geq0.
 \]
-where \(Q\) is quality, \(T_{\mathrm{resolution}}\) is resolution time, \(H\) is
-handoff count, and \(\alpha\) is a handoff penalty. This proxy is not a direct
-mutual-information estimate. It is a practical measurement bridge.
+Here $Q$ is baseline-relative value, $t_0$ is a fixed reference time, and
+$H_{\mathrm{handoff}}$ is a handoff count, distinct from the economic savings
+$H$. Declare $t_0$ and $\alpha$, retain negative values, and report the
+components separately. This stabilized proxy is neither a literal
+information-rate estimate nor generally equivalent to minimizing $J$.
+Avoid counting handoff penalties again when their full costs already enter
+the objective.
 
-To study coalescing and splitting, compare whether a workflow performs better
-when work is handled inside one bounded agent, split across separate agents
-with an explicit protocol, or coordinated through a hybrid boundary such as an
-agent-managed vendor or escalation path. The empirical question is whether the
-boundary change lowers surprise and action loss enough to justify any added
-coordination or monitoring cost.
+\subsection{Observational deployment studies}
 
-Incident traces provide natural measurements of latency, handoffs, reopen
-rate, escalation, and decision quality, which is why they are the preferred
-first empirical spine for the theory.
+A matched before/after analysis can characterize associations after adjusting
+for measured case mix. It does not eliminate unobserved selection, changing
+staffing, incident severity, temporal trends, or simultaneous tooling changes.
+Staggered adoption can support a stronger design only with stated identification
+assumptions, an appropriate estimator, checks on pre-treatment behavior, and
+attention to spillovers between teams. Randomized rollout or crossover, where
+safe, can more directly isolate the interface intervention. Safety and
+permission constraints remain part of the feasible experimental design.
 
-\subsection{A minimal test of the capacity threshold}
-
-The cheapest credible test of Proposition~\ref{prop:capacity} proxy-estimates
-the
-decision-relevant interface rate \(R^\star\) and the interface capacity
-\(\kappa\) from handoff traces and checks whether decision loss rises where the
-operational rate exceeds capacity. Incident and support-ticket data are
-well-suited because handoffs are the interface. A single quarter of tickets
-from one organization is sufficient, ideally spanning a boundary change---a
-coalesced incident-room period versus a ticket-handoff period---or contrasting
-a coalesced and a split team.
-
-Three quantities are estimated from the trace:
-\begin{itemize}
-  \item \(R^\star\), the decision-relevant cross-boundary rate, proxied by
-  \emph{clarification round-trips per handoff}: how often the receiving side
-  must return for more information before it can act. Persistent back-and-forth
-  indicates that the handoff did not carry enough decision-relevant state.
-  \item \(\kappa\), the interface capacity, proxied by \emph{schema
-  completeness at handoff}: the fraction of decision-relevant fields (severity,
-  suspected cause, blast radius, owner) populated when work crosses the
-  boundary.
-  \item decision loss, proxied by resolution time and reopen rate, controlling
-  for severity and case complexity.
-\end{itemize}
-
-Proposition~\ref{prop:capacity} predicts an \emph{elbow}: where the operational
-deficit \(R^\star-\kappa\) is non-positive, handoffs are information-clean and
-split performance can match coalesced performance; where the deficit is
-positive, decision loss should rise with it. Plotting resolution time or reopen
-rate against a proxy for \((R^\star-\kappa)\) should be flatter to the left of
-zero and increasing to the right. Observing this elbow is evidence that the
-capacity boundary is real rather than merely drawn.
-Theorem~\ref{thm:deficit} sharpens the prediction from a shape to a functional
-form: in the smooth regime the logarithm of the excess loss should fall
-approximately linearly in effective interface capacity, each added bit of
-schema capacity cutting the excess roughly fourfold. A log-linear fit of
-excess resolution time or reopen rate against the capacity proxy is therefore
-a stronger test than the elbow alone.
-
-A complementary check tests the cost-vector prediction summarized in
-Table~\ref{tab:costs}. For boundary-change cases, an agent-mediated routing or
-summarization layer should lower interpretation cost \(C_{\mathrm{interp}}\)
-(clarification requests) and delay cost \(C_{\mathrm{delay}}\) (time to triage)
-while raising monitoring cost \(C_{\mathrm{monitor}}\) (approvals), with net
-agility \(\widehat{\calG}=Q/((1+T_{\mathrm{resolution}})(1+\alpha H))\)
-increasing. Corollary~\ref{cor:agents} adds a sharper, falsifiable prediction:
-lowering the per-boundary cost \(B\) should raise the efficient number of units
-\(m^\star=\sqrt{A/B}\), so teams that adopt stronger protocols or agentic
-interfaces should sustain finer decomposition at equal or lower coordination
-cost.
-
-This design requires no model training and no causal identification beyond
-matching on case mix, and it can run on a single design partner's ticket
-export. Where trace data is not yet available, the same protocol stands as a
-pre-registered design.
+To examine the granularity model, compare costs across alternative feasible
+partitions, not merely the number of teams an organization happens to have.
+Estimate changes in both $A$ and $B$, record cross-boundary deficits and
+transition costs, and check the balanced-unit and sparse-interface assumptions.
+The conditional prediction is
+$\Delta\log m^\star=\tfrac12(\Delta\log A-\Delta\log B)$ within the
+interior surrogate regime. Adoption alone does not predict a $41\%$ increase
+or finer decomposition. Register the planned analysis before examining test
+outcomes; this proposed protocol has not itself been externally preregistered.
 
 \section{Limitations}
 
@@ -1257,6 +1273,18 @@ does not yet estimate causal effects.
 Sixth, organizational utility is multi-objective. Speed, accuracy, compliance,
 safety, morale, trust, and strategic learning may trade off.
 
+Seventh, the Gaussian benchmark requires scalar quadratic estimation,
+memoryless samples, optimal coding, and asymptotically long blocks. A real-time
+agent handoff need not approach that bound; block delay must be costed.
+
+Eighth, balanced units, sparse interfaces, and constant interface costs are
+separate assumptions. Heterogeneous tasks and interacting communication cuts
+can invalidate the square-root model and additive deficit approximations.
+
+Finally, this is a normative design framework, not a theory of equilibrium
+ownership or bargaining. Strategic behavior, transition costs, organizational
+learning, and distributional consequences require explicit extensions.
+
 \section{Conclusion}
 
 Coase--Information Theory reframes the firm as an information architecture and
@@ -1278,7 +1306,12 @@ that they automate tasks. It is that they alter where boundaries should be
 drawn: inside firms, across teams, between vendors, and between human and
 machine actors. They are boundary-shifting infrastructure.
 
-The next generation of AI-native companies will be designed not merely around
+The central economic distinction is between preserving all decision value
+and preserving enough to justify a boundary's cost. A lossy interface can be
+optimal. Agents can move the optimum in either direction by changing internal
+coordination, interface costs, and the value of shared context.
+
+The next generation of AI-native companies may be designed not merely around
 people using AI tools, but around software-mediated sensing, routing, decision,
 and execution loops. The purpose of Coase--Information Theory is to provide a
 language for designing and measuring those loops.

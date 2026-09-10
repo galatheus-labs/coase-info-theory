@@ -1,4 +1,10 @@
-# Coase–Information Theory Demo Repo
+# Coase–Information Theory
+
+**Draft revision 1.3 — September 9, 2026.** The canonical TeX and rebuilt PDF contain the technical revision. Draft-branch changes are not live on the public companion until merged and deployed.
+
+[Revision notes](docs/revision-1.3-notes.md) · [Analytical workbench](analytical-workbench.html)
+
+The central economic comparison is `excess decision loss <= coordination savings`: a lossy boundary can be optimal. The Gaussian coding example and balanced-unit square-root model are conditional analytical benchmarks, not universal organizational laws.
 
 **▶ Live interactive companion → https://galatheus-labs.github.io/coase-info-theory/**  ·  [Paper (PDF)](paper/coase-information-theory.pdf)  ·  [Paper (TeX)](paper/coase-information-theory.tex)  ·  [Galatheus](https://galatheus.com)
 
@@ -23,7 +29,7 @@ The companion page opens with a 60-second animated walkthrough of the thesis —
 - security alert triage,
 - procurement and AP automation.
 
-A boundary **phase map** shows which architecture wins across protocol quality and task interdependence, with the `R* = κ` capacity threshold drawn in.
+A heuristic **phase map** shows which architecture wins under chosen scenario coefficients. Its dimensionless sliders are not estimates of `R*` or bit capacity. The separate analytical workbench evaluates the Gaussian switching threshold and sweeps integer unit counts explicitly.
 
 ## Contents
 
@@ -88,7 +94,7 @@ The simulation is deliberately simple. It is not a calibrated causal estimate. I
 
 ## Most important next step
 
-Choose one empirical spine — preferably incident response or support routing — and replace the current stylized coefficients with real trace calibration.
+Run a controlled incident-response or support-routing replay: freeze cases and decision policy, vary only the interface representation or budget, and report decision loss, latency, and resource costs separately. Observational deployment studies need explicit identification assumptions.
 
 ## Public positioning
 
@@ -103,3 +109,9 @@ This repo should support a public paper/essay package:
 The thought-leadership sentence:
 
 > AI-native companies are not just companies with AI tools. They are organizations whose sensing, routing, decision, and execution loops are increasingly software-mediated.
+
+## Validation
+
+`node tests/model.test.cjs` checks the analytical formulas, integer optimization, and signed scenario agility. `latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=build paper/coase-information-theory.tex` builds the paper. The revision migration is guarded against an unexpected 1.2 source and is not part of normal application startup.
+
+Historical notes and `paper/coase-information-theory-draft.md` are retained as archives; they are not the current mathematical specification.

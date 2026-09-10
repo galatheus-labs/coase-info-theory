@@ -1,204 +1,39 @@
-# Measurement Playbook
+# Measurement playbook — draft 1.3
 
-## Purpose
+The first test is whether a boundary or protocol improves a declared decision objective, not whether ticket proxies look like bits. This is a proposed protocol, not an externally preregistered or completed study.
 
-This playbook turns Coase–Information Theory from a conceptual framework into an instrumentation lens for real organizational workflows.
+## Controlled paired replay
 
-The objective is not to directly estimate Shannon mutual information in every setting. The objective is to estimate operational proxies for the theory's core quantities:
+Freeze cases, evidence available at decision time, downstream model/policy version, tools, permissions, and a loss rubric. Compare local-only evidence, a fixed structured handoff, an agent-mediated handoff under a declared budget, and a full-evidence reference. Vary interface representation or budget independently of case difficulty. Preserve the same cases across arms, repeat stochastic policies, and blind scoring where feasible. Postmortems may label outcomes but must not leak future evidence into earlier decisions.
 
-\[
-\widehat{\mathcal{G}}_t \approx \frac{Q_t}{\tau_t(1+\widetilde C_t)}
-\]
-
-In practice:
-
-- \(Q_t\), decision value, is proxied by decision/action quality or loss reduction,
-- surprise is proxied by unexpected escalations, reopens, SLA misses, anomaly severity, or decision reversals,
-- \(\tau_t\) is proxied by sensing-to-action latency,
-- \(\widetilde C_t\) is proxied by handoffs, labor, events, messages, approvals, tool calls, or queue time.
+The full-evidence reference is not automatically Bayes-optimal. Report negative empirical reference gaps rather than clipping them. Pre-specify effects of interest and use pilot variance and clustering to plan sample size; a quarter of tickets is not a power calculation.
 
 ## Minimal event schema
 
-A useful trace can be as simple as:
+Retain case_id, timestamp, actor_type, owner, event_type, and outcome quality. Add arm, policy_version, decision_id, evidence_cutoff, representation_type, declared_message_budget, action_loss, baseline_loss, compute_cost, interpretation_minutes, and review_minutes when available. Treat repeated observations within an incident as clustered, not independent samples.
 
-```csv
-case_id,timestamp,actor_type,owner,event_type,quality
-INC-1,2026-06-04T09:00:00Z,system,observability,created,
-INC-1,2026-06-04T09:03:00Z,agent,triage-bot,triage,
-INC-1,2026-06-04T09:08:00Z,human,oncall,decision,
-INC-1,2026-06-04T09:24:00Z,human,oncall,resolved,88
-```
+## Separate measurements before aggregating
 
-Recommended columns:
+Decision value Q is baseline_loss minus action_loss under the same rubric. Latency is signal-to-action elapsed time; report triage, decision, and resolution intervals separately. Resource cost includes compute, communication, human interpretation, and review using disjoint accounting. Use cost-adjusted agility Q/[tau(1+C/C0)] only with declared positive time and cost scales. Preserve negative Q and negative agility. This ratio is not generally equivalent to minimizing the full objective.
 
-| Column | Meaning |
-|---|---|
-| `case_id` | Workflow case, incident, ticket, lead, request, etc. |
-| `timestamp` | ISO timestamp for the event. |
-| `actor_type` | `human`, `agent`, `system`, `vendor`, or `customer`. |
-| `owner` | Responsible person, team, agent, vendor, or queue. |
-| `event_type` | `created`, `triage`, `handoff`, `decision`, `action`, `resolved`, `reopened`, `rework`. |
-| `quality` | Optional terminal quality score or outcome score. |
+For a stabilized descriptive trace proxy use Q/[(t0+T_resolution)(1+alpha*handoff_count)], with a fixed reference time t0 and declared alpha. Handoff counts here are not the economic coordination savings H. Do not charge the same handoff twice through both an explicit cost and a proxy penalty. For sequential non-overlapping episodes, aggregate value as sum(Q)/sum(tau), not the unweighted mean of episode ratios; concurrent workflows need separate throughput accounting.
 
-## Core metrics
+## Prediction scores
 
-### 1. Time to first triage
+Evaluate predictive surprise on a fixed set of tasks, targets, times, weights, and reference measures across architectures. Do not sum surprise over a changing number of agents. Reopens, escalations, and reversals are useful diagnostics but are not literal Shannon surprise without a probability model.
 
-\[
-T_{triage} = t_{first\;triage} - t_{created}
-\]
+## What operational proxies cannot establish
 
-Interpretation: sensing and routing latency.
+Clarification requests partly result from an inadequate interface; they are not an exogenous estimate of R*. Schema completeness fractions are not bit capacities. Do not subtract these proxies to claim an R*-kappa deficit. Actual operational bits require a specified alphabet, code, and rate convention; token budgets are engineering constraints, not semantic information rates by definition.
 
-### 2. Time to decision
+An operational preservation threshold does not imply a kink or elbow. The fourfold-per-bit deficit reduction is specific to the memoryless scalar Gaussian/quadratic, asymptotically optimally coded benchmark. Reopen probability and resolution time do not inherit that law. Test flexible alternatives, and do not log nonpositive estimated excess losses.
 
-\[
-T_{decision} = t_{first\;decision} - t_{created}
-\]
+## Economic comparison and uncertainty
 
-Interpretation: how long it takes the organization to select a coherent action.
+Compare excess decision loss with coordination savings in the same units per decision. Include amortized transition costs and coding delay. Report paired effects, appropriate uncertainty intervals, clustering choices, and sensitivity to objective weights. Treat observational before/after matching as adjustment for measured case mix, not proof of causality; staggered adoption still needs identification assumptions and spillover checks.
 
-### 3. Time to resolution
+## Granularity
 
-\[
-T_{resolution} = t_{resolved} - t_{created}
-\]
+Compare feasible partitions and measure changes in both internal coordination burden A and interface cost B. Distinguish A from cross-boundary decision dependence. The square-root comparative static applies only to its balanced-size, sparse-interface, constant-cost interior regime; clipping, indivisible components, and interacting deficits can change the result.
 
-Interpretation: end-to-end organizational response time.
-
-### 4. Handoff count
-
-Count changes in `owner` within a case:
-
-\[
-H = \sum_k \mathbf{1}[owner_k \neq owner_{k-1}]
-\]
-
-Interpretation: coordination overhead and possible information-loss opportunities.
-
-### 5. Agent-assisted share
-
-\[
-S_{agent} = \frac{\#\;agent\;events}{\#\;all\;events}
-\]
-
-Interpretation: degree of software-mediated coordination.
-
-### 6. Rework/reopen count
-
-Count events whose type includes `rework`, `reopen`, or `rollback`.
-
-Interpretation: action error, distortion, or premature/incorrect decision-making.
-
-### 7. Surprise proxy
-
-Count or score events that show the agent's internal representation failed to anticipate the state:
-
-- unexpected escalation,
-- SLA miss,
-- incident severity increase,
-- decision reversal,
-- customer-impacting anomaly,
-- reopened or rerouted case.
-
-Interpretation: boundary stress. If surprise concentrates at an interface between teams, vendors, queues, or software agents, the boundary may need better protocols, richer shared state, or a different partition of responsibility.
-
-### 8. Action quality proxy
-
-Use an observed outcome if available:
-
-- incident severity reduction,
-- customer satisfaction,
-- SLA success,
-- accepted lead routing,
-- no rollback,
-- no reopen,
-- expert evaluation score.
-
-If unavailable, use a coarse rubric:
-
-| Score | Meaning |
-|---|---|
-| 100 | Correct first action, no rework, good outcome. |
-| 80 | Correct path with minor delay. |
-| 60 | Resolved but with significant handoffs or rework. |
-| 40 | Wrong first action or customer-impacting delay. |
-| 20 | Escalated failure. |
-
-### 9. Practical agility proxy
-
-A simple proxy:
-
-\[
-\widehat{\mathcal{A}} = \frac{Q}{1 + T_{resolution}} \cdot \frac{1}{1 + \alpha H}
-\]
-
-where:
-
-- \(Q\) is quality on a 0–100 scale,
-- \(T_{resolution}\) is time in hours,
-- \(H\) is handoff count,
-- \(\alpha\) is a handoff penalty such as 0.1.
-
-This is not a direct mutual-information estimate. It is a practical operational proxy.
-
-### 10. Boundary movement proxy
-
-To study coalescing and splitting, compare whether a workflow performs better when work is:
-
-- handled inside one bounded agent, such as one team or one software-mediated queue,
-- split across separate agents with an explicit protocol,
-- coordinated through a hybrid boundary, such as an agent-managed vendor or escalation path.
-
-The empirical question is whether the boundary change lowers surprise and action loss enough to justify any added coordination or monitoring cost.
-
-## Suggested first empirical case study
-
-### Incident response
-
-Why it is strong:
-
-- has clear timestamps,
-- has observable start and end points,
-- involves routing, triage, escalation, and action,
-- makes latency and misalignment visible,
-- is legible to engineering and management readers.
-
-Data sources:
-
-- PagerDuty incidents,
-- Slack incident channels,
-- deployment logs,
-- GitHub PR/revert events,
-- Jira/Linear tickets,
-- postmortems.
-
-Paper mapping:
-
-| Theory quantity | Incident trace proxy |
-|---|---|
-| \(X_t\) | true incident state / severity / root cause |
-| \(Y_t^i\) | alerts, logs, customer reports, dashboards |
-| \(M_t^{ij}\) | Slack messages, tickets, escalations, handoffs |
-| \(a_t\) | mitigation, rollback, failover, customer communication |
-| \(Q_t\) | action correctness / severity reduction / no rework |
-| \(\tau_t\) | time to decision or resolution |
-| \(C_t\) | handoffs, people involved, message volume, queue time |
-
-## How to use the trace mapper app
-
-Open `workflow-trace-mapper.html` and paste CSV data with the minimal schema above. The app will compute per-case metrics and aggregate proxies.
-
-This gives the paper a companion method:
-
-1. define the organizational trace,
-2. estimate latency and handoffs,
-3. score action quality,
-4. compute an agility proxy,
-5. compare human-heavy, agent-assisted, and protocolized workflows.
-
-## What not to overclaim
-
-Do not claim the proxy is literal mutual information unless the data supports such estimation. Instead, say:
-
-> We use operational proxies for decision value per unit time. These proxies are designed to be observable in workflow traces and can later be refined into more direct information-theoretic estimates when ground-truth state labels are available.
+The old workflow-trace-mapper URL redirects to the scenario companion; it does not currently implement a CSV analysis pipeline. The sample CSV files are illustrative inputs, not empirical validation.
