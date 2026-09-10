@@ -22,7 +22,7 @@ close(M.granularity(25,2,20).continuous/5,Math.sqrt(.5));
 close(M.agility(1,2,10,55,55),-.05); close(M.agility(1,.5,10,0,55),.05);
 assert.throws(()=>M.deficit(-1,1)); assert.throws(()=>M.granularity(1,0,4)); assert.throws(()=>M.granularity(1,1,2.5));
 assert.throws(()=>M.agility(1,.5,0,1,55));
-const lambda=.5,tau=3,Q0=2,eps=1e-5;
+const lambda=.5,tau=3,Q0=2,eps=1e-6;
 const marginal=x=>Q0*x*Math.exp(-x*tau);
 assert.ok((marginal(lambda+eps)-marginal(lambda-eps))/(2*eps)<0);
 close(Q0*Math.exp(-lambda*tau)*(1-lambda*tau),(marginal(lambda+eps)-marginal(lambda-eps))/(2*eps));

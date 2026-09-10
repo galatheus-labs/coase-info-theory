@@ -101,7 +101,7 @@ with the same scoring opportunities and weights for every architecture
 agents. The term $\E\sum_t L(X_t,a_t)$ is cumulative action loss.
 ''')
     s = replace_once(s, 'Then an objective-efficient architecture satisfies',
-                     'Weights are nonnegative and costs use a common declared accounting\nconvention. By default $\beta_S=0$: predictive surprise is a diagnostic unless\nan independent economic burden, not already in loss or other costs, justifies\npricing it. Then an objective-efficient architecture satisfies')
+                     'Weights are nonnegative and costs use a common declared accounting\nconvention. By default $\\beta_S=0$: predictive surprise is a diagnostic unless\nan independent economic burden, not already in loss or other costs, justifies\npricing it. Then an objective-efficient architecture satisfies')
     s = replace_once(s, 'boundary is \\emph{Pareto-efficient} when no feasible boundary movement weakly',
                      'boundary is \\emph{Pareto-efficient} when no feasible architecture weakly')
     s = replace_once(s, 'feasible boundary movement lowers the organization\'s total expected objective',

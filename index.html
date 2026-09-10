@@ -176,6 +176,7 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
   </style>
 </head>
 <body>
+<div class="container"><p><strong>Draft 1.3:</strong> <a href="analytical-workbench.html">Open the analytical workbench</a> for explicit model assumptions, a lossy economic switching threshold, and integer unit-count optimization. The animation and scenario sliders below are conceptual illustrations, not measured information rates.</p></div>
   <div class="container">
     <div class="topnav"><a class="active" href="index.html">Examples</a><a class="" href="paper/coase-information-theory.pdf">Paper PDF</a><a class="" href="https://github.com/galatheus-labs/coase-info-theory" target="_blank" rel="noopener">GitHub</a><a class="" href="https://galatheus.com" target="_blank" rel="noopener">Galatheus ↗</a></div>
 
@@ -327,13 +328,14 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
       <div class="badge" id="phaseStatus">idle</div>
     </div>
     <p class="small" style="margin-top:8px;">
-      Each cell re-runs the current scenario at that combination of protocol quality (&kappa;) and task interdependence (R*),
-      colored by the winning boundary form. The dashed diagonal is the capacity threshold <span class="code">R* = &kappa;</span>
-      from the paper: below and right of it, boundaries are information-clean and finer decomposition
-      (<span class="code">m* = &radic;(A/B)</span>) pays; above and left, interdependence outruns interface capacity and
-      coalescence wins. The diagonal is a band, not a cliff: per the paper's interface-deficit law, the penalty for
-      sitting above it decays exponentially in protocol capacity (~4&times; per bit), so near-threshold cells are
-      decided by the other cost terms. The crosshair marks your current levers. Re-run after changing levers to refresh the map.
+      Each cell evaluates chosen heuristic coefficients at dimensionless protocol-quality and
+      task-dependence settings. These sliders are not measured bits or an estimate of R*.
+      No information-theoretic diagonal is imposed: the winner follows this scenario's total
+      objective, and lossy boundaries can win. The split scenario uses three groups; it does
+      not optimize unit count. Use the <a href="analytical-workbench.html">analytical workbench</a>
+      for the Gaussian economic threshold and an explicit integer granularity sweep.
+      The crosshair marks your current levers.
+
     </p>
     <div class="canvas-shell section" style="margin-top:14px;">
       <canvas id="phaseCanvas" width="920" height="620" aria-label="Boundary phase map over protocol quality and task interdependence"></canvas>
@@ -342,7 +344,7 @@ canvas { display:block; width:100%; height:auto; aspect-ratio: 1.48 / 1; }
   </div>
 </section>
 
-    <div class="footer">Monte Carlo companion for the Coase–Information Theory paper (rev 1.2, 2026-06-09): boundary capacity threshold (R* = κ) and the granularity law m* = √(A/B). Stylized simulation, not a causal estimate.</div>
+    <div class="footer">Draft revision 1.3 (2026-09-09). Heuristic scenario model, not a causal estimate or an implementation of optimal coding. Agility uses signed baseline-relative squared-loss reduction. See the separate analytical workbench for economic thresholds and granularity.</div>
   </div>
 
 <script>
@@ -384,6 +386,7 @@ const BOUNDARIES = [
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
 const fmt2 = n => (Math.round(n * 100) / 100).toFixed(2);
+const fmtAgility = n => Number(n).toFixed(4);
 const setText = (id, value) => { document.getElementById(id).textContent = value; };
 const setHTML = (id, value) => { document.getElementById(id).innerHTML = value; };
 const pct = (value, max=100) => clamp((value / max) * 100, 0, 100);
@@ -1263,7 +1266,7 @@ const SCENARIOS = [
     id: 'monolith-microservices',
     name: 'Monolith vs microservices',
     caption: 'One deployable or many? Split when interfaces are clean and modules are loosely coupled; coalesce when they are not.',
-    description: 'The hero example as a control panel. This is the granularity sweet spot m* = √(A/B): raise interface quality (lower B) and the efficient number of services rises; raise domain coupling (raise A) and it falls back toward a monolith.',
+    description: 'A heuristic scenario, not a fit of m* = √(A/B). Internal coordination burden A and cross-boundary decision dependence are distinct: raising A alone favors splitting in the balanced-unit model, whereas increasing loss at a cut can favor coalescence. Agents may change both A and B. Use the analytical workbench for unit-count optimization.',
     useCase: 'Current problem: every platform team relitigates monolith vs microservices. The answer is a boundary-cost tradeoff, not a doctrine — clean contracts and weak coupling favor splitting; tangled domains and thin tooling favor one unit.',
     proxy: 'Trace proxies: deploy frequency, cross-service call depth, incident blast radius, build/coordination time, contract churn, rollback rate, on-call handoffs.',
     levers: [
@@ -1604,6 +1607,7 @@ function simulateBoundary(option, cfg, seedOffset=0) {
   const xVals = [];
   const estVals = [];
   let totalLoss = 0;
+  let totalBaselineLoss = 0;
   let totalSurprise = 0;
   let correct = 0;
   const structure = boundaryStructure(option.id, cfg);
@@ -1630,6 +1634,7 @@ function simulateBoundary(option, cfg, seedOffset=0) {
     const predVar = Math.max(structure.predVar, 0.015);
     const surprise = Math.max(0, 0.5 * Math.log(predVar) + loss / (2 * predVar) + 0.7);
     totalLoss += loss;
+    totalBaselineLoss += x * x; // fixed zero-action baseline, same cases
     totalSurprise += surprise;
     if ((estimate >= 0) === (x >= 0)) correct += 1;
     xVals.push(x);
@@ -1641,6 +1646,8 @@ function simulateBoundary(option, cfg, seedOffset=0) {
   const quality = (correct / cfg.trials) * 100;
   const surprise = totalSurprise / cfg.trials;
   const loss = totalLoss / cfg.trials;
+  const baselineLoss = totalBaselineLoss / cfg.trials;
+  const decisionValue = baselineLoss - loss;
   const latency = structure.latency;
   const cost = structure.cost + structure.monitor * 0.55;
   const terms = cfg.blueprintGain === undefined ? planningTerms(cfg) : cfg;
@@ -1649,16 +1656,19 @@ function simulateBoundary(option, cfg, seedOffset=0) {
   const runtimeSurprise = structure.runtimeSurprise ?? terms.runtimeSurprise * 100;
   const volatilityPenalty = 1 + terms.volatilityFactor * (latency / 16) * (0.65 + terms.runtimeSurprise * 0.72 + terms.rigidityRisk * 0.58);
   const transitionCost = terms.runtimeSurprise * latency * 0.28 + terms.rigidityRisk * latency * 0.22;
-  const objective = surprise * 16 + loss * 18 + latency * (0.55 + cfg.volatility / 130) + cost * 0.16 +
+  const objective = loss * 18 + latency * (0.55 + cfg.volatility / 130) + cost * 0.16 +
     planningDelay * 0.46 + rigidityRisk * 0.06 + runtimeSurprise * 0.04 + transitionCost;
-  const agility = clamp((information * (quality / 100) * 18) /
-    Math.max(4, (latency + planningDelay * 0.35) * (cost / 55) * volatilityPenalty), 0, 100);
-  return { ...option, surprise, loss, latency, cost, planningDelay, rigidityRisk, runtimeSurprise, quality, information, agility, objective, corr };
+  // Q / [tau * (1 + C/C0)]; signs are preserved. Scores are not percentages.
+  // Setup delay is included once in this toy per-decision latency convention.
+  const effectiveLatency = latency + planningDelay;
+  const agility = decisionValue / (effectiveLatency * (1 + cost / 55));
+
+  return { ...option, surprise, loss, baselineLoss, decisionValue, effectiveLatency, latency, cost, planningDelay, rigidityRisk, runtimeSurprise, quality, information, agility, objective, corr };
 }
 
 function runSimulation(cfg) {
   return BOUNDARIES
-    .map((option, idx) => simulateBoundary(option, cfg, idx * 10007))
+    .map(option => simulateBoundary(option, cfg, 0)) // paired latent cases and noise draws
     .sort((a,b) => a.objective - b.objective);
 }
 
@@ -2032,22 +2042,8 @@ function drawPhaseDiagram(cfg) {
     ctx.lineTo(padL + plotW, gy);
     ctx.stroke();
   }
-  // capacity threshold R* = kappa: interdependence equals protocol quality
-  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([9, 6]);
-  ctx.beginPath();
-  ctx.moveTo(padL, padT + plotH);
-  ctx.lineTo(padL + plotW, padT);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = '#f1f5f9';
-  ctx.font = '700 13px Inter, system-ui, sans-serif';
-  ctx.fillText('R* = κ', padL + plotW * 0.5 + 8, padT + plotH * 0.5 - 8);
-  ctx.fillStyle = 'rgba(226,232,240,0.62)';
-  ctx.font = '600 12px Inter, system-ui, sans-serif';
-  ctx.fillText('coalesce', padL + plotW * 0.1, padT + plotH * 0.16);
-  ctx.fillText('split · m*=√(A/B)', padL + plotW * 0.56, padT + plotH * 0.9);
+  // Sliders are dimensionless; do not draw a fabricated R*=kappa boundary.
+
   const cx = padL + (cfg.protocol / 100) * plotW;
   const cy = padT + (1 - cfg.interdependence / 100) * plotH;
   ctx.strokeStyle = '#ffffff';
@@ -2079,7 +2075,7 @@ function renderResults(rows) {
   const best = rows[0];
   setText('winnerName', best.short);
   setText('winnerObjective', fmt(best.objective));
-  setText('winnerAgility', fmt(best.agility));
+  setText('winnerAgility', fmtAgility(best.agility));
   setText('winnerQuality', fmt(best.quality) + '%');
   setHTML('metricBars', rows.map(row => `
     <div class="metric-panel">
@@ -2092,12 +2088,12 @@ function renderResults(rows) {
       ${makeBar('Runtime surprise', row.runtimeSurprise, 100, 'rose')}
       ${makeBar('Rigidity risk', row.rigidityRisk, 100, 'purple')}
       ${makeBar('Coordination cost', row.cost, 125, 'orange')}
-      ${makeBar('Agility', row.agility, 100, 'teal')}
+      <p>Baseline-relative value: ${fmt2(row.decisionValue)}; cost-adjusted agility: ${fmtAgility(row.agility)} loss units per minute (signed, not a percentage).</p>
     </div>
   `).join(''));
   setHTML('resultTable', `
-    <thead><tr><th>Boundary</th><th>Objective</th><th>Surprise</th><th>Loss</th><th>Fidelity</th><th>Quality</th><th>Latency</th><th>Setup</th><th>Runtime</th><th>Rigid</th><th>Cost</th><th>Agility</th></tr></thead>
-    <tbody>${rows.map(row => `<tr><td>${row.name}</td><td>${fmt(row.objective)}</td><td>${fmt2(row.surprise)}</td><td>${fmt2(row.loss)}</td><td>${fmt(row.information)}</td><td>${fmt(row.quality)}%</td><td>${fmt(row.latency)}m</td><td>${fmt(row.planningDelay)}</td><td>${fmt(row.runtimeSurprise)}</td><td>${fmt(row.rigidityRisk)}</td><td>${fmt(row.cost)}</td><td>${fmt(row.agility)}</td></tr>`).join('')}</tbody>
+    <thead><tr><th>Boundary</th><th>Objective</th><th>Surprise</th><th>Loss</th><th>Fidelity</th><th>Sign accuracy</th><th>Latency</th><th>Setup</th><th>Runtime</th><th>Rigid</th><th>Cost</th><th>Agility (loss/min)</th></tr></thead>
+    <tbody>${rows.map(row => `<tr><td>${row.name}</td><td>${fmt(row.objective)}</td><td>${fmt2(row.surprise)}</td><td>${fmt2(row.loss)}</td><td>${fmt(row.information)}</td><td>${fmt(row.quality)}%</td><td>${fmt(row.latency)}m</td><td>${fmt(row.planningDelay)}</td><td>${fmt(row.runtimeSurprise)}</td><td>${fmt(row.rigidityRisk)}</td><td>${fmt(row.cost)}</td><td>${fmtAgility(row.agility)}</td></tr>`).join('')}</tbody>
   `);
 }
 
