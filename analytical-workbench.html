@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Economic boundaries — analytical workbench, draft 1.3</title>
+<style>
+body{font:17px/1.55 system-ui,sans-serif;max-width:1000px;margin:auto;padding:28px;background:#0f172a;color:#e5e7eb}a{color:#93c5fd}h1{line-height:1.15}section{border:1px solid #475569;border-radius:14px;padding:24px;margin:24px 0}.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}label{display:flex;flex-direction:column;gap:6px}input{padding:10px;font:inherit;width:100%;box-sizing:border-box}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}th,td{padding:8px;text-align:right;border-bottom:1px solid #475569}th:first-child,td:first-child{text-align:left}.table-wrap{overflow:auto;max-height:440px}svg{width:100%;height:auto;border:1px solid #475569}.status{font-size:1.2em;font-weight:650}.small{font-size:.88em;color:#cbd5e1}output{display:block}button{font:inherit;padding:9px 16px;cursor:pointer}code{white-space:normal}.error{font-weight:650}
+</style></head><body>
+<p><a href="index.html">Scenario companion</a> · <a href="paper/coase-information-theory.pdf">Paper PDF</a> · Draft 1.3</p>
+<h1>A boundary can be lossy and still be worth drawing.</h1>
+<p>This workbench evaluates explicit analytical assumptions. It contains no fitted organizational parameters and is not empirical evidence. The scenario companion uses a different heuristic model.</p>
+<section><h2>1. The economic switching threshold</h2>
+<p>Scalar Gaussian estimation; quadratic loss; memoryless samples; optimal asymptotic one-way coding. Coordination savings are held fixed as capacity varies. All loss and cost quantities use common objective units per decision.</p>
+<div class="inputs">
+<label>Zero-capacity deficit Δ(0)<input id="delta0" type="number" min="0" max="1000000" step="0.25" value="4"></label>
+<label>Coordination savings H<input id="savings" type="number" min="-1000000" max="1000000" step="0.25" value="1"></label>
+<label>Capacity κ (bits/decision)<input id="capacity" type="number" min="0" max="30" step="0.25" value="1"></label>
+</div>
+<p><code>Δ(κ) = Δ(0) × 2^(−2κ); J_split − J_coalesced = Δ(κ) − H</code></p>
+<output id="economic" aria-live="polite"></output>
+<p class="small">A positive deficit is not a prohibition on splitting. Capacity-dependent interface cost or coding delay makes H a function of κ and invalidates this fixed-H closed form. A one-shot handoff need not achieve the asymptotic bound.</p>
+</section>
+<section><h2>2. How many units?</h2>
+<p>Balanced groups, quadratic within-unit cost, and a tree-like graph with constant cost B on each of m−1 interfaces. Decision loss is held fixed. Internal burden A is not cross-boundary decision dependence.</p>
+<div class="inputs">
+<label>Coalesced internal cost A<input id="internalA" type="number" min="0.0001" max="1000000" step="any" value="100"></label>
+<label>Cost per interface B<input id="interfaceB" type="number" min="0.0001" max="1000000" step="any" value="4"></label>
+<label>Primitive components N<input id="components" type="number" min="1" max="256" step="1" value="20"></label>
+</div>
+<p><code>Θ(m) = A/m + B(m−1); continuous optimum = clip(√(A/B), 1, N)</code></p>
+<output id="granularity" aria-live="polite"></output>
+<svg id="curve" viewBox="0 0 800 300" role="img" aria-labelledby="curve-title curve-desc"><title id="curve-title">Coordination cost by unit count</title><desc id="curve-desc">The table below provides exact numeric values for the plotted balanced-size relaxation.</desc></svg>
+<div class="table-wrap"><table><thead><tr><th>Units m</th><th>Internal A/m</th><th>Interfaces B(m−1)</th><th>Surrogate total</th><th>Indivisible primitives</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p class="small">The last column uses balanced integer group sizes n_j and internal cost (A/N²)Σn_j² rather than pretending N/m is an integer. Ties select the smallest unit count. With lossy interfaces, add the joint decision deficit before optimizing; individual cut deficits need not be additive.</p>
+<p><strong>Conditional comparative static:</strong> Δlog m* = ½(Δlog A − Δlog B), only in the interior continuous model. Agents can favor integration when internal costs fall proportionally more than interface costs.</p>
+</section>
+<p id="error" class="error" role="alert"></p>
+<script src="assets/analytical-model.js"></script>
+<script>
+'use strict';
+const ids=['delta0','savings','capacity','internalA','interfaceB','components'];
+const show=n=>Number.isFinite(n)?Number(n).toFixed(4):'no finite threshold';
+function render(){
+  try{
+    for(const id of ids){const el=document.getElementById(id);if(!el.checkValidity()||el.value==='')throw new Error('Check the permitted range for '+id);}
+    const [d,h,k,A,B,N]=ids.map(id=>Number(document.getElementById(id).value));
+    const loss=CoaseAnalytical.deficit(d,k), threshold=CoaseAnalytical.economicThreshold(d,h), gap=loss-h;
+    const tie=Math.abs(gap)<=1e-12*Math.max(1,Math.abs(loss),Math.abs(h));
+    const verdict=tie?'Equal total objective':gap<0?'Splitting has the lower objective':'Coalescence has the lower objective';
+    document.getElementById('economic').innerHTML='<p class="status">'+verdict+'</p><p>Remaining deficit: '+show(loss)+'. Split minus coalesced objective: '+show(gap)+'. Economic threshold: '+show(threshold)+(Number.isFinite(threshold)?' bits/decision.':'.')+'</p>';
+    const g=CoaseAnalytical.granularity(A,B,N);
+    document.getElementById('granularity').textContent='Continuous relaxation: '+show(g.continuous)+' units. Best integer m in the surrogate: '+g.best.m+'. Best count with indivisible primitives: '+g.integerBest.m+'.';
+    document.getElementById('rows').innerHTML=g.rows.map(r=>'<tr><td>'+r.m+'</td><td>'+show(r.internal)+'</td><td>'+show(r.interfaces)+'</td><td>'+show(r.cost)+'</td><td>'+show(r.integerCost)+'</td></tr>').join('');
+    const lo=0, hi=Math.max(...g.rows.map(r=>r.cost))*1.1;
+    const pt=r=>(55+(r.m-1)/Math.max(1,N-1)*700).toFixed(2)+','+(250-(r.cost-lo)/(hi-lo)*215).toFixed(2);
+    document.getElementById('curve').innerHTML='<title id="curve-title">Coordination cost by unit count</title><desc id="curve-desc">Numeric values are listed in the following table.</desc><path d="M55 25 V250 H770" fill="none" stroke="currentColor"/><polyline points="'+g.rows.map(pt).join(' ')+'" fill="none" stroke="currentColor" stroke-width="2"/><text x="350" y="285" fill="currentColor">Unit count m (1 to '+N+')</text><text x="60" y="18" fill="currentColor">Total cost Θ(m), maximum '+show(hi)+'</text>';
+    document.getElementById('error').textContent='';
+  }catch(e){document.getElementById('error').textContent=e.message;document.getElementById('economic').textContent='Invalid inputs';document.getElementById('granularity').textContent='';document.getElementById('rows').textContent='';}
+}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',render));render();
+</script></body></html>
